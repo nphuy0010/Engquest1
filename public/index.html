@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngQuest Online Multiplayer</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        /* --- CORE CSS --- */
+        :root {
+            --primary: #6C5CE7;
+            --primary-light: #A29BFE;
+            --secondary: #00B894;
+            --accent: #FF6B6B;
+            --accent-light: #FDCB6E;
+            --dark: #2D3436;
+            --darker: #1E272E;
+            --light: #F5F6FA;
+            --text: #2D3436;
+            --border: #DFE6E9;
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            --shadow-sm: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(45, 52, 54, 0.95);
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            z-index: 10;
+        }
+
+        .screen.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            font-size: 1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: var(--shadow-sm);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(108, 92, 231, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--light);
+            transform: translateY(-3px);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--secondary), #00A383);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 184, 148, 0.3);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--accent), #e15f41);
+            color: white;
+        }
+
+        .btn-back {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid white;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 50px 45px;
+            box-shadow: var(--shadow);
+            width: 90%;
+            max-width: 550px;
+            backdrop-filter: blur(10px);
+        }
+
+        h1.title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #95A5A6;
+            font-weight: 500;
+            margin-bottom: 35px;
+        }
+
+        h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 30px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .input-row {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-row label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .input-row input,
+        .input-row select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            outline: none;
+        }
+
+        /* LOBBY UI */
+        .room-code-display {
+            font-size: 3rem;
+            font-weight: 900;
+            letter-spacing: 5px;
+            color: var(--dark);
+            text-align: center;
+            margin-bottom: 20px;
+            font-family: 'Space Mono', monospace;
+            background: var(--light);
+            padding: 10px;
+            border-radius: 15px;
+            border: 2px dashed var(--primary);
+        }
+
+        .player-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: var(--light);
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border-left: 5px solid #ddd;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 800;
+        }
+
+        .status-ready {
+            background: #dff9fb;
+            color: #22a6b3;
+        }
+
+        .status-wait {
+            background: #ffbe76;
+            color: #fff;
+        }
+
+        /* GAME BOARD UI - 3 COLUMNS */
+        #game-wrapper {
+            width: 100%;
+            height: calc(100vh - 80px);
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: stretch;
+            padding: 20px;
+            margin-top: 80px;
+            gap: 20px;
+        }
+
+        .side-panel {
+            width: 280px;
+            height: 100%;
+            max-height: 80vmin;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .sp-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--darker);
+            margin-bottom: 15px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        #board {
+            width: 80vmin;
+            height: 80vmin;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            grid-template-rows: repeat(9, 1fr);
+            gap: 3px;
+            border: 8px solid white;
+            border-radius: 12px;
+            position: relative;
+            flex-shrink: 0;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .tile {
+            background: white;
+            border: 1px solid #E8EAED;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-align: center;
+            overflow: hidden;
+            border-radius: 6px;
+        }
+
+        .bar {
+            height: 35%;
+            width: 100%;
+            border-bottom: 2px solid #f0f0f0;
+            transition: background 0.3s;
+            position: relative;
+        }
+
+        .tile-name {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2px;
+            line-height: 1.2;
+            word-break: break-word;
+            color: var(--dark);
+            z-index: 2;
+            font-size: 0.6rem;
+        }
+
+        .corner {
+            background: linear-gradient(135deg, #FFE66D, #FFD700);
+            justify-content: center;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .token-holder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            padding: 2px;
+            z-index: 10;
+        }
+
+        .token {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            margin: 2px;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            background: white;
+            z-index: 15;
+        }
+
+        .house-container {
+            position: absolute;
+            top: -1px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            font-size: 10px;
+            letter-spacing: -2px;
+            z-index: 5;
+        }
+
+        .rent-info {
+            position: absolute;
+            bottom: 1px;
+            width: 100%;
+            font-size: 9px;
+            color: #d63031;
+            font-weight: 800;
+            z-index: 4;
+        }
+
+        .center-hub {
+            grid-column: 2 / 9;
+            grid-row: 2 / 9;
+            background: linear-gradient(135deg, #1E272E 0%, #2D3436 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .hub-title {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+
+        .dice-area {
+            perspective: 800px;
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+            margin: 15px 0;
+        }
+
+        .cube {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .face {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #667EEA, #764BA2);
+            border: 3px solid white;
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3.5rem;
+            color: white;
+            font-weight: 900;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .f1 {
+            transform: translateZ(50px);
+        }
+
+        .f6 {
+            transform: rotateY(180deg) translateZ(50px);
+        }
+
+        .f3 {
+            transform: rotateY(90deg) translateZ(50px);
+        }
+
+        .f4 {
+            transform: rotateY(-90deg) translateZ(50px);
+        }
+
+        .f2 {
+            transform: rotateX(90deg) translateZ(50px);
+        }
+
+        .f5 {
+            transform: rotateX(-90deg) translateZ(50px);
+        }
+
+        .dice-label {
+            color: #BDC3C7;
+            font-size: 0.8rem;
+            margin-top: 10px;
+        }
+
+        .game-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(180deg, rgba(30, 39, 46, 0.95), rgba(30, 39, 46, 0.8));
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            z-index: 100;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-title {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 900;
+        }
+
+        .menu-btn {
+            padding: 10px 20px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* MODALS */
+        .modal-wrap {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 600;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-box {
+            background: white;
+            width: 90%;
+            max-width: 520px;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            padding: 25px;
+            color: white;
+            font-size: 1.4rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .modal-body {
+            padding: 35px;
+        }
+
+        .q-text {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            font-weight: 600;
+            text-align: center;
+            color: var(--dark);
+            line-height: 1.5;
+        }
+
+        .ans-btn {
+            display: block;
+            width: 100%;
+            padding: 16px 18px;
+            margin: 12px 0;
+            background: var(--light);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        .ans-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateX(8px);
+        }
+
+        @media (max-width: 1400px) {
+            #game-wrapper {
+                flex-wrap: wrap;
+                height: auto;
+                justify-content: center;
+            }
+
+            #board {
+                order: -1;
+                margin-bottom: 20px;
+                width: 80vmin;
+                height: 80vmin;
+            }
+
+            .side-panel {
+                width: 45%;
+                min-width: 300px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="sc-menu" class="screen active">
+        <div class="glass-panel">
+            <h1 class="title" style="text-align: center;">EngQuest</h1>
+            <p class="subtitle" style="text-align: center;">🌍 Multiplayer English Adventure 🌍</p>
+            <button class="btn btn-primary" onclick="navTo('sc-setup')" style="width: 100%; margin-bottom: 15px;">🎮
+                CHƠI ONLINE</button>
+        </div>
+    </div>
+
+    <div id="sc-setup" class="screen">
+        <button class="btn btn-back" onclick="navTo('sc-menu')">← TRỞ LẠI</button>
+        <div class="glass-panel">
+            <h2>THÔNG TIN NHÂN VẬT</h2>
+            <div class="input-row" style="display: flex; gap: 10px;">
+                <select id="my-avatar" style="width: 80px; font-size: 1.5rem; text-align: center; border-radius: 10px;">
+                    <option value="🐶">🐶</option>
+                    <option value="🐱">🐱</option>
+                    <option value="🦊">🦊</option>
+                    <option value="🐼">🐼</option>
+                    <option value="🦁">🦁</option>
+                    <option value="🐸">🐸</option>
+                </select>
+                <input id="my-name" type="text" placeholder="Tên của bạn..." value="Gamer"
+                    style="flex: 1; font-weight: bold;">
+            </div>
+            <hr style="margin: 25px 0; border: 1px solid #eee;">
+            <div style="display: flex; gap: 15px;">
+                <button class="btn btn-primary" onclick="reqCreateRoom()" style="flex: 1;">➕ TẠO PHÒNG</button>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <input id="join-code" type="text" placeholder="Nhập mã 6 số..." maxlength="6"
+                    style="flex: 1; padding: 10px; border-radius: 10px; border: 2px solid var(--border); font-size: 1.2rem; text-align: center; font-family: 'Space Mono'; font-weight: bold;">
+                <button class="btn btn-secondary" onclick="reqJoinRoom()">🚪 VÀO PHÒNG</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="sc-lobby" class="screen">
+        <button class="btn btn-back" onclick="location.reload()">← RỜI PHÒNG</button>
+        <div class="glass-panel">
+            <h2 style="margin-bottom: 10px;">PHÒNG CHỜ</h2>
+            <p style="text-align: center; color: #7f8fa6; margin-bottom: 5px;">Mã phòng của bạn:</p>
+            <div class="room-code-display" id="lobby-code">------</div>
+            <div id="lobby-players" style="margin-bottom: 25px;"></div>
+            <button id="btn-start-game" class="btn btn-success" style="width: 100%; display: none;"
+                onclick="reqStartGame()">🚀 BẮT ĐẦU GAME</button>
+            <button id="btn-ready" class="btn btn-warning" style="width: 100%; display: none;"
+                onclick="reqToggleReady()">✅ SẴN SÀNG</button>
+        </div>
+    </div>
+
+    <div id="sc-game" class="screen">
+        <div class="game-header">
+            <div class="game-title">⚡ EngQuest <span id="header-room-code"
+                    style="font-size: 1rem; color: var(--accent-light); margin-left: 10px;"></span></div>
+            <div style="flex:1"></div>
+            <button class="menu-btn" onclick="if(confirm('Bạn muốn thoát ván game này?')) location.reload();">🏠
+                THOÁT</button>
+        </div>
+
+        <div id="game-wrapper">
+            <div class="side-panel" id="log-panel">
+                <h3 class="sp-title">📜 NHẬT KÝ</h3>
+                <div id="activity-log"
+                    style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-right: 5px;">
+                    <div style="text-align: center; color: #aaa; font-size: 0.85rem; margin-top: 10px;">Trò chơi bắt
+                        đầu!</div>
+                </div>
+            </div>
+
+            <div id="board">
+                <div class="center-hub">
+                    <h2 class="hub-title">EngQuest</h2>
+                    <div class="dice-area" onclick="userRollDice()">
+                        <div class="cube" id="dice-cube">
+                            <div class="face f1">1</div>
+                            <div class="face f2">2</div>
+                            <div class="face f3">3</div>
+                            <div class="face f4">4</div>
+                            <div class="face f5">5</div>
+                            <div class="face f6">6</div>
+                        </div>
+                    </div>
+                    <p class="dice-label">🎲 CLICK TO ROLL</p>
+                </div>
+            </div>
+
+            <div class="side-panel" id="side-panel">
+                <h3 class="sp-title">📊 BẢNG XẾP HẠNG</h3>
+                <div id="detailed-stats" style="flex: 1; overflow-y: auto; margin-bottom: 15px; padding-right: 5px;">
+                </div>
+                <h3 class="sp-title" style="border-top: 2px dashed #ddd; padding-top: 15px;">🎯 TRẠNG THÁI</h3>
+                <div id="current-action-display"
+                    style="text-align: center; color: #555; font-weight: 600; font-size: 1rem; padding: 10px; background: #f1f2f6; border-radius: 10px;">
+                    Đang kết nối...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-q" class="modal-wrap">
+        <div class="modal-box">
+            <div class="modal-header" id="mq-title">CHALLENGE</div>
+            <div class="modal-body">
+                <div class="q-text" id="mq-text">Question?</div>
+                <div id="mq-opts"></div>
+            </div>
+        </div>
+    </div>
+    <div id="modal-buy" class="modal-wrap">
+        <div class="modal-box">
+            <div class="modal-header" id="mb-title">BẤT ĐỘNG SẢN</div>
+            <div class="modal-body" style="text-align: center;">
+                <div id="mb-text" class="q-text">Bạn có muốn mua?</div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;"><button class="btn btn-success"
+                        id="btn-buy-yes" style="flex: 1;">MUA</button><button class="btn btn-secondary" id="btn-buy-no"
+                        style="flex: 1;">BỎ QUA</button></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        let mySocketId = "";
+        let currentRoomId = "";
+
+        socket.on('connect', () => { mySocketId = socket.id; });
+        socket.on('error_msg', (msg) => { alert("⚠️ " + msg); });
+
+        // --- DATA BÀN CỜ & CÂU HỎI ---
+        const COLORS = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA502'];
+        const BOARD_CONFIG = [
+            { type: 'corner', name: 'GO', color: '#fff' },
+            { type: 'prop', name: 'Hanoi', color: '#ff7979', price: 100, housePrice: 50, rent: 10, owner: null, houses: 0 },
+            { type: 'chest', name: 'CHEST', color: '#a29bfe' },
+            { type: 'prop', name: 'Sapa', color: '#ff7979', price: 100, housePrice: 50, rent: 10, owner: null, houses: 0 },
+            { type: 'chance', name: 'CHANCE', color: '#fab1a0' },
+            { type: 'prop', name: 'Bangkok', color: '#ff7979', price: 120, housePrice: 50, rent: 15, owner: null, houses: 0 },
+            { type: 'prop', name: 'Bali', color: '#ff7979', price: 120, housePrice: 50, rent: 15, owner: null, houses: 0 },
+            { type: 'prop', name: 'Phuket', color: '#ff7979', price: 140, housePrice: 50, rent: 20, owner: null, houses: 0 },
+            { type: 'corner', name: 'JAIL', color: '#b2bec3' },
+            { type: 'prop', name: 'Seoul', color: '#badc58', price: 160, housePrice: 100, rent: 25, owner: null, houses: 0 },
+            { type: 'prop', name: 'Busan', color: '#badc58', price: 160, housePrice: 100, rent: 25, owner: null, houses: 0 },
+            { type: 'chest', name: 'CHEST', color: '#a29bfe' },
+            { type: 'prop', name: 'Tokyo', color: '#badc58', price: 180, housePrice: 100, rent: 30, owner: null, houses: 0 },
+            { type: 'prop', name: 'Osaka', color: '#badc58', price: 180, housePrice: 100, rent: 30, owner: null, houses: 0 },
+            { type: 'chance', name: 'CHANCE', color: '#fab1a0' },
+            { type: 'prop', name: 'Kyoto', color: '#badc58', price: 200, housePrice: 100, rent: 35, owner: null, houses: 0 },
+            { type: 'corner', name: 'FREE', color: '#74b9ff' },
+            { type: 'prop', name: 'Paris', color: '#7ed6df', price: 220, housePrice: 150, rent: 40, owner: null, houses: 0 },
+            { type: 'prop', name: 'Lyon', color: '#7ed6df', price: 220, housePrice: 150, rent: 40, owner: null, houses: 0 },
+            { type: 'chest', name: 'CHEST', color: '#a29bfe' },
+            { type: 'prop', name: 'Berlin', color: '#7ed6df', price: 240, housePrice: 150, rent: 45, owner: null, houses: 0 },
+            { type: 'prop', name: 'Rome', color: '#7ed6df', price: 240, housePrice: 150, rent: 45, owner: null, houses: 0 },
+            { type: 'chance', name: 'CHANCE', color: '#fab1a0' },
+            { type: 'prop', name: 'Madrid', color: '#7ed6df', price: 260, housePrice: 150, rent: 50, owner: null, houses: 0 },
+            { type: 'corner', name: 'BACK', color: '#ffbe76' },
+            { type: 'prop', name: 'London', color: '#e056fd', price: 300, housePrice: 200, rent: 60, owner: null, houses: 0 },
+            { type: 'prop', name: 'Dubai', color: '#e056fd', price: 300, housePrice: 200, rent: 60, owner: null, houses: 0 },
+            { type: 'chest', name: 'CHEST', color: '#a29bfe' },
+            { type: 'prop', name: 'Sydney', color: '#e056fd', price: 320, housePrice: 200, rent: 70, owner: null, houses: 0 },
+            { type: 'prop', name: 'New York', color: '#e056fd', price: 350, housePrice: 200, rent: 80, owner: null, houses: 0 },
+            { type: 'chance', name: 'CHANCE', color: '#fab1a0' },
+            { type: 'prop', name: 'L.A.', color: '#e056fd', price: 400, housePrice: 200, rent: 100, owner: null, houses: 0 }
+        ];
+
+        const QUESTIONS = {
+            easy: [
+                { q: "I ___ from Vietnam.", a: ["am", "is", "are", "be"], c: 0 },
+                { q: "She usually ___ up at 6 AM every morning.", a: ["wake", "woke", "wakes", "waking"], c: 2 },
+                { q: "They ___ learning English right now.", a: ["am", "is", "are", "do"], c: 2 },
+                { q: "He wants to become a successful property ___.", a: ["tycoon", "teacher", "doctor", "driver"], c: 0 },
+                { q: "There is a coffee shop ___ the corner of the street.", a: ["in", "on", "at", "with"], c: 2 },
+                { q: "The manager ___ a new project today.", a: ["start", "starts", "is starting", "started"], c: 2 },
+                { q: "This is ___ expensive laptop in the store.", a: ["more", "the most", "most", "much"], c: 1 },
+                { q: "I went to the supermarket ___ buy some food.", a: ["for", "to", "so", "because"], c: 1 },
+                { q: "He plays the guitar very ___.", a: ["good", "well", "better", "best"], c: 1 },
+                { q: "Yesterday, I ___ my keys at the office.", a: ["leave", "left", "leaved", "leaving"], c: 1 }
+            ],
+            medium: [
+                { q: "Many students find that playing interactive games ___ their vocabulary significantly.", a: ["improve", "improves", "improving", "improved"], c: 1 },
+                { q: "If I ___ more time, I would learn another programming language.", a: ["have", "had", "have had", "having"], c: 1 },
+                { q: "By the time we arrived at the office, the meeting ___.", a: ["started", "has started", "had started", "was starting"], c: 2 },
+                { q: "The ___ of the computer determines how efficiently it can process data.", a: ["architecture", "architect", "architectural", "logically"], c: 0 },
+                { q: "The city, ___ is famous for its historical buildings, attracts millions of tourists.", a: ["who", "where", "which", "that"], c: 2 },
+                { q: "The software update is expected to ___ the system's security.", a: ["enhance", "completely", "harmful", "decrease"], c: 0 },
+                { q: "He couldn't remember where he ___ his keys.", a: ["leaves", "has left", "had left", "was leaving"], c: 2 },
+                { q: "The hotel where we stayed was ___ from the city center.", a: ["far", "away", "distance", "remote"], c: 0 }
+            ],
+            hard: [
+                { q: "Had the startup secured the funding earlier, they ___ their web development project by now.", a: ["would complete", "will have completed", "would have completed", "completed"], c: 2 },
+                { q: "Rarely ___ such a cutting-edge approach to sorting algorithms in a commercial software product.", a: ["we see", "do we see", "we do see", "see we"], c: 1 },
+                { q: "Only after the system crashed ___ that there was a critical flaw in the code.", a: ["the engineers realized", "did the engineers realize", "the engineers did realize", "realized the engineers"], c: 1 },
+                { q: "The project manager insisted that every detail of the user interface ___ rigorously tested.", a: ["is", "be", "was", "are"], c: 1 },
+                { q: "No sooner ___ the new update than thousands of users reported encountering a bug.", a: ["the company released", "did the company release", "had the company released", "the company had released"], c: 2 },
+                { q: "The financial report was so complex that it was virtually ___ to the average investor.", a: ["illegible", "incomprehensible", "infallible", "invincible"], c: 1 }
+            ]
+        };
+
+        // --- TRẠNG THÁI GAME ---
+        let players = [];
+        let curPlayerIdx = 0;
+        let isRolling = false;
+        let currentRotX = 0, currentRotY = 0;
+
+        function navTo(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function getMyInfo() {
+            return {
+                name: document.getElementById('my-name').value || "Guest",
+                avatar: document.getElementById('my-avatar').value,
+                color: COLORS[Math.floor(Math.random() * COLORS.length)]
+            };
+        }
+
+        // --- GIAO TIẾP LOBBY ---
+        function reqCreateRoom() { socket.emit('create_room', getMyInfo()); }
+        function reqJoinRoom() {
+            const code = document.getElementById('join-code').value.trim();
+            if (code.length !== 6) return alert("Mã phòng phải gồm 6 chữ số!");
+            socket.emit('join_room', { roomId: code, pInfo: getMyInfo() });
+        }
+        function reqToggleReady() { socket.emit('toggle_ready'); }
+        function reqStartGame() { socket.emit('start_game'); }
+
+        socket.on('room_created', (code) => { currentRoomId = code; });
+
+        socket.on('update_lobby', (roomData) => {
+            currentRoomId = roomData.id;
+            navTo('sc-lobby');
+            document.getElementById('lobby-code').innerText = roomData.id;
+            document.getElementById('header-room-code').innerText = `[Phòng: ${roomData.id}]`;
+
+            const listDiv = document.getElementById('lobby-players');
+            listDiv.innerHTML = '';
+            let allReady = true;
+
+            roomData.players.forEach(p => {
+                const isHost = p.id === roomData.host;
+                if (!p.isReady && !isHost) allReady = false;
+                let statusHtml = isHost ? `<span class="status-badge status-ready">👑 CHỦ PHÒNG</span>` :
+                    (p.isReady ? `<span class="status-badge status-ready">✅ SẴN SÀNG</span>` : `<span class="status-badge status-wait">⏳ ĐANG CHỜ</span>`);
+
+                listDiv.innerHTML += `<div class="player-list-item" style="border-color: ${p.color}"><div><span style="font-size: 1.5rem; margin-right: 10px;">${p.avatar}</span> ${p.name} ${p.id === mySocketId ? '(Bạn)' : ''}</div><div>${statusHtml}</div></div>`;
+            });
+
+            const isMeHost = roomData.host === mySocketId;
+            const btnStart = document.getElementById('btn-start-game');
+            const btnReady = document.getElementById('btn-ready');
+
+            if (isMeHost) {
+                btnStart.style.display = 'block'; btnReady.style.display = 'none';
+                btnStart.style.opacity = allReady && roomData.players.length >= 2 ? '1' : '0.5';
+            } else {
+                btnStart.style.display = 'none'; btnReady.style.display = 'block';
+                const me = roomData.players.find(p => p.id === mySocketId);
+                btnReady.innerText = me && me.isReady ? "HỦY SẴN SÀNG" : "✅ SẴN SÀNG";
+                btnReady.className = me && me.isReady ? "btn btn-secondary" : "btn btn-warning";
+            }
+
+            if (roomData.isPlaying) { players = roomData.players; curPlayerIdx = roomData.currentTurnIdx; updateStats(); }
+        });
+
+        socket.on('game_started', (roomData) => {
+            players = roomData.players;
+            curPlayerIdx = roomData.currentTurnIdx;
+            renderBoard(); updateStats(); navTo('sc-game'); updateTurnDisplay();
+        });
+
+        function updateTurnDisplay() {
+            if (players.length > 0) {
+                const p = players[curPlayerIdx];
+                const isMe = p.id === mySocketId;
+                document.getElementById('current-action-display').innerHTML = isMe ? `<span style="color:var(--secondary)">Lượt của BẠN! 🎲 Hãy đổ xúc xắc.</span>` : `Đang chờ <span style="color:${p.color}">${p.avatar} ${p.name}</span> đi...`;
+            }
+        }
+
+        // --- GHI NHẬT KÝ ---
+        function showNotify(msg) {
+            const logDiv = document.getElementById('activity-log');
+            if (!logDiv) return;
+            const entry = document.createElement('div');
+            entry.style.padding = '12px'; entry.style.borderRadius = '8px'; entry.style.fontSize = '0.9rem'; entry.style.lineHeight = '1.4'; entry.style.boxShadow = '0 2px 5px rgba(0,0,0,0.05)';
+
+            let borderColor = 'var(--primary)', bgColor = '#f8f9fa';
+            if (msg.includes('✅') || msg.includes('nhận') || msg.includes('mua') || msg.includes('ĐÚNG')) { borderColor = 'var(--secondary)'; bgColor = 'rgba(0,184,148,0.1)'; }
+            else if (msg.includes('❌') || msg.includes('TÙ') || msg.includes('SAI') || msg.includes('thu')) { borderColor = 'var(--accent)'; bgColor = 'rgba(255,107,107,0.1)'; }
+            else if (msg.includes('🎲')) { borderColor = 'var(--accent-light)'; bgColor = 'rgba(253, 203, 110, 0.1)'; }
+
+            entry.style.borderLeft = `4px solid ${borderColor}`; entry.style.background = bgColor; entry.innerHTML = msg;
+            logDiv.appendChild(entry); logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        socket.on('log_msg', (msg) => { showNotify(msg); });
+        socket.on('sync_players', (data) => { players = data; updateStats(); });
+
+        // --- LOGIC XÚC XẮC ---
+        function userRollDice() { if (!isRolling) socket.emit('request_roll'); }
+
+        socket.on('dice_rolled', (data) => {
+            isRolling = true; const val = data.value;
+            document.getElementById('current-action-display').innerHTML = `Đang đổ xúc xắc... 🎲`;
+
+            const cube = document.getElementById('dice-cube');
+            const rotations = { 1: { x: 0, y: 0 }, 6: { x: 0, y: 180 }, 3: { x: 0, y: -90 }, 4: { x: 0, y: 90 }, 2: { x: -90, y: 0 }, 5: { x: 90, y: 0 } };
+            const target = rotations[val];
+            const getNextAngle = (c, t, s) => { const n = ((c % 360) + 360) % 360; let d = t - n; if (d <= 0) d += 360; return c + d + (s * 360); };
+
+            currentRotX = getNextAngle(currentRotX, target.x, Math.floor(Math.random() * 3) + 2);
+            currentRotY = getNextAngle(currentRotY, target.y, Math.floor(Math.random() * 3) + 2);
+            cube.style.transform = `rotateX(${currentRotX}deg) rotateY(${currentRotY}deg)`;
+
+            setTimeout(() => {
+                const p = players.find(x => x.id === data.playerId);
+                if (p) {
+                    showNotify(`🎲 <b>${p.avatar} ${p.name}</b> vừa đổ được <b>${val}</b> bước!`);
+                    movePlayerVisual(val, p.id);
+                }
+            }, 2000);
+        });
+
+        // --- LOGIC DI CHUYỂN MỚI (CHỐNG LỖI QUAY VỀ 0) ---
+        function movePlayerVisual(steps, pId) {
+            const token = document.getElementById(`token-${pId}`);
+            if (!token) return;
+
+            // Đọc vị trí hiện tại dựa trên DOM thay vì biến pos dễ bị server ghi đè
+            let current = parseInt(token.parentElement.id.replace('holder-', ''));
+            let stepCount = 0;
+
+            const moveInterval = setInterval(() => {
+                current++;
+                if (current >= 32) current = 0;
+
+                stepCount++;
+                document.getElementById(`holder-${current}`).appendChild(token);
+
+                if (stepCount >= steps) {
+                    clearInterval(moveInterval);
+                    // CHỈ người tung xúc xắc mới báo cáo vị trí kết thúc cho server
+                    if (pId === mySocketId) {
+                        socket.emit('movement_complete', current);
+                        setTimeout(() => handleTile(current), 500);
+                    }
+                }
+            }, 150);
+        }
+
+        socket.on('player_is_answering', (playerId) => {
+            const p = players.find(x => x.id === playerId);
+            if (p) showNotify(`🧠 <b>${p.avatar} ${p.name}</b> đang giải câu hỏi tiếng Anh...`);
+        });
+
+        // HÀM GỌI MODAL KHI DỪNG BƯỚC
+        function handleTile(pos) {
+            const tile = BOARD_CONFIG[pos];
+            const p = players.find(pl => pl.id === mySocketId);
+
+            if (p) {
+                if (tile.type === 'prop') {
+                    socket.emit('answering_event');
+                    openQuestion(pos);
+                } else if (tile.type === 'chance' || tile.type === 'chest') {
+                    const bonus = Math.floor(Math.random() * 100) - 30;
+                    socket.emit('answered_result', { correct: true, points: bonus, isBonus: true });
+                    showNotify(`${bonus >= 0 ? "🍀 MAY MẮN" : "☠️ XUI XẺO"}! <b>${p.name}</b> được ${bonus >= 0 ? '+' : ''}${bonus}đ`);
+                    setTimeout(() => socket.emit('next_turn'), 1500);
+                } else if (tile.name === 'JAIL') {
+                    showNotify(`🚨 <b>${p.name}</b> ĐÃ BỊ CẢNH SÁT BẮT VÀO TÙ!`);
+                    setTimeout(() => socket.emit('next_turn'), 1500);
+                } else {
+                    setTimeout(() => socket.emit('next_turn'), 1000);
+                }
+            }
+        }
+
+        socket.on('turn_changed', (newTurnIdx) => {
+            curPlayerIdx = newTurnIdx; isRolling = false; updateTurnDisplay();
+        });
+
+        // --- CÂU HỎI & KINH TẾ ---
+        function openQuestion(tileIndex) {
+            const modal = document.getElementById('modal-q');
+            const p = players.find(pl => pl.id === mySocketId);
+            const cycle = p.qCount % 10;
+            let diffKey = 'easy', rewardPoints = 50;
+            if (cycle >= 5 && cycle <= 8) { diffKey = 'medium'; rewardPoints = 100; } else if (cycle === 9) { diffKey = 'hard'; rewardPoints = 200; }
+
+            const pool = QUESTIONS[diffKey];
+            const q = pool[Math.floor(Math.random() * pool.length)];
+
+            document.getElementById('mq-title').innerText = `📚 CHỌN ĐÁP ÁN ĐÚNG - ${rewardPoints} ĐIỂM`;
+            document.getElementById('mq-text').innerText = q.q;
+            const optsDiv = document.getElementById('mq-opts'); optsDiv.innerHTML = '';
+
+            q.a.forEach((ans, idx) => {
+                const btn = document.createElement('button'); btn.className = 'ans-btn'; btn.innerText = ans;
+                btn.onclick = () => answerQuestion(idx === q.c, rewardPoints, tileIndex);
+                optsDiv.appendChild(btn);
+            });
+            modal.style.display = 'flex';
+        }
+
+        function answerQuestion(isCorrect, rewardPoints, tileIndex) {
+            document.getElementById('modal-q').style.display = 'none';
+            const tile = BOARD_CONFIG[tileIndex];
+
+            socket.emit('answered_result', { correct: isCorrect, points: isCorrect ? rewardPoints : 0, isBonus: false });
+
+            setTimeout(() => {
+                if (isCorrect) {
+                    if (tile.owner !== null && tile.owner !== mySocketId) payRent(tileIndex);
+                    else handlePropertyTransaction(tileIndex);
+                } else {
+                    if (tile.owner !== null && tile.owner !== mySocketId) payRent(tileIndex);
+                    else socket.emit('next_turn');
+                }
+            }, 1500);
+        }
+
+        function getRent(tile) { return (!tile || tile.type !== 'prop') ? 0 : tile.rent + (tile.houses * tile.rent * 2); }
+
+        function payRent(tileIndex) {
+            const tile = BOARD_CONFIG[tileIndex];
+            socket.emit('pay_rent', { ownerId: tile.owner, amount: getRent(tile) });
+            setTimeout(() => socket.emit('next_turn'), 1000);
+        }
+
+        function handlePropertyTransaction(tileIndex) {
+            const tile = BOARD_CONFIG[tileIndex];
+            const p = players.find(pl => pl.id === mySocketId);
+
+            if (tile.owner === null) {
+                if (p.score >= tile.price) showBuyModal(tileIndex, 'buy');
+                else { showNotify(`❌ Bạn không đủ tiền mua ${tile.name}!`); socket.emit('next_turn'); }
+            } else if (tile.owner === mySocketId) {
+                if (tile.houses < 4 && p.score >= tile.housePrice) showBuyModal(tileIndex, 'build');
+                else { showNotify(tile.houses >= 4 ? `Đã xây tối đa nhà tại ${tile.name}!` : `Không đủ tiền nâng cấp!`); socket.emit('next_turn'); }
+            }
+        }
+
+        function showBuyModal(tileIndex, action) {
+            const tile = BOARD_CONFIG[tileIndex];
+            const modal = document.getElementById('modal-buy');
+            const title = document.getElementById('mb-title'); const text = document.getElementById('mb-text');
+            const btnYes = document.getElementById('btn-buy-yes'); const btnNo = document.getElementById('btn-buy-no');
+            const me = players.find(pl => pl.id === mySocketId);
+
+            if (action === 'buy') {
+                title.innerText = "🏛️ MUA ĐỊA DANH";
+                text.innerHTML = `Mua <b>${tile.name}</b>?<br>Giá: <span style="color:var(--secondary)">${tile.price}đ</span><br>Thuế cơ bản: ${getRent(tile)}đ`;
+                btnYes.innerText = `MUA (${tile.price}đ)`;
+                btnYes.onclick = () => { socket.emit('property_action', { action: 'buy', tileIndex: tileIndex, cost: tile.price, playerName: me.name }); modal.style.display = 'none'; socket.emit('next_turn'); };
+            } else if (action === 'build') {
+                title.innerText = "🏠 NÂNG CẤP NHÀ";
+                text.innerHTML = `Nâng cấp nhà ở <b>${tile.name}</b>?<br>Giá nâng cấp: <span style="color:var(--secondary)">${tile.housePrice}đ</span><br>Thuế tăng lên: <b>${tile.rent + ((tile.houses + 1) * tile.rent * 2)}đ</b>`;
+                btnYes.innerText = `NÂNG CẤP (${tile.housePrice}đ)`;
+                btnYes.onclick = () => { socket.emit('property_action', { action: 'build', tileIndex: tileIndex, cost: tile.housePrice, playerName: me.name }); modal.style.display = 'none'; socket.emit('next_turn'); };
+            }
+            btnNo.onclick = () => { modal.style.display = 'none'; socket.emit('next_turn'); };
+            modal.style.display = 'flex';
+        }
+
+        socket.on('sync_board', (data) => {
+            const tile = BOARD_CONFIG[data.tileIndex];
+            if (data.action === 'buy') { tile.owner = data.playerId; showNotify(`🏛️ <b>${data.playerName}</b> đã trở thành chủ nhân của <b>${tile.name}</b>!`); }
+            else if (data.action === 'build') { tile.houses++; showNotify(`🏠 <b>${data.playerName}</b> đã nâng cấp nhà tại <b>${tile.name}</b>!`); }
+            updateBoardVisuals();
+        });
+
+        // --- HÀM VẼ GIAO DIỆN BÀN CỜ ---
+        function renderBoard() {
+            const board = document.getElementById('board'); const hub = board.querySelector('.center-hub');
+            board.innerHTML = ''; board.appendChild(hub);
+            BOARD_CONFIG.forEach((tileData, index) => {
+                let r, c; if (index <= 8) { r = 1; c = index + 1; } else if (index <= 16) { r = index - 8 + 1; c = 9; } else if (index <= 24) { r = 9; c = 9 - (index - 16); } else { r = 9 - (index - 24); c = 1; }
+                const div = document.createElement('div'); div.className = `tile ${tileData.type === 'corner' ? 'corner' : ''}`;
+                div.style.gridRow = r; div.style.gridColumn = c; div.id = `tile-${index}`;
+                if (tileData.type === 'prop') div.innerHTML = `<div class="bar" style="background:${tileData.color}"></div><div class="tile-name">${tileData.name}</div>`;
+                else div.innerHTML = `<span style="color:${tileData.color}; font-weight: 900;">${tileData.name}</span>`;
+                const holder = document.createElement('div'); holder.className = 'token-holder'; holder.id = `holder-${index}`;
+                div.appendChild(holder); board.appendChild(div);
+            });
+            // VẼ QUÂN CỜ BẰNG ID CỦA NGƯỜI CHƠI (Cực kỳ quan trọng để không bị mix lộn xộn)
+            players.forEach((p) => {
+                const t = document.createElement('div'); t.className = 'token'; t.style.border = `2px solid ${p.color}`;
+                t.innerText = p.avatar; t.id = `token-${p.id}`;
+                document.getElementById(`holder-${p.pos}`).appendChild(t);
+            });
+            updateBoardVisuals();
+        }
+
+        function updateBoardVisuals() {
+            BOARD_CONFIG.forEach((tile, index) => {
+                if (tile.type === 'prop' && tile.owner !== null) {
+                    const el = document.getElementById(`tile-${index}`);
+                    const owner = players.find(p => p.id === tile.owner);
+                    if (!owner) return;
+                    const bar = el.querySelector('.bar'); bar.style.background = owner.color; bar.style.display = 'flex'; bar.style.alignItems = 'center'; bar.style.justifyContent = 'center';
+                    bar.innerHTML = `<span style="font-size: 14px; text-shadow: 0 0 3px rgba(255,255,255,0.8);">${owner.avatar}</span>`;
+                    let houseDiv = el.querySelector('.house-container');
+                    if (!houseDiv) { houseDiv = document.createElement('div'); houseDiv.className = 'house-container'; el.appendChild(houseDiv); }
+                    houseDiv.innerHTML = '🏠'.repeat(tile.houses);
+                }
+            });
+        }
+
+        function updateStats() {
+            const detailedStats = document.getElementById('detailed-stats'); if (!detailedStats) return;
+            detailedStats.innerHTML = '';
+            players.forEach((p, idx) => {
+                let isActive = idx === curPlayerIdx;
+                detailedStats.innerHTML += `<div style="padding: 12px; border-radius: 12px; background: ${isActive ? 'rgba(0,184,148,0.15)' : '#f8f9fa'}; border-left: 6px solid ${p.color}; margin-bottom: 12px;"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;"><span style="font-weight: 700; color: ${p.color};">${p.avatar} ${p.name} ${p.id === mySocketId ? '(Bạn)' : ''}</span><span style="font-size: 1.2rem; font-weight: 900;">${p.score}</span></div></div>`;
+            });
+        }
+    </script>
+</body>
+
+</html>
