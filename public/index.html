@@ -41,6 +41,51 @@
             overflow: hidden;
         }
 
+        /* MÀN HÌNH YÊU CẦU XOAY MÁY */
+        #rotate-device {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(30, 39, 46, 0.98);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #rotate-device i {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            animation: tilt 2s infinite ease-in-out;
+        }
+
+        @keyframes tilt {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            50% {
+                transform: rotate(-90deg);
+            }
+
+            100% {
+                transform: rotate(0deg);
+            }
+        }
+
+        @media screen and (max-width: 900px) and (orientation: portrait) {
+            #rotate-device {
+                display: flex;
+            }
+        }
+
+        /* SCREENS & GLASS PANELS */
         .screen {
             position: fixed;
             top: 0;
@@ -485,7 +530,7 @@
             cursor: pointer;
         }
 
-        /* SỬA LỖI MODAL POPUP (Ảnh 1 - PC) */
+        /* MODAL VÀ NOTIFICATION */
         .notification {
             position: fixed;
             bottom: 30px;
@@ -501,9 +546,9 @@
             display: none;
             z-index: 500;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
         }
 
-        /* MODAL CHÍNH */
         .modal-wrap {
             position: fixed;
             top: 0;
@@ -570,69 +615,35 @@
             transform: translateX(8px);
         }
 
-        /* --- SỬA LỖI RESPONSIVE CHO ĐIỆN THOẠI (Ảnh 2, 3) --- */
-        @media (max-width: 1200px) {
-            body {
-                overflow: auto;
-            }
-
-            /* Cho phép cuộn trên mobile */
-
-            /* Sửa giao diện Setup (Ảnh 2) */
-            .glass-panel {
-                padding: 30px 20px;
-                width: 95%;
-                max-width: none;
-            }
-
-            h1.title {
-                font-size: 2.5rem;
-            }
-
-            h2 {
-                font-size: 1.5rem;
-                margin-bottom: 20px;
-            }
-
-            .input-row {
-                flex-wrap: wrap;
-                gap: 10px;
-            }
-
-            .input-row input {
-                font-size: 0.9rem;
-            }
-
-            .btn {
-                width: 100%;
-                padding: 12px 20px;
-                font-size: 0.9rem;
-            }
-
-            .btn-back {
-                top: 10px;
-                left: 10px;
-                padding: 5px 10px;
-                font-size: 0.8rem;
-            }
-
-            #join-code {
-                font-size: 1rem;
-                padding: 8px;
-            }
-
-            /* Sửa giao diện Game (Ảnh 3) */
+        /* RESPONSIVE LANDSCAPE & MOBILE SCALE */
+        @media screen and (max-height: 600px) and (orientation: landscape),
+        screen and (max-width: 1200px) {
             #game-wrapper {
-                flex-direction: column;
-                height: auto;
-                margin-top: 60px;
+                flex-direction: row;
+                flex-wrap: nowrap;
                 padding: 10px;
-                align-items: center;
+                margin-top: 60px;
                 gap: 10px;
+                align-items: stretch;
+            }
+
+            .side-panel {
+                width: 25vw;
+                min-width: 160px;
+                padding: 12px;
+                border-radius: 12px;
+            }
+
+            #board {
+                width: 78vh;
+                height: 78vh;
+                margin-bottom: 0;
+                border-width: 3px;
+                order: 0;
             }
 
             .game-header {
-                height: 60px;
+                height: 55px;
                 padding: 0 15px;
             }
 
@@ -641,67 +652,76 @@
             }
 
             .menu-btn {
-                padding: 5px 10px;
+                padding: 6px 12px;
                 font-size: 0.8rem;
             }
 
-            #board {
-                order: -1;
-                width: 90vmin;
-                height: 90vmin;
-                border: 4px solid white;
-                margin-bottom: 10px;
-            }
-
-            /* Đẩy bàn cờ lên trên và thu nhỏ */
-            .center-hub {
-                padding: 10px;
+            .sp-title {
+                font-size: 0.85rem;
+                margin-bottom: 8px;
             }
 
             .hub-title {
-                font-size: 1.2rem;
+                font-size: 1.1rem;
+                letter-spacing: 1px;
+            }
+
+            #current-action-display {
+                font-size: 0.8rem;
+                padding: 6px;
             }
 
             .dice-area {
-                width: 60px;
-                height: 60px;
-                margin: 5px 0;
+                width: 50px;
+                height: 50px;
+                margin: 8px 0;
             }
 
             .face {
-                width: 60px;
-                height: 60px;
-                font-size: 2rem;
-                border: 2px solid white;
-                border-radius: 10px;
+                width: 50px;
+                height: 50px;
+                font-size: 1.8rem;
+                border-width: 2px;
+                border-radius: 8px;
             }
 
             .f1 {
-                transform: translateZ(30px);
+                transform: translateZ(25px);
             }
 
             .f6 {
-                transform: rotateY(180deg) translateZ(30px);
+                transform: rotateY(180deg) translateZ(25px);
             }
 
             .f3 {
-                transform: rotateY(90deg) translateZ(30px);
+                transform: rotateY(90deg) translateZ(25px);
             }
 
             .f4 {
-                transform: rotateY(-90deg) translateZ(30px);
+                transform: rotateY(-90deg) translateZ(25px);
             }
 
             .f2 {
-                transform: rotateX(90deg) translateZ(30px);
+                transform: rotateX(90deg) translateZ(25px);
             }
 
             .f5 {
-                transform: rotateX(-90deg) translateZ(30px);
+                transform: rotateX(-90deg) translateZ(25px);
+            }
+
+            .dice-label {
+                font-size: 0.6rem;
+                margin-top: 5px;
+            }
+
+            .tile {
+                font-size: 0.45rem;
+                border-radius: 3px;
             }
 
             .tile-name {
-                font-size: 0.5rem;
+                font-size: 0.45rem;
+                line-height: 1;
                 padding: 1px;
             }
 
@@ -709,39 +729,40 @@
                 font-size: 0.6rem;
             }
 
+            .rent-info {
+                font-size: 6px;
+            }
+
             .token {
                 width: 14px;
                 height: 14px;
-                font-size: 10px;
+                font-size: 9px;
                 margin: 1px;
+                border-width: 1px !important;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
             }
 
-            .side-panel {
-                width: 100%;
-                max-height: none;
-                height: auto;
-                border-radius: 15px;
-                padding: 15px;
-            }
-
-            .sp-title {
-                font-size: 1rem;
-                margin-bottom: 10px;
-            }
-
-            #current-action-display {
-                font-size: 0.9rem;
+            #activity-log div {
                 padding: 8px;
+                font-size: 0.75rem;
+                border-radius: 6px;
+                border-left-width: 3px;
             }
 
-            #activity-log {
-                max-height: 200px;
-                gap: 5px;
+            #detailed-stats>div {
+                padding: 8px;
+                margin-bottom: 8px;
+                border-radius: 8px;
+                border-left-width: 4px;
+            }
+
+            #detailed-stats span {
+                font-size: 0.8rem !important;
             }
 
             .modal-box {
-                width: 95%;
-                max-width: none;
+                width: 90%;
+                max-width: 400px;
             }
 
             .modal-header {
@@ -754,29 +775,33 @@
             }
 
             .q-text {
-                font-size: 1.1rem;
-                margin-bottom: 20px;
+                font-size: 1rem;
+                margin-bottom: 15px;
             }
 
             .ans-btn {
-                font-size: 0.9rem;
-                padding: 12px 15px;
-                margin: 8px 0;
+                padding: 10px 12px;
+                font-size: 0.85rem;
+                margin: 6px 0;
             }
 
-            /* popup thông báo mobile dán xuống dưới cùng */
             .notification {
-                bottom: 10px;
-                width: 90%;
+                width: 80%;
                 font-size: 0.9rem;
-                padding: 10px 15px;
-                text-align: center;
+                padding: 10px;
+                bottom: 10px;
             }
         }
     </style>
 </head>
 
 <body>
+    <div id="rotate-device">
+        <i>📱🔄</i>
+        <h2 style="color: white; margin-bottom: 10px;">Vui lòng xoay ngang điện thoại!</h2>
+        <p style="color: #bbb;">Trải nghiệm game tốt nhất ở chế độ toàn màn hình ngang.</p>
+    </div>
+
     <div id="sc-menu" class="screen active">
         <div class="glass-panel">
             <h1 class="title" style="text-align: center;">EngQuest</h1>
@@ -901,14 +926,15 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        const socket = io();
+        // Cấu hình websocket để chơi ổn định trên Render
+        const socket = io({ transports: ['websocket', 'polling'] });
         let mySocketId = "";
         let currentRoomId = "";
 
         socket.on('connect', () => { mySocketId = socket.id; });
         socket.on('error_msg', (msg) => { alert("⚠️ " + msg); });
 
-        // --- DATA BÀN CỜ & CÂU HỎI (Giữ nguyên) ---
+        // --- DATA BÀN CỜ & CÂU HỎI ---
         const COLORS = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA502'];
         const BOARD_CONFIG = [
             { type: 'corner', name: 'GO', color: '#fff' },
@@ -978,7 +1004,7 @@
             ]
         };
 
-        // --- TRẠNG THÁI GAME (Giữ nguyên) ---
+        // --- TRẠNG THÁI GAME ---
         let players = [];
         let curPlayerIdx = 0;
         let isRolling = false;
@@ -997,7 +1023,7 @@
             };
         }
 
-        // --- GIAO TIẾP LOBBY (Giữ nguyên) ---
+        // --- GIAO TIẾP LOBBY ---
         function reqCreateRoom() { socket.emit('create_room', getMyInfo()); }
         function reqJoinRoom() {
             const code = document.getElementById('join-code').value.trim();
@@ -1011,9 +1037,17 @@
 
         socket.on('update_lobby', (roomData) => {
             currentRoomId = roomData.id;
+
+            // 🛡️ CHỐT CHẶN: Đang chơi mà cập nhật phòng thì cấm không cho quay lại sảnh
+            if (roomData.isPlaying) {
+                players = roomData.players;
+                curPlayerIdx = roomData.currentTurnIdx;
+                updateStats();
+                return;
+            }
+
             navTo('sc-lobby');
             document.getElementById('lobby-code').innerText = roomData.id;
-            document.getElementById('header-room-code').innerText = `[Phòng: ${roomData.id}]`;
 
             const listDiv = document.getElementById('lobby-players');
             listDiv.innerHTML = '';
@@ -1041,14 +1075,21 @@
                 btnReady.innerText = me && me.isReady ? "HỦY SẴN SÀNG" : "✅ SẴN SÀNG";
                 btnReady.className = me && me.isReady ? "btn btn-secondary" : "btn btn-warning";
             }
-
-            if (roomData.isPlaying) { players = roomData.players; curPlayerIdx = roomData.currentTurnIdx; updateStats(); }
         });
 
         socket.on('game_started', (roomData) => {
             players = roomData.players;
             curPlayerIdx = roomData.currentTurnIdx;
             renderBoard(); updateStats(); navTo('sc-game'); updateTurnDisplay();
+        });
+
+        // Xử lý khi có người rớt mạng lúc đang chơi
+        socket.on('player_dropped', (data) => {
+            players = data.players;
+            curPlayerIdx = data.turn;
+            renderBoard();
+            updateStats();
+            updateTurnDisplay();
         });
 
         function updateTurnDisplay() {
@@ -1066,29 +1107,23 @@
 
             let borderColor = 'var(--primary)', bgColor = '#f8f9fa';
             if (msg.includes('✅') || msg.includes('nhận') || msg.includes('mua') || msg.includes('ĐÚNG')) { borderColor = 'var(--secondary)'; bgColor = 'rgba(0,184,148,0.1)'; }
-            else if (msg.includes('❌') || msg.includes('TÙ') || msg.includes('SAI') || msg.includes('thu')) { borderColor = 'var(--accent)'; bgColor = 'rgba(255,107,107,0.1)'; }
+            else if (msg.includes('❌') || msg.includes('TÙ') || msg.includes('SAI') || msg.includes('thu') || msg.includes('mất kết nối')) { borderColor = 'var(--accent)'; bgColor = 'rgba(255,107,107,0.1)'; }
             else if (msg.includes('🎲')) { borderColor = 'var(--accent-light)'; bgColor = 'rgba(253, 203, 110, 0.1)'; }
 
             entry.style.borderLeft = `4px solid ${borderColor}`; entry.style.background = bgColor; entry.innerHTML = msg;
 
-            // Nhật ký mới nhất dán vào popup dưới cùng (Mobile/PC Popup)
             const n = document.getElementById('notification');
-            n.innerHTML = msg;
-            n.style.display = 'block';
+            n.innerHTML = msg; n.style.display = 'block';
             setTimeout(() => n.style.display = 'none', 2500);
 
-            // Ghi log vào cột nhật ký bên trái (Giữ nguyên cho PC/Dưới mobile)
             const logDiv = document.getElementById('activity-log');
-            if (logDiv) {
-                logDiv.appendChild(entry);
-                logDiv.scrollTop = logDiv.scrollHeight; // Cuộn xuống log mới nhất
-            }
+            if (logDiv) { logDiv.appendChild(entry); logDiv.scrollTop = logDiv.scrollHeight; }
         }
 
         socket.on('log_msg', (msg) => { showNotify(msg); });
         socket.on('sync_players', (data) => { players = data; updateStats(); });
 
-        // --- LOGIC XÚC XẮC (Giữ nguyên) ---
+        // --- LOGIC XÚC XẮC CHỐNG LAG ---
         function userRollDice() { if (!isRolling) socket.emit('request_roll'); }
 
         socket.on('dice_rolled', (data) => {
@@ -1100,8 +1135,6 @@
             const target = rotations[val];
             const getNextAngle = (c, t, s) => { const n = ((c % 360) + 360) % 360; let d = t - n; if (d <= 0) d += 360; return c + d + (s * 360); };
 
-            // Thu nhỏ góc xoay cho mobile
-            const scale = (window.innerWidth <= 1200) ? 0.6 : 1;
             const turnsX = Math.floor(Math.random() * 3) + 2;
             const turnsY = Math.floor(Math.random() * 3) + 2;
 
@@ -1110,44 +1143,47 @@
             cube.style.transform = `rotateX(${currentRotX}deg) rotateY(${currentRotY}deg)`;
 
             setTimeout(() => {
-                const p = players[curPlayerIdx];
-                showNotify(`🎲 <b>${p.avatar} ${p.name}</b> vừa đổ được <b>${val}</b> bước!`);
-                movePlayer(val);
+                const p = players.find(x => x.id === data.playerId);
+                if (p) {
+                    showNotify(`🎲 <b>${p.avatar} ${p.name}</b> vừa đổ được <b>${val}</b> bước!`);
+                    movePlayerVisual(val, p.id);
+                }
             }, 2000);
         });
 
-        // --- DI CHUYỂN & Ô ĐẤT (Giữ nguyên logic) ---
-        function movePlayer(steps) {
-            const p = players[curPlayerIdx];
-            let current = p.pos; let stepCount = 0;
+        function movePlayerVisual(steps, pId) {
+            const token = document.getElementById(`token-${pId}`);
+            if (!token) return;
+
+            let current = parseInt(token.parentElement.id.replace('holder-', ''));
+            let stepCount = 0;
+
             const moveInterval = setInterval(() => {
                 current++;
-                if (current >= 32) {
-                    current = 0;
-                    if (p.id === mySocketId) {
-                        showNotify(`✅ <b>${p.name}</b> đi qua cờ GO. Nhận 200đ!`);
-                        socket.emit('answered_result', { correct: true, points: 200, isBonus: true });
-                    }
-                }
+                if (current >= 32) current = 0;
                 stepCount++;
-                document.getElementById(`holder-${current}`).appendChild(document.getElementById(`token-${curPlayerIdx}`));
+                document.getElementById(`holder-${current}`).appendChild(token);
+
                 if (stepCount >= steps) {
-                    clearInterval(moveInterval); p.pos = current;
-                    setTimeout(() => handleTile(current), 500);
+                    clearInterval(moveInterval);
+                    if (pId === mySocketId) {
+                        socket.emit('movement_complete', current);
+                        setTimeout(() => handleTile(current), 500);
+                    }
                 }
             }, 150);
         }
 
         socket.on('player_is_answering', (playerId) => {
             const p = players.find(x => x.id === playerId);
-            if (p) showNotify(`🧠 <b>${p.avatar} ${p.name}</b> đang giải câu hỏi tiếng Anh...`);
+            if (p) showNotify(`🧠 <b>${p.avatar} ${p.name}</b> đang giải câu hỏi...`);
         });
 
         function handleTile(pos) {
             const tile = BOARD_CONFIG[pos];
-            const p = players[curPlayerIdx];
+            const p = players.find(pl => pl.id === mySocketId);
 
-            if (p.id === mySocketId) {
+            if (p) {
                 if (tile.type === 'prop') {
                     socket.emit('answering_event');
                     openQuestion(pos);
@@ -1157,7 +1193,7 @@
                     showNotify(`${bonus >= 0 ? "🍀 MAY MẮN" : "☠️ XUI XẺO"}! <b>${p.name}</b> được ${bonus >= 0 ? '+' : ''}${bonus}đ`);
                     setTimeout(() => socket.emit('next_turn'), 1500);
                 } else if (tile.name === 'JAIL') {
-                    showNotify(`🚨 <b>${p.name}</b> ĐÃ BỊ CẢNH SÁT BẮT VÀO TÙ!`);
+                    showNotify(`🚨 <b>${p.name}</b> BỊ BẮT VÀO TÙ!`);
                     setTimeout(() => socket.emit('next_turn'), 1500);
                 } else {
                     setTimeout(() => socket.emit('next_turn'), 1000);
@@ -1169,7 +1205,7 @@
             curPlayerIdx = newTurnIdx; isRolling = false; updateTurnDisplay();
         });
 
-        // --- CÂU HỎI & KINH TẾ (Giữ nguyên) ---
+        // --- CÂU HỎI & KINH TẾ ---
         function openQuestion(tileIndex) {
             const modal = document.getElementById('modal-q');
             const p = players.find(pl => pl.id === mySocketId);
@@ -1225,7 +1261,7 @@
                 else { showNotify(`❌ Bạn không đủ tiền mua ${tile.name}!`); socket.emit('next_turn'); }
             } else if (tile.owner === mySocketId) {
                 if (tile.houses < 4 && p.score >= tile.housePrice) showBuyModal(tileIndex, 'build');
-                else { showNotify(tile.houses >= 4 ? `Đã xây tối đa nhà tại ${tile.name}!` : `Không đủ tiền nâng cấp!`); socket.emit('next_turn'); }
+                else { showNotify(tile.houses >= 4 ? `Đã xây tối đa!` : `Không đủ tiền!`); socket.emit('next_turn'); }
             }
         }
 
@@ -1243,7 +1279,7 @@
                 btnYes.onclick = () => { socket.emit('property_action', { action: 'buy', tileIndex: tileIndex, cost: tile.price, playerName: me.name }); modal.style.display = 'none'; socket.emit('next_turn'); };
             } else if (action === 'build') {
                 title.innerText = "🏠 NÂNG CẤP NHÀ";
-                text.innerHTML = `Nâng cấp nhà ở <b>${tile.name}</b>?<br>Giá nâng cấp: <span style="color:var(--secondary)">${tile.housePrice}đ</span><br>Thuế tăng lên: <b>${tile.rent + ((tile.houses + 1) * tile.rent * 2)}đ</b>`;
+                text.innerHTML = `Nâng cấp nhà ở <b>${tile.name}</b>?<br>Giá: <span style="color:var(--secondary)">${tile.housePrice}đ</span><br>Thuế tăng: <b>${tile.rent + ((tile.houses + 1) * tile.rent * 2)}đ</b>`;
                 btnYes.innerText = `NÂNG CẤP (${tile.housePrice}đ)`;
                 btnYes.onclick = () => { socket.emit('property_action', { action: 'build', tileIndex: tileIndex, cost: tile.housePrice, playerName: me.name }); modal.style.display = 'none'; socket.emit('next_turn'); };
             }
@@ -1253,7 +1289,7 @@
 
         socket.on('sync_board', (data) => {
             const tile = BOARD_CONFIG[data.tileIndex];
-            if (data.action === 'buy') { tile.owner = data.playerId; showNotify(`🏛️ <b>${data.playerName}</b> đã trở thành chủ nhân của <b>${tile.name}</b>!`); }
+            if (data.action === 'buy') { tile.owner = data.playerId; showNotify(`🏛️ <b>${data.playerName}</b> đã trở thành chủ của <b>${tile.name}</b>!`); }
             else if (data.action === 'build') { tile.houses++; showNotify(`🏠 <b>${data.playerName}</b> đã nâng cấp nhà tại <b>${tile.name}</b>!`); }
             updateBoardVisuals();
         });
@@ -1271,9 +1307,9 @@
                 const holder = document.createElement('div'); holder.className = 'token-holder'; holder.id = `holder-${index}`;
                 div.appendChild(holder); board.appendChild(div);
             });
-            players.forEach((p, i) => {
+            players.forEach((p) => {
                 const t = document.createElement('div'); t.className = 'token'; t.style.border = `2px solid ${p.color}`;
-                t.innerText = p.avatar; t.id = `token-${i}`; document.getElementById(`holder-${p.pos}`).appendChild(t);
+                t.innerText = p.avatar; t.id = `token-${p.id}`; document.getElementById(`holder-${p.pos}`).appendChild(t);
             });
             updateBoardVisuals();
         }
