@@ -997,7 +997,7 @@
             <div class="modal-body" style="text-align: center;">
                 <div class="target-box">Thời gian cần DỪNG: <span id="clock-target-txt"
                         style="color: var(--accent-light); font-size:1.5rem">5.00</span>s</div>
-                <p style="font-size: 0.85rem; color: #aaa;">(Đồng hồ sẽ bị ẩn sau 1 giây! Hãy đếm thầm!)</p>
+                <p style="font-size: 0.85rem; color: #aaa;">(Đồng hồ sẽ bị ẩn sau 2 giây! Hãy đếm thầm!)</p>
                 <div id="clock-display">0.00</div>
                 <button class="btn btn-warning" id="btn-stop-clock" style="width:100%; font-size:1.2rem; padding: 20px;"
                     onclick="stopStealClock()">⏸️ BẤM DỪNG!</button>
@@ -1144,9 +1144,10 @@
 
             modal.style.display = 'flex'; currentStealTimeValue = 0;
 
+            // ĐÃ CHỈNH SỬA: Hiển thị đồng hồ 2 GIÂY trước khi chuyển thành ??.??
             currentStealTimer = setInterval(() => {
                 currentStealTimeValue += 0.05;
-                if (currentStealTimeValue <= 1.0) { display.innerText = currentStealTimeValue.toFixed(2); }
+                if (currentStealTimeValue <= 2.0) { display.innerText = currentStealTimeValue.toFixed(2); }
                 else { display.innerText = "??.??"; display.style.color = '#7f8fa6'; }
             }, 50);
 
@@ -1194,14 +1195,32 @@
             }
         });
 
+        // ĐÃ CHỈNH SỬA: Chống kẹt lượt đi (Fallback System)
         socket.on('resume_original_turn', () => {
-            if (players[curPlayerIdx].id === mySocketId) {
-                const tIdx = originalPlayerTileIndex; const tile = BOARD_CONFIG[tIdx];
-                if (tile.owner && tile.owner !== mySocketId) payRent(tIdx); else socket.emit('next_turn');
-            } else if (players[curPlayerIdx].isBot && isMyRoomHost) {
-                const pBot = players[curPlayerIdx]; const tIdx = originalPlayerTileIndex; const tile = BOARD_CONFIG[tIdx];
-                if (tile.owner && tile.owner !== pBot.id) botPayRent(tIdx, pBot); else socket.emit('next_turn', pBot.id);
-            }
+            setTimeout(() => { // Đợi 2 giây để người chơi xem thông báo cướp xong
+                try {
+                    const activePlayer = players[curPlayerIdx];
+                    if (activePlayer.id === mySocketId) {
+                        const tIdx = originalPlayerTileIndex; const tile = BOARD_CONFIG[tIdx];
+                        // Nếu đứng trên đất người khác thì nộp phạt, còn không thì tự động sang lượt
+                        if (tile && tile.type === 'prop' && tile.owner && tile.owner !== mySocketId) {
+                            payRent(tIdx);
+                        } else {
+                            socket.emit('next_turn');
+                        }
+                    } else if (activePlayer.isBot && isMyRoomHost) {
+                        const pBot = activePlayer; const tIdx = originalPlayerTileIndex; const tile = BOARD_CONFIG[tIdx];
+                        if (tile && tile.type === 'prop' && tile.owner && tile.owner !== pBot.id) {
+                            botPayRent(tIdx, pBot);
+                        } else {
+                            socket.emit('next_turn', pBot.id);
+                        }
+                    }
+                } catch (err) {
+                    console.error("Lỗi khi Resume Turn, kích hoạt cứu kẹt...", err);
+                    socket.emit('next_turn'); // Nếu có lỗi xảy ra vẫn ép chuyển lượt
+                }
+            }, 2000);
         });
 
 

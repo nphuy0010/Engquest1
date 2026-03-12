@@ -21,7 +21,6 @@ function getActor(room, socketId, targetId) {
 }
 
 io.on('connection', (socket) => {
-    // --- LOBBY & ROOM LOGIC ---
     socket.on('play_with_bot', (pInfo) => {
         const roomId = generateRoomCode(); socket.join(roomId); socketToRoom[socket.id] = roomId;
         const newPlayer = { id: socket.id, username: pInfo.username, avatar: pInfo.avatar, color: pInfo.color, isReady: true, score: 500, pos: 0, jail: false, qCount: 0, currentStreak: 0, isBot: false };
@@ -63,21 +62,16 @@ io.on('connection', (socket) => {
         }
     });
 
-    // --- GAME MOVEMENT & JAIL LOGIC ---
     socket.on('request_roll', (targetId) => {
         const roomId = socketToRoom[socket.id]; if (roomId && rooms[roomId]) {
             const room = rooms[roomId]; const actor = getActor(room, socket.id, targetId);
             if (actor && room.players[room.currentTurnIdx]?.id === actor.id) {
                 const val = Math.floor(Math.random() * 6) + 1;
-
-                // KIỂM TRA LUẬT TRONG TÙ
                 if (actor.jail) {
                     if (val === 6) {
-                        actor.jail = false; // Thoát tù thành công
-                        io.to(roomId).emit('sync_players', room.players);
+                        actor.jail = false; io.to(roomId).emit('sync_players', room.players);
                         io.to(roomId).emit('dice_rolled', { value: val, playerId: actor.id, escaped: true });
                     } else {
-                        // Đổ không ra 6, tiếp tục ở tù
                         io.to(roomId).emit('dice_rolled', { value: val, playerId: actor.id, remainInJail: true });
                     }
                 } else {
@@ -91,10 +85,7 @@ io.on('connection', (socket) => {
         const roomId = socketToRoom[socket.id];
         if (roomId && rooms[roomId]) {
             const p = getActor(rooms[roomId], socket.id, data.targetId);
-            if (p) {
-                p.jail = true;
-                io.to(roomId).emit('sync_players', rooms[roomId].players);
-            }
+            if (p) { p.jail = true; io.to(roomId).emit('sync_players', rooms[roomId].players); }
         }
     });
 
@@ -108,13 +99,11 @@ io.on('connection', (socket) => {
         }
     });
 
-    // --- CHIA SẺ CÂU HỎI LÊN MÀN HÌNH CHUNG ---
     socket.on('share_question', (data) => {
         const roomId = socketToRoom[socket.id];
         if (roomId) socket.to(roomId).emit('show_shared_question', data);
     });
 
-    // --- XỬ LÝ KẾT QUẢ & CƯỚP CÂU HỎI ---
     socket.on('answered_result', (data) => {
         const roomId = socketToRoom[socket.id];
         if (roomId && rooms[roomId]) {
@@ -187,7 +176,6 @@ io.on('connection', (socket) => {
         io.to(roomId).emit('steal_winner_selected', { winnerId: winner, questionData: sd.questionData });
     }
 
-    // --- BẤT ĐỘNG SẢN & KẾT THÚC ---
     socket.on('property_action', (data) => {
         const roomId = socketToRoom[socket.id]; if (roomId && rooms[roomId]) {
             const p = getActor(rooms[roomId], socket.id, data.targetId);
