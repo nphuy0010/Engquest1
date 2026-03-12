@@ -478,6 +478,7 @@
             justify-content: center;
             align-items: center;
             backdrop-filter: blur(5px);
+            flex-direction: column;
         }
 
         .modal-box {
@@ -486,6 +487,7 @@
             max-width: 520px;
             border-radius: 20px;
             overflow: hidden;
+            position: relative;
         }
 
         .modal-header {
@@ -531,9 +533,29 @@
             transform: translateX(8px);
         }
 
-        /* ========================================================= */
-        /* --- 1. ĐIỆN THOẠI CẦM DỌC (PORTRAIT) - XẾP 1 CỘT ĐẸP MẮT --- */
-        /* ========================================================= */
+        /* ĐỒNG HỒ CƯỚP ĐIỂM */
+        #clock-display {
+            font-family: 'Space Mono', monospace;
+            font-size: 4rem;
+            font-weight: 900;
+            color: var(--accent);
+            text-align: center;
+            margin: 20px 0;
+            letter-spacing: 2px;
+        }
+
+        .target-box {
+            background: var(--darker);
+            color: white;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        /* ĐIỆN THOẠI DỌC */
         @media screen and (max-width: 900px) and (orientation: portrait) {
             .glass-panel {
                 width: 95% !important;
@@ -678,9 +700,7 @@
             }
         }
 
-        /* ========================================================= */
-        /* --- 2. ĐIỆN THOẠI CẦM NGANG (LANDSCAPE) - XẾP 3 CỘT --- */
-        /* ========================================================= */
+        /* ĐIỆN THOẠI NGANG */
         @media screen and (max-height: 600px) and (orientation: landscape),
         screen and (max-width: 1200px) and (orientation: landscape) {
             #game-wrapper {
@@ -824,11 +844,14 @@
 </head>
 
 <body>
+    <div id="rotate-device"><i>📱🔄</i>
+        <h2 style="color: white;">Vui lòng xoay ngang điện thoại!</h2>
+    </div>
+
     <div id="sc-menu" class="screen active">
         <div class="glass-panel">
             <h1 class="title" style="text-align: center;">EngQuest</h1>
             <p class="subtitle" style="text-align: center;">🌍 Multiplayer English Adventure 🌍</p>
-
             <div class="input-row" style="display: flex; gap: 10px; align-items: center;">
                 <select id="my-avatar" style="width: 80px; font-size: 1.5rem; text-align: center; border-radius: 10px;">
                     <option value="🐶">🐶</option>
@@ -841,12 +864,10 @@
                 <input id="my-name" type="text" placeholder="Nhập tên của bạn..." value="Gamer"
                     style="flex: 1; font-weight: bold; font-size: 1.1rem; border: 2px solid var(--border); border-radius: 10px; padding: 12px;">
             </div>
-
             <div style="display: flex; gap: 10px; margin-bottom: 15px;">
                 <button class="btn btn-primary" onclick="navTo('sc-setup')" style="flex: 1;">👥 CHƠI VỚI BẠN</button>
                 <button class="btn btn-info" onclick="reqPlayBot()" style="flex: 1;">🤖 CHƠI VỚI MÁY</button>
             </div>
-
             <button class="btn btn-warning" onclick="document.getElementById('modal-rules').style.display='flex';"
                 style="width: 100%;">📖 LUẬT CHƠI</button>
         </div>
@@ -856,11 +877,12 @@
         <div class="modal-box">
             <div class="modal-header">📖 LUẬT CHƠI ENGQUEST</div>
             <div class="modal-body" style="font-size: 0.95rem; line-height: 1.6;">
-                <p><b>1. Mục tiêu:</b> Di chuyển quanh bàn cờ, trả lời đúng câu hỏi Tiếng Anh để có quyền mua đất và thu
-                    thuế người khác.</p>
-                <p><b>2. Chuỗi Đúng:</b> Trả lời đúng liên tiếp sẽ được hiển thị biểu tượng ngọn lửa (🔥).</p>
-                <p><b>3. Chiến thắng:</b> Chủ phòng có quyền bấm <b>"Kết Thúc Ván"</b> bất kỳ lúc nào. Người nhiều tiền
-                    nhất lúc đó sẽ giành chiến thắng.</p>
+                <p><b>1. Trả lời đúng:</b> Mua đất, thu thuế.</p>
+                <p><b>2. Cướp câu hỏi:</b> Nếu người chơi trả lời SAI, câu hỏi sẽ được nhường lại. Đồng hồ Mù sẽ đếm
+                    ngầm, ai bấm DỪNG sát với thời gian yêu cầu nhất sẽ được quyền cướp điểm.</p>
+                <p><b>3. Vượt ngục:</b> Nếu vào ô TÙ (JAIL), bạn bị giam giữ và bắt buộc phải đổ xúc xắc ra số <b>6</b>
+                    mới được thoát.</p>
+                <p><b>4. Chiến thắng:</b> Chủ phòng bấm <b>"Kết Thúc"</b>. Ai nhiều tiền nhất sẽ thắng.</p>
                 <button class="btn btn-success" onclick="document.getElementById('modal-rules').style.display='none';"
                     style="width: 100%; margin-top: 20px;">ĐÃ HIỂU</button>
             </div>
@@ -871,9 +893,8 @@
         <button class="btn btn-back" onclick="navTo('sc-menu')">← TRỞ LẠI</button>
         <div class="glass-panel">
             <h2>CHƠI MULTIPLAYER</h2>
-            <div style="display: flex; gap: 15px;">
-                <button class="btn btn-primary" onclick="reqCreateRoom()" style="flex: 1;">➕ TẠO PHÒNG MỚI</button>
-            </div>
+            <div style="display: flex; gap: 15px;"><button class="btn btn-primary" onclick="reqCreateRoom()"
+                    style="flex: 1;">➕ TẠO PHÒNG MỚI</button></div>
             <div style="display: flex; gap: 10px; margin-top: 15px;">
                 <input id="join-code" type="text" placeholder="Nhập mã 6 số..." maxlength="6"
                     style="flex: 1; text-align: center; font-family: 'Space Mono'; font-weight: bold; border: 2px solid var(--border); border-radius: 10px; padding: 12px;">
@@ -903,10 +924,9 @@
                     style="font-size: 0.8rem; color: var(--accent-light); margin-left: 10px;"></span></div>
             <div style="flex:1"></div>
             <button class="menu-btn" style="background: var(--primary); display: none;" id="btn-end-game"
-                onclick="if(confirm('Kết thúc ván ngay bây giờ?')) socket.emit('end_game');">🏆 KẾT THÚC VÁN</button>
+                onclick="if(confirm('Kết thúc ván ngay bây giờ?')) socket.emit('end_game');">🏆 KẾT THÚC</button>
             <button class="menu-btn" onclick="if(confirm('Thoát game?')) location.reload();">🏠 THOÁT</button>
         </div>
-
         <div id="game-wrapper">
             <div class="side-panel" id="log-panel">
                 <h3 class="sp-title">📜 NHẬT KÝ</h3>
@@ -914,7 +934,6 @@
                     style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-right: 5px;">
                 </div>
             </div>
-
             <div id="board">
                 <div class="center-hub">
                     <h2 class="hub-title">EngQuest</h2>
@@ -931,7 +950,6 @@
                     <p class="dice-label">🎲 CLICK TO ROLL</p>
                 </div>
             </div>
-
             <div class="side-panel" id="side-panel">
                 <h3 class="sp-title">📊 BẢNG XẾP HẠNG</h3>
                 <div id="detailed-stats" style="flex: 1; overflow-y: auto; margin-bottom: 15px; padding-right: 5px;">
@@ -953,6 +971,15 @@
             </div>
         </div>
     </div>
+    <div id="modal-spectator" class="modal-wrap">
+        <div class="modal-box" style="background: rgba(255,255,255,0.9);">
+            <div class="modal-header" style="background: var(--dark)">ĐANG TRẢ LỜI...</div>
+            <div class="modal-body">
+                <div class="q-text" id="ms-text">Question?</div>
+                <div id="ms-opts" style="opacity: 0.5; pointer-events: none;"></div>
+            </div>
+        </div>
+    </div>
     <div id="modal-buy" class="modal-wrap">
         <div class="modal-box">
             <div class="modal-header" id="mb-title">BẤT ĐỘNG SẢN</div>
@@ -964,17 +991,28 @@
             </div>
         </div>
     </div>
+    <div id="modal-clock" class="modal-wrap" style="background: rgba(0,0,0,0.95)">
+        <div class="modal-box" style="background: #2D3436; color: white;">
+            <div class="modal-header" style="background: var(--accent);">🚨 CƠ HỘI CƯỚP ĐIỂM!</div>
+            <div class="modal-body" style="text-align: center;">
+                <div class="target-box">Thời gian cần DỪNG: <span id="clock-target-txt"
+                        style="color: var(--accent-light); font-size:1.5rem">5.00</span>s</div>
+                <p style="font-size: 0.85rem; color: #aaa;">(Đồng hồ sẽ bị ẩn sau 1 giây! Hãy đếm thầm!)</p>
+                <div id="clock-display">0.00</div>
+                <button class="btn btn-warning" id="btn-stop-clock" style="width:100%; font-size:1.2rem; padding: 20px;"
+                    onclick="stopStealClock()">⏸️ BẤM DỪNG!</button>
+            </div>
+        </div>
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io({ transports: ['websocket', 'polling'] });
-        let mySocketId = "";
-        let isMyRoomHost = false;
+        let mySocketId = ""; let isMyRoomHost = false;
 
         socket.on('connect', () => { mySocketId = socket.id; });
         socket.on('error_msg', (msg) => { alert("⚠️ " + msg); });
 
-        // --- DATA BÀN CỜ & CÂU HỎI ---
         const COLORS = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA502'];
         const BOARD_CONFIG = [
             { type: 'corner', name: 'GO', color: '#fff' }, { type: 'prop', name: 'Hanoi', color: '#ff7979', price: 100, housePrice: 50, rent: 10, owner: null, houses: 0 }, { type: 'chest', name: 'CHEST', color: '#a29bfe' }, { type: 'prop', name: 'Sapa', color: '#ff7979', price: 100, housePrice: 50, rent: 10, owner: null, houses: 0 }, { type: 'chance', name: 'CHANCE', color: '#fab1a0' }, { type: 'prop', name: 'Bangkok', color: '#ff7979', price: 120, housePrice: 50, rent: 15, owner: null, houses: 0 }, { type: 'prop', name: 'Bali', color: '#ff7979', price: 120, housePrice: 50, rent: 15, owner: null, houses: 0 }, { type: 'prop', name: 'Phuket', color: '#ff7979', price: 140, housePrice: 50, rent: 20, owner: null, houses: 0 }, { type: 'corner', name: 'JAIL', color: '#b2bec3' }, { type: 'prop', name: 'Seoul', color: '#badc58', price: 160, housePrice: 100, rent: 25, owner: null, houses: 0 }, { type: 'prop', name: 'Busan', color: '#badc58', price: 160, housePrice: 100, rent: 25, owner: null, houses: 0 }, { type: 'chest', name: 'CHEST', color: '#a29bfe' }, { type: 'prop', name: 'Tokyo', color: '#badc58', price: 180, housePrice: 100, rent: 30, owner: null, houses: 0 }, { type: 'prop', name: 'Osaka', color: '#badc58', price: 180, housePrice: 100, rent: 30, owner: null, houses: 0 }, { type: 'chance', name: 'CHANCE', color: '#fab1a0' }, { type: 'prop', name: 'Kyoto', color: '#badc58', price: 200, housePrice: 100, rent: 35, owner: null, houses: 0 }, { type: 'corner', name: 'FREE', color: '#74b9ff' }, { type: 'prop', name: 'Paris', color: '#7ed6df', price: 220, housePrice: 150, rent: 40, owner: null, houses: 0 }, { type: 'prop', name: 'Lyon', color: '#7ed6df', price: 220, housePrice: 150, rent: 40, owner: null, houses: 0 }, { type: 'chest', name: 'CHEST', color: '#a29bfe' }, { type: 'prop', name: 'Berlin', color: '#7ed6df', price: 240, housePrice: 150, rent: 45, owner: null, houses: 0 }, { type: 'prop', name: 'Rome', color: '#7ed6df', price: 240, housePrice: 150, rent: 45, owner: null, houses: 0 }, { type: 'chance', name: 'CHANCE', color: '#fab1a0' }, { type: 'prop', name: 'Madrid', color: '#7ed6df', price: 260, housePrice: 150, rent: 50, owner: null, houses: 0 }, { type: 'corner', name: 'BACK', color: '#ffbe76' }, { type: 'prop', name: 'London', color: '#e056fd', price: 300, housePrice: 200, rent: 60, owner: null, houses: 0 }, { type: 'prop', name: 'Dubai', color: '#e056fd', price: 300, housePrice: 200, rent: 60, owner: null, houses: 0 }, { type: 'chest', name: 'CHEST', color: '#a29bfe' }, { type: 'prop', name: 'Sydney', color: '#e056fd', price: 320, housePrice: 200, rent: 70, owner: null, houses: 0 }, { type: 'prop', name: 'New York', color: '#e056fd', price: 350, housePrice: 200, rent: 80, owner: null, houses: 0 }, { type: 'chance', name: 'CHANCE', color: '#fab1a0' }, { type: 'prop', name: 'L.A.', color: '#e056fd', price: 400, housePrice: 200, rent: 100, owner: null, houses: 0 }
@@ -986,19 +1024,11 @@
             hard: [{ q: "Had the startup secured funding, they ___ the project.", a: ["would complete", "will have completed", "would have completed", "completed"], c: 2 }]
         };
 
-        // --- TRẠNG THÁI GAME & GIAO TIẾP LOBBY ---
         let players = []; let curPlayerIdx = 0; let isRolling = false; let currentRotX = 0, currentRotY = 0;
+        let originalPlayerTileIndex = -1;
 
         function navTo(screenId) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(screenId).classList.add('active'); }
-
-        function getMyInfo() {
-            return {
-                username: document.getElementById('my-name').value || "Gamer",
-                avatar: document.getElementById('my-avatar').value,
-                color: COLORS[Math.floor(Math.random() * COLORS.length)]
-            };
-        }
-
+        function getMyInfo() { return { username: document.getElementById('my-name').value || "Gamer", avatar: document.getElementById('my-avatar').value, color: COLORS[Math.floor(Math.random() * COLORS.length)] }; }
         function reqPlayBot() { socket.emit('play_with_bot', getMyInfo()); }
         function reqCreateRoom() { socket.emit('create_room', getMyInfo()); }
         function reqJoinRoom() { const code = document.getElementById('join-code').value.trim(); if (code.length !== 6) return; socket.emit('join_room', { roomId: code, pInfo: getMyInfo() }); }
@@ -1008,86 +1038,67 @@
         socket.on('update_lobby', (roomData) => {
             if (roomData.isPlaying) { players = roomData.players; curPlayerIdx = roomData.currentTurnIdx; isMyRoomHost = (roomData.host === mySocketId); updateStats(); return; }
             navTo('sc-lobby'); document.getElementById('lobby-code').innerText = roomData.id;
-            const listDiv = document.getElementById('lobby-players'); listDiv.innerHTML = '';
-            let allReady = true;
-
+            const listDiv = document.getElementById('lobby-players'); listDiv.innerHTML = ''; let allReady = true;
             roomData.players.forEach(p => {
                 const isHost = p.id === roomData.host; if (!p.isReady && !isHost) allReady = false;
                 let statusHtml = isHost ? `<span class="status-badge status-ready">👑 HOST</span>` : (p.isReady ? `<span class="status-badge status-ready">✅ READY</span>` : `<span class="status-badge status-wait">⏳ WAIT</span>`);
                 listDiv.innerHTML += `<div class="player-list-item" style="border-color: ${p.color}"><div><span style="font-size:1.5rem; margin-right:10px;">${p.avatar}</span> ${p.username}</div><div>${statusHtml}</div></div>`;
             });
-
             isMyRoomHost = roomData.host === mySocketId;
-            const btnStart = document.getElementById('btn-start-game'); const btnReady = document.getElementById('btn-ready');
-            const btnEnd = document.getElementById('btn-end-game');
-
-            if (isMyRoomHost) {
-                btnStart.style.display = 'block'; btnReady.style.display = 'none'; btnEnd.style.display = 'block';
-                btnStart.style.opacity = allReady && roomData.players.length >= 2 ? '1' : '0.5';
-            } else {
-                btnStart.style.display = 'none'; btnReady.style.display = 'block'; btnEnd.style.display = 'none';
-                const me = roomData.players.find(p => p.id === mySocketId);
-                btnReady.innerText = me && me.isReady ? "HỦY SẴN SÀNG" : "✅ SẴN SÀNG";
-            }
+            const btnStart = document.getElementById('btn-start-game'); const btnReady = document.getElementById('btn-ready'); const btnEnd = document.getElementById('btn-end-game');
+            if (isMyRoomHost) { btnStart.style.display = 'block'; btnReady.style.display = 'none'; btnEnd.style.display = 'block'; btnStart.style.opacity = allReady && roomData.players.length >= 2 ? '1' : '0.5'; }
+            else { btnStart.style.display = 'none'; btnReady.style.display = 'block'; btnEnd.style.display = 'none'; const me = roomData.players.find(p => p.id === mySocketId); btnReady.innerText = me && me.isReady ? "HỦY SẴN SÀNG" : "✅ SẴN SÀNG"; }
         });
 
-        socket.on('game_started', (roomData) => {
-            players = roomData.players; curPlayerIdx = roomData.currentTurnIdx; isMyRoomHost = (roomData.host === mySocketId);
-            document.getElementById('activity-log').innerHTML = '';
-            renderBoard();
-            updateStats();
-            navTo('sc-game');
-
-            document.getElementById('btn-end-game').style.display = isMyRoomHost ? 'block' : 'none';
-            updateTurnDisplay();
-        });
-
+        socket.on('game_started', (roomData) => { players = roomData.players; curPlayerIdx = roomData.currentTurnIdx; isMyRoomHost = (roomData.host === mySocketId); document.getElementById('activity-log').innerHTML = ''; renderBoard(); updateStats(); navTo('sc-game'); document.getElementById('btn-end-game').style.display = isMyRoomHost ? 'block' : 'none'; updateTurnDisplay(); });
         socket.on('player_dropped', (data) => { players = data.players; curPlayerIdx = data.turn; renderBoard(); updateStats(); updateTurnDisplay(); });
+        socket.on('game_over', (data) => { alert(`🏆 CHÚC MỪNG ${data.winnerName} ĐÃ THẮNG VỚI ${data.score} ĐIỂM!`); navTo('sc-lobby'); BOARD_CONFIG.forEach(t => { if (t.type === 'prop') { t.owner = null; t.houses = 0; } }); });
 
-        socket.on('game_over', (data) => {
-            alert(`🏆 CHÚC MỪNG ${data.winnerName} ĐÃ CHIẾN THẮNG VỚI ${data.score} ĐIỂM!`);
-            navTo('sc-lobby');
-            BOARD_CONFIG.forEach(t => { if (t.type === 'prop') { t.owner = null; t.houses = 0; } });
-        });
-
-        // --- GHI NHẬT KÝ & THÔNG BÁO ---
         function showNotify(msg) {
             const entry = document.createElement('div'); entry.style.padding = '12px'; entry.style.borderRadius = '8px'; entry.style.fontSize = '0.9rem'; entry.style.lineHeight = '1.4';
-            let bC = 'var(--primary)', bgC = '#f8f9fa';
-            if (msg.includes('✅') || msg.includes('nhận') || msg.includes('mua')) { bC = 'var(--secondary)'; bgC = 'rgba(0,184,148,0.1)'; } else if (msg.includes('❌') || msg.includes('TÙ') || msg.includes('thu')) { bC = 'var(--accent)'; bgC = 'rgba(255,107,107,0.1)'; } else if (msg.includes('🎲')) { bC = 'var(--accent-light)'; bgC = 'rgba(253, 203, 110, 0.1)'; }
+            let bC = 'var(--primary)', bgC = '#f8f9fa'; if (msg.includes('✅') || msg.includes('nhận') || msg.includes('mua') || msg.includes('CƯỚP')) { bC = 'var(--secondary)'; bgC = 'rgba(0,184,148,0.1)'; } else if (msg.includes('❌') || msg.includes('TÙ') || msg.includes('thu') || msg.includes('Hết giờ')) { bC = 'var(--accent)'; bgC = 'rgba(255,107,107,0.1)'; } else if (msg.includes('🎲') || msg.includes('⏱️')) { bC = 'var(--accent-light)'; bgC = 'rgba(253, 203, 110, 0.1)'; }
             entry.style.borderLeft = `4px solid ${bC}`; entry.style.background = bgC; entry.innerHTML = msg;
-
-            const n = document.getElementById('notification'); n.innerHTML = msg; n.style.display = 'block'; setTimeout(() => n.style.display = 'none', 2500);
+            const n = document.getElementById('notification'); n.innerHTML = msg; n.style.display = 'block'; setTimeout(() => n.style.display = 'none', 3000);
             const logDiv = document.getElementById('activity-log'); if (logDiv) { logDiv.appendChild(entry); logDiv.scrollTop = logDiv.scrollHeight; }
         }
         socket.on('log_msg', showNotify); socket.on('sync_players', data => { players = data; updateStats(); });
 
-        // --- LOGIC BOT CHƠI ---
         function updateTurnDisplay() {
             if (players.length > 0) {
                 const p = players[curPlayerIdx];
-                document.getElementById('current-action-display').innerHTML = (p.id === mySocketId) ? `<span style="color:var(--secondary)">Lượt của BẠN! 🎲 Hãy đổ xúc xắc.</span>` : `Đang chờ <span style="color:${p.color}">${p.username}</span> đi...`;
-
-                // Nếu tới lượt Bot và mình là Host -> Đại diện cho Bot bấm đổ xúc xắc
-                if (p.isBot && isMyRoomHost && !isRolling) {
-                    setTimeout(() => { socket.emit('request_roll', p.id); }, 1500);
+                if (p.jail) {
+                    document.getElementById('current-action-display').innerHTML = (p.id === mySocketId) ? `<span style="color:var(--accent)">🚨 Bạn đang ở TÙ! Hãy đổ ra 6 để vượt ngục.</span>` : `Đang chờ <span style="color:${p.color}">${p.username}</span> đổ xúc xắc vượt ngục...`;
+                } else {
+                    document.getElementById('current-action-display').innerHTML = (p.id === mySocketId) ? `<span style="color:var(--secondary)">Lượt của BẠN! 🎲 Hãy đổ xúc xắc.</span>` : `Đang chờ <span style="color:${p.color}">${p.username}</span> đi...`;
                 }
+                if (p.isBot && isMyRoomHost && !isRolling) setTimeout(() => { socket.emit('request_roll', p.id); }, 1500);
             }
         }
 
-        // --- LOGIC XÚC XẮC ---
         function userRollDice() { if (!isRolling && !players[curPlayerIdx].isBot) socket.emit('request_roll'); }
 
         socket.on('dice_rolled', (data) => {
-            isRolling = true; const val = data.value;
-            const cube = document.getElementById('dice-cube');
+            isRolling = true; const val = data.value; const cube = document.getElementById('dice-cube');
             const rots = { 1: { x: 0, y: 0 }, 6: { x: 0, y: 180 }, 3: { x: 0, y: -90 }, 4: { x: 0, y: 90 }, 2: { x: -90, y: 0 }, 5: { x: 90, y: 0 } };
             const getA = (c, t, s) => c + (t - ((c % 360) + 360) % 360 + (t - ((c % 360) + 360) % 360 <= 0 ? 360 : 0)) + (s * 360);
             currentRotX = getA(currentRotX, rots[val].x, Math.floor(Math.random() * 3) + 2); currentRotY = getA(currentRotY, rots[val].y, Math.floor(Math.random() * 3) + 2);
             cube.style.transform = `rotateX(${currentRotX}deg) rotateY(${currentRotY}deg)`;
+
             setTimeout(() => {
                 const p = players.find(x => x.id === data.playerId);
-                if (p) { showNotify(`🎲 <b>${p.username}</b> đổ được <b>${val}</b> bước!`); movePlayerVisual(val, p); }
+                if (p) {
+                    if (data.remainInJail) {
+                        showNotify(`🚨 <b>${p.username}</b> đổ được <b>${val}</b>. Chưa đủ để ra tù (Cần 6)!`);
+                        if (p.id === mySocketId || (p.isBot && isMyRoomHost)) {
+                            setTimeout(() => socket.emit('next_turn', p.id), 1500);
+                        }
+                    } else {
+                        if (data.escaped) showNotify(`🎉 <b>${p.username}</b> đổ được <b>6</b>! Đã vượt ngục thành công!`);
+                        else showNotify(`🎲 <b>${p.username}</b> đổ được <b>${val}</b> bước!`);
+
+                        movePlayerVisual(val, p);
+                    }
+                }
             }, 2000);
         });
 
@@ -1095,96 +1106,173 @@
             const token = document.getElementById(`token-${p.id}`); if (!token) return;
             let cur = parseInt(token.parentElement.id.replace('holder-', '')); let stepC = 0;
             const moveInt = setInterval(() => {
-                cur = (cur + 1) % 32; stepC++;
-                document.getElementById(`holder-${cur}`).appendChild(token);
-                if (stepC >= steps) {
-                    clearInterval(moveInt);
-                    if (p.id === mySocketId) {
-                        socket.emit('movement_complete', { pos: cur });
-                        setTimeout(() => handleTile(cur, p), 500);
-                    } else if (p.isBot && isMyRoomHost) { // Host chạy não cho Bot
-                        socket.emit('movement_complete', { pos: cur, targetId: p.id });
-                        setTimeout(() => handleBotTile(cur, p), 500);
-                    }
-                }
+                cur = (cur + 1) % 32; stepC++; document.getElementById(`holder-${cur}`).appendChild(token);
+                if (stepC >= steps) { clearInterval(moveInt); if (p.id === mySocketId) { socket.emit('movement_complete', { pos: cur }); setTimeout(() => handleTile(cur, p), 500); } else if (p.isBot && isMyRoomHost) { socket.emit('movement_complete', { pos: cur, targetId: p.id }); setTimeout(() => handleBotTile(cur, p), 500); } }
             }, 150);
         }
 
-        // --- XỬ LÝ SỰ KIỆN BÀN CỜ ---
+        // ==========================================
+        // KHU VỰC LOGIC CÂU HỎI CHUNG VÀ CƯỚP ĐIỂM
+        // ==========================================
+        let currentStealTimer = null;
+        let currentStealTimeValue = 0;
+
         socket.on('player_is_answering', (pId) => { const p = players.find(x => x.id === pId); if (p) showNotify(`🧠 <b>${p.username}</b> đang giải câu hỏi...`); });
 
+        socket.on('show_shared_question', (data) => {
+            const modal = document.getElementById('modal-spectator');
+            document.getElementById('ms-text').innerText = data.q;
+            const optsDiv = document.getElementById('ms-opts'); optsDiv.innerHTML = '';
+            data.a.forEach(ans => { const btn = document.createElement('button'); btn.className = 'ans-btn'; btn.innerText = ans; optsDiv.appendChild(btn); });
+            modal.style.display = 'flex';
+        });
+
+        socket.on('start_steal_clock', (data) => {
+            document.getElementById('modal-spectator').style.display = 'none';
+            if (data.originalPlayerId === mySocketId) return;
+
+            const p = players.find(x => x.id === data.originalPlayerId);
+            if (p && p.isBot && !isMyRoomHost) return;
+
+            const modal = document.getElementById('modal-clock');
+            const display = document.getElementById('clock-display');
+            const btn = document.getElementById('btn-stop-clock');
+
+            document.getElementById('clock-target-txt').innerText = data.targetTime;
+            display.innerText = "0.00"; display.style.color = 'var(--accent)';
+            btn.style.display = 'block'; btn.innerText = "⏸️ BẤM DỪNG!"; btn.disabled = false;
+
+            modal.style.display = 'flex'; currentStealTimeValue = 0;
+
+            currentStealTimer = setInterval(() => {
+                currentStealTimeValue += 0.05;
+                if (currentStealTimeValue <= 1.0) { display.innerText = currentStealTimeValue.toFixed(2); }
+                else { display.innerText = "??.??"; display.style.color = '#7f8fa6'; }
+            }, 50);
+
+            const botInRoom = players.find(pl => pl.isBot);
+            if (botInRoom && isMyRoomHost && botInRoom.id !== data.originalPlayerId) {
+                const botStopTime = parseFloat(data.targetTime) + (Math.random() * 1.5 - 0.75);
+                setTimeout(() => { socket.emit('submit_steal_time', { targetId: botInRoom.id, stoppedAt: botStopTime }); }, botStopTime * 1000);
+            }
+        });
+
+        function stopStealClock() {
+            clearInterval(currentStealTimer);
+            const btn = document.getElementById('btn-stop-clock'); const display = document.getElementById('clock-display');
+            btn.innerText = "ĐÃ LƯU KẾT QUẢ!"; btn.disabled = true;
+            display.innerText = currentStealTimeValue.toFixed(2); display.style.color = 'var(--secondary)';
+            socket.emit('submit_steal_time', { stoppedAt: currentStealTimeValue });
+            setTimeout(() => { document.getElementById('modal-clock').style.display = 'none'; }, 1500);
+        }
+
+        socket.on('steal_winner_selected', (data) => {
+            document.getElementById('modal-clock').style.display = 'none';
+            const botWinner = players.find(pl => pl.isBot && pl.id === data.winnerId);
+            if (botWinner && isMyRoomHost) {
+                setTimeout(() => {
+                    const isCor = Math.random() < 0.75;
+                    socket.emit('answered_result', { targetId: botWinner.id, correct: isCor, points: 100, isBonus: false, isStealAnswer: true });
+                }, 2500); return;
+            }
+
+            if (data.winnerId === mySocketId) {
+                const modal = document.getElementById('modal-q');
+                document.getElementById('mq-title').innerText = `🔥 CƠ HỘI CƯỚP - 100 ĐIỂM`;
+                document.getElementById('mq-text').innerText = data.questionData.q;
+                const optsDiv = document.getElementById('mq-opts'); optsDiv.innerHTML = '';
+
+                data.questionData.a.forEach((ans, idx) => {
+                    const btn = document.createElement('button'); btn.className = 'ans-btn'; btn.innerText = ans;
+                    btn.onclick = () => {
+                        modal.style.display = 'none';
+                        socket.emit('answered_result', { correct: (idx === data.questionData.c), points: (idx === data.questionData.c) ? 100 : 0, isBonus: false, isStealAnswer: true });
+                    };
+                    optsDiv.appendChild(btn);
+                });
+                modal.style.display = 'flex';
+            }
+        });
+
+        socket.on('resume_original_turn', () => {
+            if (players[curPlayerIdx].id === mySocketId) {
+                const tIdx = originalPlayerTileIndex; const tile = BOARD_CONFIG[tIdx];
+                if (tile.owner && tile.owner !== mySocketId) payRent(tIdx); else socket.emit('next_turn');
+            } else if (players[curPlayerIdx].isBot && isMyRoomHost) {
+                const pBot = players[curPlayerIdx]; const tIdx = originalPlayerTileIndex; const tile = BOARD_CONFIG[tIdx];
+                if (tile.owner && tile.owner !== pBot.id) botPayRent(tIdx, pBot); else socket.emit('next_turn', pBot.id);
+            }
+        });
+
+
+        // --- LOGIC XỬ LÝ SỰ KIỆN GỐC ---
         function handleTile(pos, p) {
-            const tile = BOARD_CONFIG[pos];
+            const tile = BOARD_CONFIG[pos]; originalPlayerTileIndex = pos;
             if (tile.type === 'prop') { socket.emit('answering_event'); openQuestion(pos); }
             else if (tile.type === 'chance' || tile.type === 'chest') { const bonus = Math.floor(Math.random() * 100) - 30; socket.emit('answered_result', { correct: true, points: bonus, isBonus: true }); showNotify(`${bonus >= 0 ? "🍀" : "☠️"} <b>${p.username}</b> ${bonus >= 0 ? '+' : ''}${bonus}đ`); setTimeout(() => socket.emit('next_turn'), 1500); }
-            else if (tile.name === 'JAIL') { showNotify(`🚨 <b>${p.username}</b> BỊ BẮT VÀO TÙ!`); setTimeout(() => socket.emit('next_turn'), 1500); }
+            else if (tile.name === 'JAIL') {
+                showNotify(`🚨 <b>${p.username}</b> VỪA VÀO TÙ! (Phải đổ được 6 để ra)`);
+                socket.emit('player_jailed', { targetId: p.id });
+                setTimeout(() => socket.emit('next_turn'), 1500);
+            }
             else { setTimeout(() => socket.emit('next_turn'), 1000); }
         }
 
-        socket.on('turn_changed', (nIdx) => { curPlayerIdx = nIdx; isRolling = false; updateTurnDisplay(); });
-
-        // --- BOT NGHĨ VÀ ĐƯA RA QUYẾT ĐỊNH ---
         function handleBotTile(pos, p) {
-            const tile = BOARD_CONFIG[pos];
+            const tile = BOARD_CONFIG[pos]; originalPlayerTileIndex = pos;
             if (tile.type === 'prop') {
                 socket.emit('answering_event', p.id);
                 setTimeout(() => {
                     let pts = (p.qCount % 10) >= 5 ? 100 : 50; if ((p.qCount % 10) === 9) pts = 200;
                     let isCor = Math.random() < 0.75;
-                    socket.emit('answered_result', { targetId: p.id, correct: isCor, points: isCor ? pts : 0, isBonus: false });
-
-                    setTimeout(() => {
-                        if (isCor) {
-                            if (tile.owner && tile.owner !== p.id) { botPayRent(pos, p); }
-                            else { handleBotPropTx(pos, p); }
-                        } else {
-                            if (tile.owner && tile.owner !== p.id) { botPayRent(pos, p); }
-                            else { socket.emit('next_turn', p.id); }
-                        }
-                    }, 1500);
+                    const diff = 'easy'; const qPool = QUESTIONS[diff]; const qData = qPool[Math.floor(Math.random() * qPool.length)];
+                    socket.emit('share_question', qData);
+                    socket.emit('answered_result', { targetId: p.id, correct: isCor, points: isCor ? pts : 0, isBonus: false, tileIndex: pos, questionData: qData });
                 }, 2000);
             }
             else if (tile.type === 'chance' || tile.type === 'chest') { const bonus = Math.floor(Math.random() * 100) - 30; socket.emit('answered_result', { targetId: p.id, correct: true, points: bonus, isBonus: true }); showNotify(`${bonus >= 0 ? "🍀" : "☠️"} <b>${p.username}</b> ${bonus >= 0 ? '+' : ''}${bonus}đ`); setTimeout(() => socket.emit('next_turn', p.id), 1500); }
-            else if (tile.name === 'JAIL') { showNotify(`🚨 <b>${p.username}</b> BỊ BẮT VÀO TÙ!`); setTimeout(() => socket.emit('next_turn', p.id), 1500); }
+            else if (tile.name === 'JAIL') {
+                showNotify(`🚨 <b>${p.username}</b> VỪA VÀO TÙ! (Phải đổ được 6 để ra)`);
+                socket.emit('player_jailed', { targetId: p.id });
+                setTimeout(() => socket.emit('next_turn', p.id), 1500);
+            }
             else { setTimeout(() => socket.emit('next_turn', p.id), 1000); }
         }
 
         function botPayRent(tIdx, p) { const tile = BOARD_CONFIG[tIdx]; socket.emit('pay_rent', { targetId: p.id, ownerId: tile.owner, amount: tile.rent + (tile.houses * tile.rent * 2) }); setTimeout(() => socket.emit('next_turn', p.id), 1000); }
 
-        function handleBotPropTx(tIdx, p) {
-            const tile = BOARD_CONFIG[tIdx];
-            if (!tile.owner && p.score >= tile.price + 100) {
-                socket.emit('property_action', { targetId: p.id, action: 'buy', tileIndex: tIdx, cost: tile.price, playerName: p.username });
-            } else if (tile.owner === p.id && tile.houses < 4 && p.score >= tile.housePrice + 100) {
-                socket.emit('property_action', { targetId: p.id, action: 'build', tileIndex: tIdx, cost: tile.housePrice, playerName: p.username });
-            }
-            setTimeout(() => socket.emit('next_turn', p.id), 1000);
-        }
-
-        // --- CÂU HỎI CHO NGƯỜI CHƠI ---
         function openQuestion(tIdx) {
             const modal = document.getElementById('modal-q'); const p = players.find(pl => pl.id === mySocketId);
             let diff = 'easy', pts = 50; if ((p.qCount % 10) >= 5) { diff = 'medium'; pts = 100; } if ((p.qCount % 10) === 9) { diff = 'hard'; pts = 200; }
             const q = QUESTIONS[diff][Math.floor(Math.random() * QUESTIONS[diff].length)];
+            socket.emit('share_question', q);
             document.getElementById('mq-title').innerText = `📚 CÂU HỎI - ${pts} ĐIỂM`; document.getElementById('mq-text').innerText = q.q;
             const optsDiv = document.getElementById('mq-opts'); optsDiv.innerHTML = '';
-            q.a.forEach((ans, idx) => { const btn = document.createElement('button'); btn.className = 'ans-btn'; btn.innerText = ans; btn.onclick = () => answerQuestion(idx === q.c, pts, tIdx); optsDiv.appendChild(btn); });
+            q.a.forEach((ans, idx) => { const btn = document.createElement('button'); btn.className = 'ans-btn'; btn.innerText = ans; btn.onclick = () => answerQuestion(idx === q.c, pts, tIdx, q); optsDiv.appendChild(btn); });
             modal.style.display = 'flex';
         }
 
-        function answerQuestion(isCor, pts, tIdx) {
-            document.getElementById('modal-q').style.display = 'none'; const tile = BOARD_CONFIG[tIdx];
-            socket.emit('answered_result', { correct: isCor, points: isCor ? pts : 0, isBonus: false });
-            setTimeout(() => { if (isCor) { if (tile.owner && tile.owner !== mySocketId) payRent(tIdx); else handlePropTx(tIdx); } else { if (tile.owner && tile.owner !== mySocketId) payRent(tIdx); else socket.emit('next_turn'); } }, 1500);
+        function answerQuestion(isCor, pts, tIdx, qData) {
+            document.getElementById('modal-q').style.display = 'none';
+            socket.emit('answered_result', { correct: isCor, points: isCor ? pts : 0, isBonus: false, tileIndex: tIdx, questionData: qData });
         }
+
+        socket.on('process_property_action', (data) => {
+            const tIdx = data.tileIndex; const tile = BOARD_CONFIG[tIdx]; const p = players.find(pl => pl.id === mySocketId);
+            if (p) {
+                if (p.isBot) {
+                    if (!tile.owner && p.score >= tile.price + 100) { socket.emit('property_action', { targetId: p.id, action: 'buy', tileIndex: tIdx, cost: tile.price, playerName: p.username }); }
+                    else if (tile.owner === p.id && tile.houses < 4 && p.score >= tile.housePrice + 100) { socket.emit('property_action', { targetId: p.id, action: 'build', tileIndex: tIdx, cost: tile.housePrice, playerName: p.username }); }
+                    setTimeout(() => socket.emit('next_turn', p.id), 1000);
+                } else {
+                    if (!tile.owner) { if (p.score >= tile.price) showBuyModal(tIdx, 'buy'); else { showNotify(`❌ Không đủ tiền mua!`); socket.emit('next_turn'); } }
+                    else if (tile.owner === mySocketId) { if (tile.houses < 4 && p.score >= tile.housePrice) showBuyModal(tIdx, 'build'); else { socket.emit('next_turn'); } }
+                    else { payRent(tIdx); }
+                }
+            }
+        });
 
         function payRent(tIdx) { const tile = BOARD_CONFIG[tIdx]; socket.emit('pay_rent', { ownerId: tile.owner, amount: tile.rent + (tile.houses * tile.rent * 2) }); setTimeout(() => socket.emit('next_turn'), 1000); }
-
-        function handlePropTx(tIdx) {
-            const tile = BOARD_CONFIG[tIdx]; const p = players.find(pl => pl.id === mySocketId);
-            if (!tile.owner) { if (p.score >= tile.price) showBuyModal(tIdx, 'buy'); else { showNotify(`❌ Không đủ tiền mua!`); socket.emit('next_turn'); } }
-            else if (tile.owner === mySocketId) { if (tile.houses < 4 && p.score >= tile.housePrice) showBuyModal(tIdx, 'build'); else { socket.emit('next_turn'); } }
-        }
 
         function showBuyModal(tIdx, act) {
             const tile = BOARD_CONFIG[tIdx]; const modal = document.getElementById('modal-buy'); const me = players.find(pl => pl.id === mySocketId);
@@ -1201,14 +1289,8 @@
             updateBoardVisuals();
         });
 
-        // --- VẼ GIAO DIỆN BÀN CỜ (ĐÃ FIX LỖI CRASH KHI START GAME) ---
         function renderBoard() {
-            const board = document.getElementById('board');
-            const hub = document.querySelector('.center-hub'); // Lấy cục xúc xắc ra cất đi trước
-
-            board.innerHTML = ''; // Xóa bàn cờ cũ
-            if (hub) board.appendChild(hub); // Đặt cục xúc xắc lại vào giữa
-
+            const board = document.getElementById('board'); const hub = document.querySelector('.center-hub'); board.innerHTML = ''; if (hub) board.appendChild(hub);
             BOARD_CONFIG.forEach((t, i) => {
                 let r, c; if (i <= 8) { r = 1; c = i + 1; } else if (i <= 16) { r = i - 7; c = 9; } else if (i <= 24) { r = 9; c = 25 - i; } else { r = 33 - i; c = 1; }
                 const d = document.createElement('div'); d.className = `tile ${t.type === 'corner' ? 'corner' : ''}`; d.style.gridRow = r; d.style.gridColumn = c; d.id = `tile-${i}`;
@@ -1232,7 +1314,8 @@
         function updateStats() {
             const ds = document.getElementById('detailed-stats'); if (!ds) return; ds.innerHTML = '';
             players.forEach((p, idx) => {
-                ds.innerHTML += `<div style="padding:12px; border-radius:12px; background:${idx === curPlayerIdx ? 'rgba(0,184,148,0.15)' : '#f8f9fa'}; border-left:6px solid ${p.color}; margin-bottom:12px;"><div style="display:flex; justify-content:space-between;"><span style="font-weight:700; color:${p.color};">${p.avatar} ${p.username} ${p.currentStreak > 0 ? `(🔥${p.currentStreak})` : ''}</span><span style="font-weight:900;">${p.score}</span></div></div>`;
+                const jailTag = p.jail ? `<span style="color:var(--accent); font-size:0.7rem; font-weight:900; background:rgba(255,107,107,0.2); padding:2px 6px; border-radius:4px; margin-left:5px;">🚨 TÙ</span>` : '';
+                ds.innerHTML += `<div style="padding:12px; border-radius:12px; background:${idx === curPlayerIdx ? 'rgba(0,184,148,0.15)' : '#f8f9fa'}; border-left:6px solid ${p.color}; margin-bottom:12px;"><div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-weight:700; color:${p.color};">${p.avatar} ${p.username} ${p.currentStreak > 0 ? `(🔥${p.currentStreak})` : ''} ${jailTag}</span><span style="font-weight:900;">${p.score}</span></div></div>`;
             });
         }
     </script>
