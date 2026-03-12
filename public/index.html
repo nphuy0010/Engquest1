@@ -4,11 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EngQuest Online Multiplayer</title>
+    <title>EngQuest Online</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Space+Mono:wght@400;700&display=swap"
         rel="stylesheet">
     <style>
+        /* CORE CSS */
         :root {
             --primary: #6C5CE7;
             --primary-light: #A29BFE;
@@ -41,51 +42,6 @@
             overflow-y: auto;
         }
 
-        /* CẢNH BÁO XOAY MÁY TRÊN ĐIỆN THOẠI */
-        #rotate-device {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(30, 39, 46, 0.98);
-            backdrop-filter: blur(10px);
-            z-index: 9999;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
-        }
-
-        #rotate-device i {
-            font-size: 5rem;
-            margin-bottom: 20px;
-            animation: tilt 2s infinite ease-in-out;
-        }
-
-        @keyframes tilt {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            50% {
-                transform: rotate(-90deg);
-            }
-
-            100% {
-                transform: rotate(0deg);
-            }
-        }
-
-        @media screen and (max-width: 900px) and (orientation: portrait) {
-            #rotate-device {
-                display: flex;
-            }
-        }
-
-        /* GIAO DIỆN CHUNG CÁC MÀN HÌNH */
         .screen {
             position: fixed;
             top: 0;
@@ -117,7 +73,6 @@
             box-shadow: var(--shadow);
             width: 90%;
             max-width: 550px;
-            backdrop-filter: blur(10px);
             margin: auto;
         }
 
@@ -200,22 +155,8 @@
             text-align: center;
         }
 
-        .input-row {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        .input-row label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--dark);
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
         .input-row input,
         .input-row select {
-            width: 100%;
             padding: 12px 16px;
             border: 2px solid var(--border);
             border-radius: 10px;
@@ -267,7 +208,7 @@
             color: #fff;
         }
 
-        /* BÀN CỜ & CỘT */
+        /* GAME UI */
         #game-wrapper {
             width: 100%;
             height: calc(100vh - 80px);
@@ -290,7 +231,6 @@
             display: flex;
             flex-direction: column;
             padding: 25px;
-            backdrop-filter: blur(10px);
             border: 2px solid rgba(255, 255, 255, 0.4);
         }
 
@@ -591,9 +531,158 @@
             transform: translateX(8px);
         }
 
-        /* RESPONSIVE LANDSCAPE & MOBILE SCALE */
+        /* ========================================================= */
+        /* --- 1. ĐIỆN THOẠI CẦM DỌC (PORTRAIT) - XẾP 1 CỘT ĐẸP MẮT --- */
+        /* ========================================================= */
+        @media screen and (max-width: 900px) and (orientation: portrait) {
+            .glass-panel {
+                width: 95% !important;
+                padding: 30px 20px !important;
+            }
+
+            div[style*="display: flex"] {
+                flex-wrap: wrap !important;
+                justify-content: center;
+            }
+
+            #my-avatar {
+                width: 100% !important;
+                margin-bottom: 5px;
+            }
+
+            #join-code {
+                margin-bottom: 10px;
+            }
+
+            .btn {
+                flex: 1 1 100% !important;
+            }
+
+            .game-header {
+                padding: 0 10px !important;
+                flex-wrap: wrap;
+                height: auto !important;
+                padding-bottom: 10px !important;
+            }
+
+            .game-title {
+                font-size: 1.2rem !important;
+                margin-top: 10px;
+            }
+
+            #header-room-code {
+                display: block;
+                font-size: 0.8rem !important;
+                margin-left: 0 !important;
+            }
+
+            .menu-btn {
+                padding: 6px 12px !important;
+                font-size: 0.8rem !important;
+                margin-top: 10px;
+            }
+
+            #game-wrapper {
+                flex-direction: column !important;
+                align-items: center !important;
+                overflow-y: auto;
+                padding-bottom: 50px;
+                height: auto !important;
+                margin-top: 90px !important;
+            }
+
+            #board {
+                width: 95vw !important;
+                height: 95vw !important;
+                order: -1;
+                margin-bottom: 20px;
+                border-width: 4px !important;
+            }
+
+            .side-panel {
+                width: 95vw !important;
+                min-height: 250px;
+                height: auto !important;
+                margin-bottom: 15px;
+            }
+
+            .center-hub {
+                padding: 10px !important;
+            }
+
+            .hub-title {
+                font-size: 1.2rem !important;
+            }
+
+            .dice-area {
+                width: 60px !important;
+                height: 60px !important;
+                margin: 5px 0 !important;
+            }
+
+            .face {
+                width: 60px !important;
+                height: 60px !important;
+                font-size: 2rem !important;
+                border-width: 2px !important;
+            }
+
+            .f1 {
+                transform: translateZ(30px) !important;
+            }
+
+            .f6 {
+                transform: rotateY(180deg) translateZ(30px) !important;
+            }
+
+            .f3 {
+                transform: rotateY(90deg) translateZ(30px) !important;
+            }
+
+            .f4 {
+                transform: rotateY(-90deg) translateZ(30px) !important;
+            }
+
+            .f2 {
+                transform: rotateX(90deg) translateZ(30px) !important;
+            }
+
+            .f5 {
+                transform: rotateX(-90deg) translateZ(30px) !important;
+            }
+
+            .tile-name {
+                font-size: 0.45rem !important;
+                padding: 0 !important;
+            }
+
+            .corner {
+                font-size: 0.55rem !important;
+            }
+
+            .token {
+                width: 16px !important;
+                height: 16px !important;
+                font-size: 10px !important;
+                border-width: 1px !important;
+            }
+
+            .modal-box {
+                width: 95% !important;
+            }
+
+            .notification {
+                width: 90% !important;
+                font-size: 0.9rem !important;
+                bottom: 10px !important;
+            }
+        }
+
+        /* ========================================================= */
+        /* --- 2. ĐIỆN THOẠI CẦM NGANG (LANDSCAPE) - XẾP 3 CỘT --- */
+        /* ========================================================= */
         @media screen and (max-height: 600px) and (orientation: landscape),
-        screen and (max-width: 1200px) {
+        screen and (max-width: 1200px) and (orientation: landscape) {
             #game-wrapper {
                 flex-direction: row;
                 flex-wrap: nowrap;
@@ -652,6 +741,7 @@
                 width: 50px;
                 height: 50px;
                 font-size: 1.8rem;
+                border-width: 2px;
             }
 
             .f1 {
@@ -734,10 +824,6 @@
 </head>
 
 <body>
-    <div id="rotate-device"><i>📱🔄</i>
-        <h2 style="color: white;">Vui lòng xoay ngang điện thoại!</h2>
-    </div>
-
     <div id="sc-menu" class="screen active">
         <div class="glass-panel">
             <h1 class="title" style="text-align: center;">EngQuest</h1>
@@ -947,9 +1033,11 @@
 
         socket.on('game_started', (roomData) => {
             players = roomData.players; curPlayerIdx = roomData.currentTurnIdx; isMyRoomHost = (roomData.host === mySocketId);
-            document.getElementById('activity-log').innerHTML = ''; renderBoard(); updateStats(); navTo('sc-game');
+            document.getElementById('activity-log').innerHTML = '';
+            renderBoard();
+            updateStats();
+            navTo('sc-game');
 
-            // Hiện nút End game nếu là host
             document.getElementById('btn-end-game').style.display = isMyRoomHost ? 'block' : 'none';
             updateTurnDisplay();
         });
@@ -980,14 +1068,14 @@
                 const p = players[curPlayerIdx];
                 document.getElementById('current-action-display').innerHTML = (p.id === mySocketId) ? `<span style="color:var(--secondary)">Lượt của BẠN! 🎲 Hãy đổ xúc xắc.</span>` : `Đang chờ <span style="color:${p.color}">${p.username}</span> đi...`;
 
-                // Nếu tới lượt Bot và mình là Host (người tạo phòng) -> Đại diện cho Bot bấm đổ xúc xắc
+                // Nếu tới lượt Bot và mình là Host -> Đại diện cho Bot bấm đổ xúc xắc
                 if (p.isBot && isMyRoomHost && !isRolling) {
                     setTimeout(() => { socket.emit('request_roll', p.id); }, 1500);
                 }
             }
         }
 
-        // --- LOGIC XÚC XẮC CHỐNG LAG ---
+        // --- LOGIC XÚC XẮC ---
         function userRollDice() { if (!isRolling && !players[curPlayerIdx].isBot) socket.emit('request_roll'); }
 
         socket.on('dice_rolled', (data) => {
@@ -1040,10 +1128,9 @@
             const tile = BOARD_CONFIG[pos];
             if (tile.type === 'prop') {
                 socket.emit('answering_event', p.id);
-                // Cho bot giả vờ suy nghĩ 2 giây
                 setTimeout(() => {
                     let pts = (p.qCount % 10) >= 5 ? 100 : 50; if ((p.qCount % 10) === 9) pts = 200;
-                    let isCor = Math.random() < 0.75; // 75% Bot trả lời đúng
+                    let isCor = Math.random() < 0.75;
                     socket.emit('answered_result', { targetId: p.id, correct: isCor, points: isCor ? pts : 0, isBonus: false });
 
                     setTimeout(() => {
@@ -1066,9 +1153,9 @@
 
         function handleBotPropTx(tIdx, p) {
             const tile = BOARD_CONFIG[tIdx];
-            if (!tile.owner && p.score >= tile.price + 100) { // Bot dư tiền thì mua
+            if (!tile.owner && p.score >= tile.price + 100) {
                 socket.emit('property_action', { targetId: p.id, action: 'buy', tileIndex: tIdx, cost: tile.price, playerName: p.username });
-            } else if (tile.owner === p.id && tile.houses < 4 && p.score >= tile.housePrice + 100) { // Bot dư tiền thì xây
+            } else if (tile.owner === p.id && tile.houses < 4 && p.score >= tile.housePrice + 100) {
                 socket.emit('property_action', { targetId: p.id, action: 'build', tileIndex: tIdx, cost: tile.housePrice, playerName: p.username });
             }
             setTimeout(() => socket.emit('next_turn', p.id), 1000);
@@ -1114,9 +1201,14 @@
             updateBoardVisuals();
         });
 
-        // --- VẼ GIAO DIỆN BÀN CỜ ---
+        // --- VẼ GIAO DIỆN BÀN CỜ (ĐÃ FIX LỖI CRASH KHI START GAME) ---
         function renderBoard() {
-            const board = document.getElementById('board'); board.innerHTML = ''; board.appendChild(document.querySelector('.center-hub'));
+            const board = document.getElementById('board');
+            const hub = document.querySelector('.center-hub'); // Lấy cục xúc xắc ra cất đi trước
+
+            board.innerHTML = ''; // Xóa bàn cờ cũ
+            if (hub) board.appendChild(hub); // Đặt cục xúc xắc lại vào giữa
+
             BOARD_CONFIG.forEach((t, i) => {
                 let r, c; if (i <= 8) { r = 1; c = i + 1; } else if (i <= 16) { r = i - 7; c = 9; } else if (i <= 24) { r = 9; c = 25 - i; } else { r = 33 - i; c = 1; }
                 const d = document.createElement('div'); d.className = `tile ${t.type === 'corner' ? 'corner' : ''}`; d.style.gridRow = r; d.style.gridColumn = c; d.id = `tile-${i}`;

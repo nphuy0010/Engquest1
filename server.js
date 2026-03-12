@@ -17,7 +17,7 @@ function generateRoomCode() {
     return code;
 }
 
-// Hàm hỗ trợ: Nhận diện xem lệnh được gửi cho Người thật hay Bot
+// Hàm hỗ trợ Bot
 function getActor(room, socketId, targetId) {
     if (targetId && room.host === socketId) {
         return room.players.find(p => p.id === targetId && p.isBot);
@@ -26,7 +26,7 @@ function getActor(room, socketId, targetId) {
 }
 
 io.on('connection', (socket) => {
-    console.log('🟢 Khách truy cập:', socket.id);
+    console.log('🟢 Khách truy cập kết nối:', socket.id);
 
     // --- TẠO PHÒNG CHƠI VỚI BOT ---
     socket.on('play_with_bot', (pInfo) => {
@@ -35,16 +35,15 @@ io.on('connection', (socket) => {
         socketToRoom[socket.id] = roomId;
 
         const newPlayer = { id: socket.id, username: pInfo.username, avatar: pInfo.avatar, color: pInfo.color, isReady: true, score: 500, pos: 0, jail: false, qCount: 0, currentStreak: 0, isBot: false };
-        const botPlayer = { id: 'bot_' + Math.random().toString(36).substr(2, 9), username: 'Bot Thông Thái', avatar: '🤖', color: '#00cec9', isReady: true, score: 500, pos: 0, jail: false, qCount: 0, currentStreak: 0, isBot: true };
+        const botPlayer = { id: 'bot_' + Math.random().toString(36).substr(2, 9), username: 'Máy (AI)', avatar: '🤖', color: '#00cec9', isReady: true, score: 500, pos: 0, jail: false, qCount: 0, currentStreak: 0, isBot: true };
 
         rooms[roomId] = { id: roomId, host: socket.id, players: [newPlayer, botPlayer], isPlaying: true, currentTurnIdx: 0 };
         socket.emit('room_created', roomId);
         io.to(roomId).emit('update_lobby', rooms[roomId]);
-        // Bắt đầu game ngay lập tức
         io.to(roomId).emit('game_started', rooms[roomId]);
     });
 
-    // --- LOBBY CHUNG ---
+    // --- LOBBY CHƠI VỚI BẠN BÈ ---
     socket.on('create_room', (pInfo) => {
         const roomId = generateRoomCode();
         socket.join(roomId); socketToRoom[socket.id] = roomId;
@@ -81,7 +80,7 @@ io.on('connection', (socket) => {
         }
     });
 
-    // --- GAME LOGIC ---
+    // --- GAME LOGIC (Áp dụng cho cả Người và Bot) ---
     socket.on('request_roll', (targetId) => {
         const roomId = socketToRoom[socket.id];
         if (roomId && rooms[roomId]) {
@@ -181,7 +180,6 @@ io.on('connection', (socket) => {
             const droppedName = room.players.find(p => p.id === socket.id)?.username || "Ai đó";
             room.players = room.players.filter(p => p.id !== socket.id);
 
-            // Xóa phòng nếu không còn người thật nào
             const realPlayers = room.players.filter(p => !p.isBot);
             if (realPlayers.length === 0) {
                 delete rooms[roomId];
