@@ -8,7 +8,6 @@ const io = new Server(server);
 
 app.use(express.static('public'));
 
-// Quản lý dữ liệu toàn bộ các phòng
 const rooms = {};
 const socketToRoom = {};
 
@@ -18,142 +17,126 @@ function generateRoomCode() {
     return code;
 }
 
-io.on('connection', (socket) => {
-    console.log('🟢 Người chơi kết nối:', socket.id);
+// Hàm hỗ trợ: Nhận diện xem lệnh được gửi cho Người thật hay Bot
+function getActor(room, socketId, targetId) {
+    if (targetId && room.host === socketId) {
+        return room.players.find(p => p.id === targetId && p.isBot);
+    }
+    return room.players.find(p => p.id === socketId);
+}
 
-    // 1. TẠO PHÒNG MỚI
-    socket.on('create_room', (pInfo) => {
+io.on('connection', (socket) => {
+    console.log('🟢 Khách truy cập:', socket.id);
+
+    // --- TẠO PHÒNG CHƠI VỚI BOT ---
+    socket.on('play_with_bot', (pInfo) => {
         const roomId = generateRoomCode();
         socket.join(roomId);
         socketToRoom[socket.id] = roomId;
 
-        const newPlayer = {
-            id: socket.id,
-            name: pInfo.name, avatar: pInfo.avatar, color: pInfo.color,
-            isReady: true, score: 500, pos: 0, jail: false, qCount: 0
-        };
+        const newPlayer = { id: socket.id, username: pInfo.username, avatar: pInfo.avatar, color: pInfo.color, isReady: true, score: 500, pos: 0, jail: false, qCount: 0, currentStreak: 0, isBot: false };
+        const botPlayer = { id: 'bot_' + Math.random().toString(36).substr(2, 9), username: 'Bot Thông Thái', avatar: '🤖', color: '#00cec9', isReady: true, score: 500, pos: 0, jail: false, qCount: 0, currentStreak: 0, isBot: true };
 
-        rooms[roomId] = { id: roomId, host: socket.id, players: [newPlayer], isPlaying: false, currentTurnIdx: 0 };
+        rooms[roomId] = { id: roomId, host: socket.id, players: [newPlayer, botPlayer], isPlaying: true, currentTurnIdx: 0 };
         socket.emit('room_created', roomId);
         io.to(roomId).emit('update_lobby', rooms[roomId]);
+        // Bắt đầu game ngay lập tức
+        io.to(roomId).emit('game_started', rooms[roomId]);
     });
 
-    // 2. VÀO PHÒNG BẰNG MÃ
+    // --- LOBBY CHUNG ---
+    socket.on('create_room', (pInfo) => {
+        const roomId = generateRoomCode();
+        socket.join(roomId); socketToRoom[socket.id] = roomId;
+        const newPlayer = { id: socket.id, username: pInfo.username, avatar: pInfo.avatar, color: pInfo.color, isReady: true, score: 500, pos: 0, jail: false, qCount: 0, currentStreak: 0, isBot: false };
+        rooms[roomId] = { id: roomId, host: socket.id, players: [newPlayer], isPlaying: false, currentTurnIdx: 0 };
+        socket.emit('room_created', roomId); io.to(roomId).emit('update_lobby', rooms[roomId]);
+    });
+
     socket.on('join_room', (data) => {
-        const { roomId, pInfo } = data;
-        const room = rooms[roomId];
-
+        const { roomId, pInfo } = data; const room = rooms[roomId];
         if (!room) return socket.emit('error_msg', "Mã phòng không tồn tại!");
-        if (room.isPlaying) return socket.emit('error_msg', "Phòng này đang chơi rồi!");
-        if (room.players.length >= 4) return socket.emit('error_msg', "Phòng đã đầy (Max 4)!");
-
-        socket.join(roomId);
-        socketToRoom[socket.id] = roomId;
-
-        const newPlayer = {
-            id: socket.id, name: pInfo.name, avatar: pInfo.avatar, color: pInfo.color,
-            isReady: false, score: 500, pos: 0, jail: false, qCount: 0
-        };
-
-        room.players.push(newPlayer);
-        io.to(roomId).emit('update_lobby', room);
+        if (room.isPlaying) return socket.emit('error_msg', "Phòng đang chơi rồi!");
+        if (room.players.length >= 4) return socket.emit('error_msg', "Phòng đã đầy!");
+        socket.join(roomId); socketToRoom[socket.id] = roomId;
+        const newPlayer = { id: socket.id, username: pInfo.username, avatar: pInfo.avatar, color: pInfo.color, isReady: false, score: 500, pos: 0, jail: false, qCount: 0, currentStreak: 0, isBot: false };
+        room.players.push(newPlayer); io.to(roomId).emit('update_lobby', room);
     });
 
-    // 3. NÚT SẴN SÀNG
     socket.on('toggle_ready', () => {
         const roomId = socketToRoom[socket.id];
         if (roomId && rooms[roomId]) {
-            const room = rooms[roomId];
-            const player = room.players.find(p => p.id === socket.id);
-            if (player && room.host !== socket.id) {
-                player.isReady = !player.isReady;
-                io.to(roomId).emit('update_lobby', room);
-            }
+            const room = rooms[roomId]; const player = room.players.find(p => p.id === socket.id);
+            if (player && room.host !== socket.id) { player.isReady = !player.isReady; io.to(roomId).emit('update_lobby', room); }
         }
     });
 
-    // 4. BẮT ĐẦU GAME
     socket.on('start_game', () => {
         const roomId = socketToRoom[socket.id];
         if (roomId && rooms[roomId]) {
-            const room = rooms[roomId];
-            if (room.host !== socket.id) return;
-
-            const allReady = room.players.every(p => p.isReady);
-            if (!allReady) return socket.emit('error_msg', "Chưa phải tất cả đều Sẵn sàng!");
+            const room = rooms[roomId]; if (room.host !== socket.id) return;
+            if (!room.players.every(p => p.isReady)) return socket.emit('error_msg', "Chưa Sẵn sàng hết!");
             if (room.players.length < 2) return socket.emit('error_msg', "Cần ít nhất 2 người!");
-
-            room.isPlaying = true;
-            io.to(roomId).emit('game_started', room);
+            room.isPlaying = true; io.to(roomId).emit('game_started', room);
         }
     });
 
-    // 5. ĐỔ XÚC XẮC
-    socket.on('request_roll', () => {
+    // --- GAME LOGIC ---
+    socket.on('request_roll', (targetId) => {
         const roomId = socketToRoom[socket.id];
         if (roomId && rooms[roomId]) {
-            const room = rooms[roomId];
-            const currentPlayer = room.players[room.currentTurnIdx];
-
-            if (currentPlayer && currentPlayer.id === socket.id) {
+            const room = rooms[roomId]; const actor = getActor(room, socket.id, targetId);
+            if (actor && room.players[room.currentTurnIdx]?.id === actor.id) {
                 const val = Math.floor(Math.random() * 6) + 1;
-                io.to(roomId).emit('dice_rolled', { value: val, playerId: socket.id });
-            } else {
-                socket.emit('error_msg', "Chưa tới lượt của bạn!");
+                io.to(roomId).emit('dice_rolled', { value: val, playerId: actor.id });
             }
         }
     });
 
-    // ĐỒNG BỘ VỊ TRÍ KHI ĐI XONG
-    socket.on('movement_complete', (finalPos) => {
+    socket.on('movement_complete', (data) => {
         const roomId = socketToRoom[socket.id];
         if (roomId && rooms[roomId]) {
-            const room = rooms[roomId];
-            const p = room.players.find(pl => pl.id === socket.id);
+            const room = rooms[roomId]; const p = getActor(room, socket.id, data.targetId); const finalPos = data.pos;
             if (p) {
                 if (p.pos > finalPos && finalPos < 12) {
-                    p.score += 200;
-                    io.to(roomId).emit('log_msg', `✅ <b>${p.avatar} ${p.name}</b> đi qua cờ GO. Nhận 200đ!`);
+                    p.score += 200; io.to(roomId).emit('log_msg', `✅ <b>${p.avatar} ${p.username}</b> qua cờ GO (+200đ)`);
                 }
-                p.pos = finalPos;
-                io.to(roomId).emit('sync_players', room.players);
+                p.pos = finalPos; io.to(roomId).emit('sync_players', room.players);
             }
         }
     });
 
-    // 6. TRẢ LỜI CÂU HỎI & CỘNG ĐIỂM
-    socket.on('answering_event', () => {
+    socket.on('answering_event', (targetId) => {
         const roomId = socketToRoom[socket.id];
-        if (roomId) socket.to(roomId).emit('player_is_answering', socket.id);
+        if (roomId) {
+            const p = getActor(rooms[roomId], socket.id, targetId);
+            if (p) socket.to(roomId).emit('player_is_answering', p.id);
+        }
     });
 
     socket.on('answered_result', (data) => {
         const roomId = socketToRoom[socket.id];
         if (roomId && rooms[roomId]) {
-            const room = rooms[roomId];
-            const p = room.players.find(pl => pl.id === socket.id);
+            const room = rooms[roomId]; const p = getActor(room, socket.id, data.targetId);
             if (p) {
                 p.score += data.points;
-                if (!data.isBonus) p.qCount++;
-                io.to(roomId).emit('sync_players', room.players);
-
                 if (!data.isBonus) {
-                    io.to(roomId).emit('log_msg', `${data.correct ? '✅' : '❌'} <b>${p.avatar} ${p.name}</b> trả lời ${data.correct ? 'ĐÚNG (+' + data.points + 'đ)' : 'SAI'}!`);
+                    p.qCount++;
+                    if (data.correct) p.currentStreak++; else p.currentStreak = 0;
+                    io.to(roomId).emit('log_msg', `${data.correct ? '✅' : '❌'} <b>${p.avatar} ${p.username}</b> trả lời ${data.correct ? 'ĐÚNG' : 'SAI'}! (Chuỗi: ${p.currentStreak})`);
                 }
+                io.to(roomId).emit('sync_players', room.players);
             }
         }
     });
 
-    // 7. MUA ĐẤT & TRẢ TIỀN THUÊ
     socket.on('property_action', (data) => {
         const roomId = socketToRoom[socket.id];
         if (roomId && rooms[roomId]) {
-            const room = rooms[roomId];
-            const p = room.players.find(pl => pl.id === socket.id);
+            const room = rooms[roomId]; const p = getActor(room, socket.id, data.targetId);
             if (p) {
-                p.score -= data.cost;
-                io.to(roomId).emit('sync_players', room.players);
-                io.to(roomId).emit('sync_board', { ...data, playerId: p.id });
+                p.score -= data.cost; io.to(roomId).emit('sync_players', room.players);
+                io.to(roomId).emit('sync_board', { action: data.action, tileIndex: data.tileIndex, playerId: p.id, playerName: p.username });
             }
         }
     });
@@ -161,57 +144,53 @@ io.on('connection', (socket) => {
     socket.on('pay_rent', (data) => {
         const roomId = socketToRoom[socket.id];
         if (roomId && rooms[roomId]) {
-            const room = rooms[roomId];
-            const payer = room.players.find(p => p.id === socket.id);
-            const payee = room.players.find(p => p.id === data.ownerId);
-
+            const room = rooms[roomId]; const payer = getActor(room, socket.id, data.targetId); const payee = room.players.find(x => x.id === data.ownerId);
             if (payer && payee) {
-                payer.score -= data.amount;
-                payee.score += data.amount;
+                payer.score -= data.amount; payee.score += data.amount;
                 io.to(roomId).emit('sync_players', room.players);
-                io.to(roomId).emit('log_msg', `💸 <b>${payer.avatar} ${payer.name}</b> nộp ${data.amount}đ tiền thuê cho <b>${payee.name}</b>!`);
+                io.to(roomId).emit('log_msg', `💸 <b>${payer.avatar} ${payer.username}</b> nộp ${data.amount}đ cho <b>${payee.username}</b>!`);
             }
         }
     });
 
-    // 8. CHUYỂN LƯỢT
-    socket.on('next_turn', () => {
+    socket.on('next_turn', (targetId) => {
         const roomId = socketToRoom[socket.id];
         if (roomId && rooms[roomId]) {
-            const room = rooms[roomId];
-            const currentPlayer = room.players[room.currentTurnIdx];
-            if (currentPlayer && currentPlayer.id === socket.id) {
+            const room = rooms[roomId]; const actor = getActor(room, socket.id, targetId);
+            if (actor && room.players[room.currentTurnIdx]?.id === actor.id) {
                 room.currentTurnIdx = (room.currentTurnIdx + 1) % room.players.length;
                 io.to(roomId).emit('turn_changed', room.currentTurnIdx);
             }
         }
     });
 
-    // 9. THOÁT GAME (ĐÃ SỬA LỖI VĂNG RA SẢNH CHỜ)
+    socket.on('end_game', () => {
+        const roomId = socketToRoom[socket.id];
+        if (roomId && rooms[roomId]) {
+            const room = rooms[roomId]; if (room.host !== socket.id) return;
+            let winner = room.players[0]; room.players.forEach(p => { if (p.score > winner.score) winner = p; });
+            io.to(roomId).emit('game_over', { winnerName: winner.username, score: winner.score });
+            room.isPlaying = false; room.players.forEach(p => { p.isReady = (p.id === room.host || p.isBot); p.score = 500; p.pos = 0; p.currentStreak = 0; });
+        }
+    });
+
     socket.on('disconnect', () => {
         const roomId = socketToRoom[socket.id];
         if (roomId && rooms[roomId]) {
             let room = rooms[roomId];
-
-            const droppedPlayer = room.players.find(p => p.id === socket.id);
-            const pName = droppedPlayer ? droppedPlayer.name : "Một người chơi";
-
+            const droppedName = room.players.find(p => p.id === socket.id)?.username || "Ai đó";
             room.players = room.players.filter(p => p.id !== socket.id);
 
-            if (room.players.length === 0) {
+            // Xóa phòng nếu không còn người thật nào
+            const realPlayers = room.players.filter(p => !p.isBot);
+            if (realPlayers.length === 0) {
                 delete rooms[roomId];
             } else {
-                if (room.host === socket.id) {
-                    room.host = room.players[0].id;
-                    room.players[0].isReady = true;
-                }
-
+                if (room.host === socket.id) { room.host = realPlayers[0].id; realPlayers[0].isReady = true; }
                 if (room.isPlaying) {
-                    if (room.currentTurnIdx >= room.players.length) {
-                        room.currentTurnIdx = 0;
-                    }
+                    if (room.currentTurnIdx >= room.players.length) room.currentTurnIdx = 0;
                     io.to(roomId).emit('player_dropped', { players: room.players, turn: room.currentTurnIdx });
-                    io.to(roomId).emit('log_msg', `🔴 <b>${pName}</b> vừa mất kết nối!`);
+                    io.to(roomId).emit('log_msg', `🔴 <b>${droppedName}</b> mất kết nối!`);
                 } else {
                     io.to(roomId).emit('update_lobby', room);
                 }
@@ -221,8 +200,5 @@ io.on('connection', (socket) => {
     });
 });
 
-// Cấu hình cổng cho Render / Máy local
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-    console.log(`🚀 Server EngQuest Online đang chạy tại cổng ${PORT}`);
-});
+server.listen(PORT, () => console.log(`🚀 Server EngQuest Online đang chạy tại cổng ${PORT}`));

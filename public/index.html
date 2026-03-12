@@ -9,7 +9,6 @@
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Space+Mono:wght@400;700&display=swap"
         rel="stylesheet">
     <style>
-        /* --- CORE CSS --- */
         :root {
             --primary: #6C5CE7;
             --primary-light: #A29BFE;
@@ -38,10 +37,11 @@
             background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
             color: var(--text);
             min-height: 100vh;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
         }
 
-        /* MÀN HÌNH YÊU CẦU XOAY MÁY */
+        /* CẢNH BÁO XOAY MÁY TRÊN ĐIỆN THOẠI */
         #rotate-device {
             display: none;
             position: fixed;
@@ -85,7 +85,7 @@
             }
         }
 
-        /* SCREENS & GLASS PANELS */
+        /* GIAO DIỆN CHUNG CÁC MÀN HÌNH */
         .screen {
             position: fixed;
             top: 0;
@@ -94,18 +94,31 @@
             height: 100%;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             background: rgba(45, 52, 54, 0.95);
             backdrop-filter: blur(10px);
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.5s ease;
             z-index: 10;
+            overflow-y: auto;
+            padding: 20px 0;
         }
 
         .screen.active {
             opacity: 1;
             pointer-events: all;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 50px 45px;
+            box-shadow: var(--shadow);
+            width: 90%;
+            max-width: 550px;
+            backdrop-filter: blur(10px);
+            margin: auto;
         }
 
         .btn {
@@ -127,20 +140,10 @@
             color: white;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(108, 92, 231, 0.3);
-        }
-
         .btn-secondary {
             background: white;
             color: var(--primary);
             border: 2px solid var(--primary);
-        }
-
-        .btn-secondary:hover {
-            background: var(--light);
-            transform: translateY(-3px);
         }
 
         .btn-success {
@@ -148,9 +151,9 @@
             color: white;
         }
 
-        .btn-success:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(0, 184, 148, 0.3);
+        .btn-info {
+            background: linear-gradient(135deg, #0984e3, #74b9ff);
+            color: white;
         }
 
         .btn-warning {
@@ -169,16 +172,7 @@
             border-radius: 8px;
             font-size: 0.9rem;
             backdrop-filter: blur(5px);
-        }
-
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 24px;
-            padding: 50px 45px;
-            box-shadow: var(--shadow);
-            width: 90%;
-            max-width: 550px;
-            backdrop-filter: blur(10px);
+            z-index: 50;
         }
 
         h1.title {
@@ -230,7 +224,6 @@
             outline: none;
         }
 
-        /* LOBBY UI */
         .room-code-display {
             font-size: 3rem;
             font-weight: 900;
@@ -274,7 +267,7 @@
             color: #fff;
         }
 
-        /* GAME BOARD UI - 3 COLUMNS */
+        /* BÀN CỜ & CỘT */
         #game-wrapper {
             width: 100%;
             height: calc(100vh - 80px);
@@ -403,18 +396,7 @@
             display: flex;
             justify-content: center;
             font-size: 10px;
-            letter-spacing: -2px;
             z-index: 5;
-        }
-
-        .rent-info {
-            position: absolute;
-            bottom: 1px;
-            width: 100%;
-            font-size: 9px;
-            color: #d63031;
-            font-weight: 800;
-            z-index: 4;
         }
 
         .center-hub {
@@ -493,12 +475,6 @@
             transform: rotateX(-90deg) translateZ(50px);
         }
 
-        .dice-label {
-            color: #BDC3C7;
-            font-size: 0.8rem;
-            margin-top: 10px;
-        }
-
         .game-header {
             position: fixed;
             top: 0;
@@ -528,9 +504,10 @@
             border-radius: 8px;
             font-weight: 700;
             cursor: pointer;
+            margin-left: 10px;
         }
 
-        /* MODAL VÀ NOTIFICATION */
+        /* MODALS & NOTIFICATION */
         .notification {
             position: fixed;
             bottom: 30px;
@@ -585,8 +562,8 @@
         }
 
         .q-text {
-            font-size: 1.3rem;
-            margin-bottom: 30px;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
             font-weight: 600;
             text-align: center;
             color: var(--dark);
@@ -596,15 +573,14 @@
         .ans-btn {
             display: block;
             width: 100%;
-            padding: 16px 18px;
-            margin: 12px 0;
+            padding: 14px 18px;
+            margin: 10px 0;
             background: var(--light);
             border: 2px solid var(--border);
             border-radius: 10px;
             text-align: left;
             font-size: 1rem;
             cursor: pointer;
-            transition: var(--transition);
             font-weight: 600;
         }
 
@@ -625,6 +601,8 @@
                 margin-top: 60px;
                 gap: 10px;
                 align-items: stretch;
+                overflow-x: auto;
+                overflow-y: auto;
             }
 
             .side-panel {
@@ -663,26 +641,17 @@
 
             .hub-title {
                 font-size: 1.1rem;
-                letter-spacing: 1px;
-            }
-
-            #current-action-display {
-                font-size: 0.8rem;
-                padding: 6px;
             }
 
             .dice-area {
                 width: 50px;
                 height: 50px;
-                margin: 8px 0;
             }
 
             .face {
                 width: 50px;
                 height: 50px;
                 font-size: 1.8rem;
-                border-width: 2px;
-                border-radius: 8px;
             }
 
             .f1 {
@@ -709,11 +678,6 @@
                 transform: rotateX(-90deg) translateZ(25px);
             }
 
-            .dice-label {
-                font-size: 0.6rem;
-                margin-top: 5px;
-            }
-
             .tile {
                 font-size: 0.45rem;
                 border-radius: 3px;
@@ -721,7 +685,6 @@
 
             .tile-name {
                 font-size: 0.45rem;
-                line-height: 1;
                 padding: 1px;
             }
 
@@ -729,39 +692,32 @@
                 font-size: 0.6rem;
             }
 
-            .rent-info {
-                font-size: 6px;
-            }
-
             .token {
                 width: 14px;
                 height: 14px;
                 font-size: 9px;
-                margin: 1px;
                 border-width: 1px !important;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
             }
 
             #activity-log div {
                 padding: 8px;
                 font-size: 0.75rem;
-                border-radius: 6px;
-                border-left-width: 3px;
             }
 
             #detailed-stats>div {
                 padding: 8px;
                 margin-bottom: 8px;
-                border-radius: 8px;
-                border-left-width: 4px;
             }
 
-            #detailed-stats span {
-                font-size: 0.8rem !important;
+            .notification {
+                width: 80%;
+                font-size: 0.9rem;
+                padding: 10px;
+                bottom: 10px;
             }
 
             .modal-box {
-                width: 90%;
+                width: 95%;
                 max-width: 400px;
             }
 
@@ -773,49 +729,21 @@
             .modal-body {
                 padding: 20px;
             }
-
-            .q-text {
-                font-size: 1rem;
-                margin-bottom: 15px;
-            }
-
-            .ans-btn {
-                padding: 10px 12px;
-                font-size: 0.85rem;
-                margin: 6px 0;
-            }
-
-            .notification {
-                width: 80%;
-                font-size: 0.9rem;
-                padding: 10px;
-                bottom: 10px;
-            }
         }
     </style>
 </head>
 
 <body>
-    <div id="rotate-device">
-        <i>📱🔄</i>
-        <h2 style="color: white; margin-bottom: 10px;">Vui lòng xoay ngang điện thoại!</h2>
-        <p style="color: #bbb;">Trải nghiệm game tốt nhất ở chế độ toàn màn hình ngang.</p>
+    <div id="rotate-device"><i>📱🔄</i>
+        <h2 style="color: white;">Vui lòng xoay ngang điện thoại!</h2>
     </div>
 
     <div id="sc-menu" class="screen active">
         <div class="glass-panel">
             <h1 class="title" style="text-align: center;">EngQuest</h1>
             <p class="subtitle" style="text-align: center;">🌍 Multiplayer English Adventure 🌍</p>
-            <button class="btn btn-primary" onclick="navTo('sc-setup')" style="width: 100%; margin-bottom: 15px;">🎮
-                CHƠI ONLINE</button>
-        </div>
-    </div>
 
-    <div id="sc-setup" class="screen">
-        <button class="btn btn-back" onclick="navTo('sc-menu')">← TRỞ LẠI</button>
-        <div class="glass-panel">
-            <h2>THÔNG TIN NHÂN VẬT</h2>
-            <div class="input-row" style="display: flex; gap: 10px;">
+            <div class="input-row" style="display: flex; gap: 10px; align-items: center;">
                 <select id="my-avatar" style="width: 80px; font-size: 1.5rem; text-align: center; border-radius: 10px;">
                     <option value="🐶">🐶</option>
                     <option value="🐱">🐱</option>
@@ -824,16 +752,45 @@
                     <option value="🦁">🦁</option>
                     <option value="🐸">🐸</option>
                 </select>
-                <input id="my-name" type="text" placeholder="Tên của bạn..." value="Gamer"
-                    style="flex: 1; font-weight: bold;">
+                <input id="my-name" type="text" placeholder="Nhập tên của bạn..." value="Gamer"
+                    style="flex: 1; font-weight: bold; font-size: 1.1rem; border: 2px solid var(--border); border-radius: 10px; padding: 12px;">
             </div>
-            <hr style="margin: 25px 0; border: 1px solid #eee;">
+
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <button class="btn btn-primary" onclick="navTo('sc-setup')" style="flex: 1;">👥 CHƠI VỚI BẠN</button>
+                <button class="btn btn-info" onclick="reqPlayBot()" style="flex: 1;">🤖 CHƠI VỚI MÁY</button>
+            </div>
+
+            <button class="btn btn-warning" onclick="document.getElementById('modal-rules').style.display='flex';"
+                style="width: 100%;">📖 LUẬT CHƠI</button>
+        </div>
+    </div>
+
+    <div id="modal-rules" class="modal-wrap">
+        <div class="modal-box">
+            <div class="modal-header">📖 LUẬT CHƠI ENGQUEST</div>
+            <div class="modal-body" style="font-size: 0.95rem; line-height: 1.6;">
+                <p><b>1. Mục tiêu:</b> Di chuyển quanh bàn cờ, trả lời đúng câu hỏi Tiếng Anh để có quyền mua đất và thu
+                    thuế người khác.</p>
+                <p><b>2. Chuỗi Đúng:</b> Trả lời đúng liên tiếp sẽ được hiển thị biểu tượng ngọn lửa (🔥).</p>
+                <p><b>3. Chiến thắng:</b> Chủ phòng có quyền bấm <b>"Kết Thúc Ván"</b> bất kỳ lúc nào. Người nhiều tiền
+                    nhất lúc đó sẽ giành chiến thắng.</p>
+                <button class="btn btn-success" onclick="document.getElementById('modal-rules').style.display='none';"
+                    style="width: 100%; margin-top: 20px;">ĐÃ HIỂU</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="sc-setup" class="screen">
+        <button class="btn btn-back" onclick="navTo('sc-menu')">← TRỞ LẠI</button>
+        <div class="glass-panel">
+            <h2>CHƠI MULTIPLAYER</h2>
             <div style="display: flex; gap: 15px;">
-                <button class="btn btn-primary" onclick="reqCreateRoom()" style="flex: 1;">➕ TẠO PHÒNG</button>
+                <button class="btn btn-primary" onclick="reqCreateRoom()" style="flex: 1;">➕ TẠO PHÒNG MỚI</button>
             </div>
             <div style="display: flex; gap: 10px; margin-top: 15px;">
                 <input id="join-code" type="text" placeholder="Nhập mã 6 số..." maxlength="6"
-                    style="flex: 1; padding: 10px; border-radius: 10px; border: 2px solid var(--border); font-size: 1.2rem; text-align: center; font-family: 'Space Mono'; font-weight: bold;">
+                    style="flex: 1; text-align: center; font-family: 'Space Mono'; font-weight: bold; border: 2px solid var(--border); border-radius: 10px; padding: 12px;">
                 <button class="btn btn-secondary" onclick="reqJoinRoom()">🚪 VÀO PHÒNG</button>
             </div>
         </div>
@@ -843,7 +800,7 @@
         <button class="btn btn-back" onclick="location.reload()">← RỜI PHÒNG</button>
         <div class="glass-panel">
             <h2 style="margin-bottom: 10px;">PHÒNG CHỜ</h2>
-            <p style="text-align: center; color: #7f8fa6; margin-bottom: 5px;">Mã phòng của bạn:</p>
+            <p style="text-align: center; color: #7f8fa6;">Mã phòng của bạn:</p>
             <div class="room-code-display" id="lobby-code">------</div>
             <div id="lobby-players" style="margin-bottom: 25px;"></div>
             <button id="btn-start-game" class="btn btn-success" style="width: 100%; display: none;"
@@ -859,8 +816,9 @@
             <div class="game-title">⚡ EngQuest <span id="header-room-code"
                     style="font-size: 0.8rem; color: var(--accent-light); margin-left: 10px;"></span></div>
             <div style="flex:1"></div>
-            <button class="menu-btn" onclick="if(confirm('Bạn muốn thoát ván game này?')) location.reload();">🏠
-                THOÁT</button>
+            <button class="menu-btn" style="background: var(--primary); display: none;" id="btn-end-game"
+                onclick="if(confirm('Kết thúc ván ngay bây giờ?')) socket.emit('end_game');">🏆 KẾT THÚC VÁN</button>
+            <button class="menu-btn" onclick="if(confirm('Thoát game?')) location.reload();">🏠 THOÁT</button>
         </div>
 
         <div id="game-wrapper">
@@ -868,8 +826,6 @@
                 <h3 class="sp-title">📜 NHẬT KÝ</h3>
                 <div id="activity-log"
                     style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-right: 5px;">
-                    <div style="text-align: center; color: #aaa; font-size: 0.85rem; margin-top: 10px;">Trò chơi bắt
-                        đầu!</div>
                 </div>
             </div>
 
@@ -897,7 +853,6 @@
                 <h3 class="sp-title" style="border-top: 2px dashed #ddd; padding-top: 15px;">🎯 TRẠNG THÁI</h3>
                 <div id="current-action-display"
                     style="text-align: center; color: #555; font-weight: 600; font-size: 1rem; padding: 10px; background: #f1f2f6; border-radius: 10px;">
-                    Đang kết nối...
                 </div>
             </div>
         </div>
@@ -916,7 +871,7 @@
         <div class="modal-box">
             <div class="modal-header" id="mb-title">BẤT ĐỘNG SẢN</div>
             <div class="modal-body" style="text-align: center;">
-                <div id="mb-text" class="q-text">Bạn có muốn mua?</div>
+                <div id="mb-text" class="q-text">Bạn muốn mua?</div>
                 <div style="display: flex; gap: 10px; margin-top: 20px;"><button class="btn btn-success"
                         id="btn-buy-yes" style="flex: 1;">MUA</button><button class="btn btn-secondary" id="btn-buy-no"
                         style="flex: 1;">BỎ QUA</button></div>
@@ -926,10 +881,9 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        // Cấu hình websocket để chơi ổn định trên Render
         const socket = io({ transports: ['websocket', 'polling'] });
         let mySocketId = "";
-        let currentRoomId = "";
+        let isMyRoomHost = false;
 
         socket.on('connect', () => { mySocketId = socket.id; });
         socket.on('error_msg', (msg) => { alert("⚠️ " + msg); });
@@ -937,404 +891,256 @@
         // --- DATA BÀN CỜ & CÂU HỎI ---
         const COLORS = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA502'];
         const BOARD_CONFIG = [
-            { type: 'corner', name: 'GO', color: '#fff' },
-            { type: 'prop', name: 'Hanoi', color: '#ff7979', price: 100, housePrice: 50, rent: 10, owner: null, houses: 0 },
-            { type: 'chest', name: 'CHEST', color: '#a29bfe' },
-            { type: 'prop', name: 'Sapa', color: '#ff7979', price: 100, housePrice: 50, rent: 10, owner: null, houses: 0 },
-            { type: 'chance', name: 'CHANCE', color: '#fab1a0' },
-            { type: 'prop', name: 'Bangkok', color: '#ff7979', price: 120, housePrice: 50, rent: 15, owner: null, houses: 0 },
-            { type: 'prop', name: 'Bali', color: '#ff7979', price: 120, housePrice: 50, rent: 15, owner: null, houses: 0 },
-            { type: 'prop', name: 'Phuket', color: '#ff7979', price: 140, housePrice: 50, rent: 20, owner: null, houses: 0 },
-            { type: 'corner', name: 'JAIL', color: '#b2bec3' },
-            { type: 'prop', name: 'Seoul', color: '#badc58', price: 160, housePrice: 100, rent: 25, owner: null, houses: 0 },
-            { type: 'prop', name: 'Busan', color: '#badc58', price: 160, housePrice: 100, rent: 25, owner: null, houses: 0 },
-            { type: 'chest', name: 'CHEST', color: '#a29bfe' },
-            { type: 'prop', name: 'Tokyo', color: '#badc58', price: 180, housePrice: 100, rent: 30, owner: null, houses: 0 },
-            { type: 'prop', name: 'Osaka', color: '#badc58', price: 180, housePrice: 100, rent: 30, owner: null, houses: 0 },
-            { type: 'chance', name: 'CHANCE', color: '#fab1a0' },
-            { type: 'prop', name: 'Kyoto', color: '#badc58', price: 200, housePrice: 100, rent: 35, owner: null, houses: 0 },
-            { type: 'corner', name: 'FREE', color: '#74b9ff' },
-            { type: 'prop', name: 'Paris', color: '#7ed6df', price: 220, housePrice: 150, rent: 40, owner: null, houses: 0 },
-            { type: 'prop', name: 'Lyon', color: '#7ed6df', price: 220, housePrice: 150, rent: 40, owner: null, houses: 0 },
-            { type: 'chest', name: 'CHEST', color: '#a29bfe' },
-            { type: 'prop', name: 'Berlin', color: '#7ed6df', price: 240, housePrice: 150, rent: 45, owner: null, houses: 0 },
-            { type: 'prop', name: 'Rome', color: '#7ed6df', price: 240, housePrice: 150, rent: 45, owner: null, houses: 0 },
-            { type: 'chance', name: 'CHANCE', color: '#fab1a0' },
-            { type: 'prop', name: 'Madrid', color: '#7ed6df', price: 260, housePrice: 150, rent: 50, owner: null, houses: 0 },
-            { type: 'corner', name: 'BACK', color: '#ffbe76' },
-            { type: 'prop', name: 'London', color: '#e056fd', price: 300, housePrice: 200, rent: 60, owner: null, houses: 0 },
-            { type: 'prop', name: 'Dubai', color: '#e056fd', price: 300, housePrice: 200, rent: 60, owner: null, houses: 0 },
-            { type: 'chest', name: 'CHEST', color: '#a29bfe' },
-            { type: 'prop', name: 'Sydney', color: '#e056fd', price: 320, housePrice: 200, rent: 70, owner: null, houses: 0 },
-            { type: 'prop', name: 'New York', color: '#e056fd', price: 350, housePrice: 200, rent: 80, owner: null, houses: 0 },
-            { type: 'chance', name: 'CHANCE', color: '#fab1a0' },
-            { type: 'prop', name: 'L.A.', color: '#e056fd', price: 400, housePrice: 200, rent: 100, owner: null, houses: 0 }
+            { type: 'corner', name: 'GO', color: '#fff' }, { type: 'prop', name: 'Hanoi', color: '#ff7979', price: 100, housePrice: 50, rent: 10, owner: null, houses: 0 }, { type: 'chest', name: 'CHEST', color: '#a29bfe' }, { type: 'prop', name: 'Sapa', color: '#ff7979', price: 100, housePrice: 50, rent: 10, owner: null, houses: 0 }, { type: 'chance', name: 'CHANCE', color: '#fab1a0' }, { type: 'prop', name: 'Bangkok', color: '#ff7979', price: 120, housePrice: 50, rent: 15, owner: null, houses: 0 }, { type: 'prop', name: 'Bali', color: '#ff7979', price: 120, housePrice: 50, rent: 15, owner: null, houses: 0 }, { type: 'prop', name: 'Phuket', color: '#ff7979', price: 140, housePrice: 50, rent: 20, owner: null, houses: 0 }, { type: 'corner', name: 'JAIL', color: '#b2bec3' }, { type: 'prop', name: 'Seoul', color: '#badc58', price: 160, housePrice: 100, rent: 25, owner: null, houses: 0 }, { type: 'prop', name: 'Busan', color: '#badc58', price: 160, housePrice: 100, rent: 25, owner: null, houses: 0 }, { type: 'chest', name: 'CHEST', color: '#a29bfe' }, { type: 'prop', name: 'Tokyo', color: '#badc58', price: 180, housePrice: 100, rent: 30, owner: null, houses: 0 }, { type: 'prop', name: 'Osaka', color: '#badc58', price: 180, housePrice: 100, rent: 30, owner: null, houses: 0 }, { type: 'chance', name: 'CHANCE', color: '#fab1a0' }, { type: 'prop', name: 'Kyoto', color: '#badc58', price: 200, housePrice: 100, rent: 35, owner: null, houses: 0 }, { type: 'corner', name: 'FREE', color: '#74b9ff' }, { type: 'prop', name: 'Paris', color: '#7ed6df', price: 220, housePrice: 150, rent: 40, owner: null, houses: 0 }, { type: 'prop', name: 'Lyon', color: '#7ed6df', price: 220, housePrice: 150, rent: 40, owner: null, houses: 0 }, { type: 'chest', name: 'CHEST', color: '#a29bfe' }, { type: 'prop', name: 'Berlin', color: '#7ed6df', price: 240, housePrice: 150, rent: 45, owner: null, houses: 0 }, { type: 'prop', name: 'Rome', color: '#7ed6df', price: 240, housePrice: 150, rent: 45, owner: null, houses: 0 }, { type: 'chance', name: 'CHANCE', color: '#fab1a0' }, { type: 'prop', name: 'Madrid', color: '#7ed6df', price: 260, housePrice: 150, rent: 50, owner: null, houses: 0 }, { type: 'corner', name: 'BACK', color: '#ffbe76' }, { type: 'prop', name: 'London', color: '#e056fd', price: 300, housePrice: 200, rent: 60, owner: null, houses: 0 }, { type: 'prop', name: 'Dubai', color: '#e056fd', price: 300, housePrice: 200, rent: 60, owner: null, houses: 0 }, { type: 'chest', name: 'CHEST', color: '#a29bfe' }, { type: 'prop', name: 'Sydney', color: '#e056fd', price: 320, housePrice: 200, rent: 70, owner: null, houses: 0 }, { type: 'prop', name: 'New York', color: '#e056fd', price: 350, housePrice: 200, rent: 80, owner: null, houses: 0 }, { type: 'chance', name: 'CHANCE', color: '#fab1a0' }, { type: 'prop', name: 'L.A.', color: '#e056fd', price: 400, housePrice: 200, rent: 100, owner: null, houses: 0 }
         ];
 
         const QUESTIONS = {
-            easy: [
-                { q: "I ___ from Vietnam.", a: ["am", "is", "are", "be"], c: 0 },
-                { q: "She usually ___ up at 6 AM every morning.", a: ["wake", "woke", "wakes", "waking"], c: 2 },
-                { q: "They ___ learning English right now.", a: ["am", "is", "are", "do"], c: 2 },
-                { q: "He wants to become a successful property ___.", a: ["tycoon", "teacher", "doctor", "driver"], c: 0 },
-                { q: "There is a coffee shop ___ the corner of the street.", a: ["in", "on", "at", "with"], c: 2 },
-                { q: "The manager ___ a new project today.", a: ["start", "starts", "is starting", "started"], c: 2 },
-                { q: "This is ___ expensive laptop in the store.", a: ["more", "the most", "most", "much"], c: 1 },
-                { q: "I went to the supermarket ___ buy some food.", a: ["for", "to", "so", "because"], c: 1 },
-                { q: "He plays the guitar very ___.", a: ["good", "well", "better", "best"], c: 1 },
-                { q: "Yesterday, I ___ my keys at the office.", a: ["leave", "left", "leaved", "leaving"], c: 1 }
-            ],
-            medium: [
-                { q: "Many students find that playing interactive games ___ their vocabulary significantly.", a: ["improve", "improves", "improving", "improved"], c: 1 },
-                { q: "If I ___ more time, I would learn another programming language.", a: ["have", "had", "have had", "having"], c: 1 },
-                { q: "By the time we arrived at the office, the meeting ___.", a: ["started", "has started", "had started", "was starting"], c: 2 },
-                { q: "The ___ of the computer determines how efficiently it can process data.", a: ["architecture", "architect", "architectural", "logically"], c: 0 },
-                { q: "The city, ___ is famous for its historical buildings, attracts millions of tourists.", a: ["who", "where", "which", "that"], c: 2 },
-                { q: "The software update is expected to ___ the system's security.", a: ["enhance", "completely", "harmful", "decrease"], c: 0 },
-                { q: "He couldn't remember where he ___ his keys.", a: ["leaves", "has left", "had left", "was leaving"], c: 2 },
-                { q: "The hotel where we stayed was ___ from the city center.", a: ["far", "away", "distance", "remote"], c: 0 }
-            ],
-            hard: [
-                { q: "Had the startup secured the funding earlier, they ___ their web development project by now.", a: ["would complete", "will have completed", "would have completed", "completed"], c: 2 },
-                { q: "Rarely ___ such a cutting-edge approach to sorting algorithms in a commercial software product.", a: ["we see", "do we see", "we do see", "see we"], c: 1 },
-                { q: "Only after the system crashed ___ that there was a critical flaw in the code.", a: ["the engineers realized", "did the engineers realize", "the engineers did realize", "realized the engineers"], c: 1 },
-                { q: "The project manager insisted that every detail of the user interface ___ rigorously tested.", a: ["is", "be", "was", "are"], c: 1 },
-                { q: "No sooner ___ the new update than thousands of users reported encountering a bug.", a: ["the company released", "did the company release", "had the company released", "the company had released"], c: 2 },
-                { q: "The financial report was so complex that it was virtually ___ to the average investor.", a: ["illegible", "incomprehensible", "infallible", "invincible"], c: 1 }
-            ]
+            easy: [{ q: "I ___ from Vietnam.", a: ["am", "is", "are", "be"], c: 0 }, { q: "She usually ___ up at 6 AM.", a: ["wake", "woke", "wakes", "waking"], c: 2 }, { q: "They ___ learning English.", a: ["am", "is", "are", "do"], c: 2 }],
+            medium: [{ q: "Many students find that playing games ___ vocabulary.", a: ["improve", "improves", "improving", "improved"], c: 1 }, { q: "If I ___ more time, I would learn code.", a: ["have", "had", "have had", "having"], c: 1 }],
+            hard: [{ q: "Had the startup secured funding, they ___ the project.", a: ["would complete", "will have completed", "would have completed", "completed"], c: 2 }]
         };
 
-        // --- TRẠNG THÁI GAME ---
-        let players = [];
-        let curPlayerIdx = 0;
-        let isRolling = false;
-        let currentRotX = 0, currentRotY = 0;
+        // --- TRẠNG THÁI GAME & GIAO TIẾP LOBBY ---
+        let players = []; let curPlayerIdx = 0; let isRolling = false; let currentRotX = 0, currentRotY = 0;
 
-        function navTo(screenId) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
-        }
+        function navTo(screenId) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(screenId).classList.add('active'); }
 
         function getMyInfo() {
             return {
-                name: document.getElementById('my-name').value || "Guest",
+                username: document.getElementById('my-name').value || "Gamer",
                 avatar: document.getElementById('my-avatar').value,
                 color: COLORS[Math.floor(Math.random() * COLORS.length)]
             };
         }
 
-        // --- GIAO TIẾP LOBBY ---
+        function reqPlayBot() { socket.emit('play_with_bot', getMyInfo()); }
         function reqCreateRoom() { socket.emit('create_room', getMyInfo()); }
-        function reqJoinRoom() {
-            const code = document.getElementById('join-code').value.trim();
-            if (code.length !== 6) return alert("Mã phòng phải gồm 6 chữ số!");
-            socket.emit('join_room', { roomId: code, pInfo: getMyInfo() });
-        }
+        function reqJoinRoom() { const code = document.getElementById('join-code').value.trim(); if (code.length !== 6) return; socket.emit('join_room', { roomId: code, pInfo: getMyInfo() }); }
         function reqToggleReady() { socket.emit('toggle_ready'); }
         function reqStartGame() { socket.emit('start_game'); }
 
-        socket.on('room_created', (code) => { currentRoomId = code; });
-
         socket.on('update_lobby', (roomData) => {
-            currentRoomId = roomData.id;
-
-            // 🛡️ CHỐT CHẶN: Đang chơi mà cập nhật phòng thì cấm không cho quay lại sảnh
-            if (roomData.isPlaying) {
-                players = roomData.players;
-                curPlayerIdx = roomData.currentTurnIdx;
-                updateStats();
-                return;
-            }
-
-            navTo('sc-lobby');
-            document.getElementById('lobby-code').innerText = roomData.id;
-
-            const listDiv = document.getElementById('lobby-players');
-            listDiv.innerHTML = '';
+            if (roomData.isPlaying) { players = roomData.players; curPlayerIdx = roomData.currentTurnIdx; isMyRoomHost = (roomData.host === mySocketId); updateStats(); return; }
+            navTo('sc-lobby'); document.getElementById('lobby-code').innerText = roomData.id;
+            const listDiv = document.getElementById('lobby-players'); listDiv.innerHTML = '';
             let allReady = true;
 
             roomData.players.forEach(p => {
-                const isHost = p.id === roomData.host;
-                if (!p.isReady && !isHost) allReady = false;
-                let statusHtml = isHost ? `<span class="status-badge status-ready">👑 CHỦ PHÒNG</span>` :
-                    (p.isReady ? `<span class="status-badge status-ready">✅ SẴN SÀNG</span>` : `<span class="status-badge status-wait">⏳ ĐANG CHỜ</span>`);
-
-                listDiv.innerHTML += `<div class="player-list-item" style="border-color: ${p.color}"><div><span style="font-size: 1.5rem; margin-right: 10px;">${p.avatar}</span> ${p.name} ${p.id === mySocketId ? '(Bạn)' : ''}</div><div>${statusHtml}</div></div>`;
+                const isHost = p.id === roomData.host; if (!p.isReady && !isHost) allReady = false;
+                let statusHtml = isHost ? `<span class="status-badge status-ready">👑 HOST</span>` : (p.isReady ? `<span class="status-badge status-ready">✅ READY</span>` : `<span class="status-badge status-wait">⏳ WAIT</span>`);
+                listDiv.innerHTML += `<div class="player-list-item" style="border-color: ${p.color}"><div><span style="font-size:1.5rem; margin-right:10px;">${p.avatar}</span> ${p.username}</div><div>${statusHtml}</div></div>`;
             });
 
-            const isMeHost = roomData.host === mySocketId;
-            const btnStart = document.getElementById('btn-start-game');
-            const btnReady = document.getElementById('btn-ready');
+            isMyRoomHost = roomData.host === mySocketId;
+            const btnStart = document.getElementById('btn-start-game'); const btnReady = document.getElementById('btn-ready');
+            const btnEnd = document.getElementById('btn-end-game');
 
-            if (isMeHost) {
-                btnStart.style.display = 'block'; btnReady.style.display = 'none';
+            if (isMyRoomHost) {
+                btnStart.style.display = 'block'; btnReady.style.display = 'none'; btnEnd.style.display = 'block';
                 btnStart.style.opacity = allReady && roomData.players.length >= 2 ? '1' : '0.5';
             } else {
-                btnStart.style.display = 'none'; btnReady.style.display = 'block';
+                btnStart.style.display = 'none'; btnReady.style.display = 'block'; btnEnd.style.display = 'none';
                 const me = roomData.players.find(p => p.id === mySocketId);
                 btnReady.innerText = me && me.isReady ? "HỦY SẴN SÀNG" : "✅ SẴN SÀNG";
-                btnReady.className = me && me.isReady ? "btn btn-secondary" : "btn btn-warning";
             }
         });
 
         socket.on('game_started', (roomData) => {
-            players = roomData.players;
-            curPlayerIdx = roomData.currentTurnIdx;
-            renderBoard(); updateStats(); navTo('sc-game'); updateTurnDisplay();
-        });
+            players = roomData.players; curPlayerIdx = roomData.currentTurnIdx; isMyRoomHost = (roomData.host === mySocketId);
+            document.getElementById('activity-log').innerHTML = ''; renderBoard(); updateStats(); navTo('sc-game');
 
-        // Xử lý khi có người rớt mạng lúc đang chơi
-        socket.on('player_dropped', (data) => {
-            players = data.players;
-            curPlayerIdx = data.turn;
-            renderBoard();
-            updateStats();
+            // Hiện nút End game nếu là host
+            document.getElementById('btn-end-game').style.display = isMyRoomHost ? 'block' : 'none';
             updateTurnDisplay();
         });
 
+        socket.on('player_dropped', (data) => { players = data.players; curPlayerIdx = data.turn; renderBoard(); updateStats(); updateTurnDisplay(); });
+
+        socket.on('game_over', (data) => {
+            alert(`🏆 CHÚC MỪNG ${data.winnerName} ĐÃ CHIẾN THẮNG VỚI ${data.score} ĐIỂM!`);
+            navTo('sc-lobby');
+            BOARD_CONFIG.forEach(t => { if (t.type === 'prop') { t.owner = null; t.houses = 0; } });
+        });
+
+        // --- GHI NHẬT KÝ & THÔNG BÁO ---
+        function showNotify(msg) {
+            const entry = document.createElement('div'); entry.style.padding = '12px'; entry.style.borderRadius = '8px'; entry.style.fontSize = '0.9rem'; entry.style.lineHeight = '1.4';
+            let bC = 'var(--primary)', bgC = '#f8f9fa';
+            if (msg.includes('✅') || msg.includes('nhận') || msg.includes('mua')) { bC = 'var(--secondary)'; bgC = 'rgba(0,184,148,0.1)'; } else if (msg.includes('❌') || msg.includes('TÙ') || msg.includes('thu')) { bC = 'var(--accent)'; bgC = 'rgba(255,107,107,0.1)'; } else if (msg.includes('🎲')) { bC = 'var(--accent-light)'; bgC = 'rgba(253, 203, 110, 0.1)'; }
+            entry.style.borderLeft = `4px solid ${bC}`; entry.style.background = bgC; entry.innerHTML = msg;
+
+            const n = document.getElementById('notification'); n.innerHTML = msg; n.style.display = 'block'; setTimeout(() => n.style.display = 'none', 2500);
+            const logDiv = document.getElementById('activity-log'); if (logDiv) { logDiv.appendChild(entry); logDiv.scrollTop = logDiv.scrollHeight; }
+        }
+        socket.on('log_msg', showNotify); socket.on('sync_players', data => { players = data; updateStats(); });
+
+        // --- LOGIC BOT CHƠI ---
         function updateTurnDisplay() {
             if (players.length > 0) {
                 const p = players[curPlayerIdx];
-                const isMe = p.id === mySocketId;
-                document.getElementById('current-action-display').innerHTML = isMe ? `<span style="color:var(--secondary)">Lượt của BẠN! 🎲 Hãy đổ xúc xắc.</span>` : `Đang chờ <span style="color:${p.color}">${p.avatar} ${p.name}</span> đi...`;
+                document.getElementById('current-action-display').innerHTML = (p.id === mySocketId) ? `<span style="color:var(--secondary)">Lượt của BẠN! 🎲 Hãy đổ xúc xắc.</span>` : `Đang chờ <span style="color:${p.color}">${p.username}</span> đi...`;
+
+                // Nếu tới lượt Bot và mình là Host (người tạo phòng) -> Đại diện cho Bot bấm đổ xúc xắc
+                if (p.isBot && isMyRoomHost && !isRolling) {
+                    setTimeout(() => { socket.emit('request_roll', p.id); }, 1500);
+                }
             }
         }
 
-        // --- GHI NHẬT KÝ ---
-        function showNotify(msg) {
-            const entry = document.createElement('div');
-            entry.style.padding = '12px'; entry.style.borderRadius = '8px'; entry.style.fontSize = '0.9rem'; entry.style.lineHeight = '1.4'; entry.style.boxShadow = '0 2px 5px rgba(0,0,0,0.05)';
-
-            let borderColor = 'var(--primary)', bgColor = '#f8f9fa';
-            if (msg.includes('✅') || msg.includes('nhận') || msg.includes('mua') || msg.includes('ĐÚNG')) { borderColor = 'var(--secondary)'; bgColor = 'rgba(0,184,148,0.1)'; }
-            else if (msg.includes('❌') || msg.includes('TÙ') || msg.includes('SAI') || msg.includes('thu') || msg.includes('mất kết nối')) { borderColor = 'var(--accent)'; bgColor = 'rgba(255,107,107,0.1)'; }
-            else if (msg.includes('🎲')) { borderColor = 'var(--accent-light)'; bgColor = 'rgba(253, 203, 110, 0.1)'; }
-
-            entry.style.borderLeft = `4px solid ${borderColor}`; entry.style.background = bgColor; entry.innerHTML = msg;
-
-            const n = document.getElementById('notification');
-            n.innerHTML = msg; n.style.display = 'block';
-            setTimeout(() => n.style.display = 'none', 2500);
-
-            const logDiv = document.getElementById('activity-log');
-            if (logDiv) { logDiv.appendChild(entry); logDiv.scrollTop = logDiv.scrollHeight; }
-        }
-
-        socket.on('log_msg', (msg) => { showNotify(msg); });
-        socket.on('sync_players', (data) => { players = data; updateStats(); });
-
         // --- LOGIC XÚC XẮC CHỐNG LAG ---
-        function userRollDice() { if (!isRolling) socket.emit('request_roll'); }
+        function userRollDice() { if (!isRolling && !players[curPlayerIdx].isBot) socket.emit('request_roll'); }
 
         socket.on('dice_rolled', (data) => {
             isRolling = true; const val = data.value;
-            document.getElementById('current-action-display').innerHTML = `Đang đổ xúc xắc... 🎲`;
-
             const cube = document.getElementById('dice-cube');
-            const rotations = { 1: { x: 0, y: 0 }, 6: { x: 0, y: 180 }, 3: { x: 0, y: -90 }, 4: { x: 0, y: 90 }, 2: { x: -90, y: 0 }, 5: { x: 90, y: 0 } };
-            const target = rotations[val];
-            const getNextAngle = (c, t, s) => { const n = ((c % 360) + 360) % 360; let d = t - n; if (d <= 0) d += 360; return c + d + (s * 360); };
-
-            const turnsX = Math.floor(Math.random() * 3) + 2;
-            const turnsY = Math.floor(Math.random() * 3) + 2;
-
-            currentRotX = getNextAngle(currentRotX, target.x, turnsX);
-            currentRotY = getNextAngle(currentRotY, target.y, turnsY);
+            const rots = { 1: { x: 0, y: 0 }, 6: { x: 0, y: 180 }, 3: { x: 0, y: -90 }, 4: { x: 0, y: 90 }, 2: { x: -90, y: 0 }, 5: { x: 90, y: 0 } };
+            const getA = (c, t, s) => c + (t - ((c % 360) + 360) % 360 + (t - ((c % 360) + 360) % 360 <= 0 ? 360 : 0)) + (s * 360);
+            currentRotX = getA(currentRotX, rots[val].x, Math.floor(Math.random() * 3) + 2); currentRotY = getA(currentRotY, rots[val].y, Math.floor(Math.random() * 3) + 2);
             cube.style.transform = `rotateX(${currentRotX}deg) rotateY(${currentRotY}deg)`;
-
             setTimeout(() => {
                 const p = players.find(x => x.id === data.playerId);
-                if (p) {
-                    showNotify(`🎲 <b>${p.avatar} ${p.name}</b> vừa đổ được <b>${val}</b> bước!`);
-                    movePlayerVisual(val, p.id);
-                }
+                if (p) { showNotify(`🎲 <b>${p.username}</b> đổ được <b>${val}</b> bước!`); movePlayerVisual(val, p); }
             }, 2000);
         });
 
-        function movePlayerVisual(steps, pId) {
-            const token = document.getElementById(`token-${pId}`);
-            if (!token) return;
-
-            let current = parseInt(token.parentElement.id.replace('holder-', ''));
-            let stepCount = 0;
-
-            const moveInterval = setInterval(() => {
-                current++;
-                if (current >= 32) current = 0;
-                stepCount++;
-                document.getElementById(`holder-${current}`).appendChild(token);
-
-                if (stepCount >= steps) {
-                    clearInterval(moveInterval);
-                    if (pId === mySocketId) {
-                        socket.emit('movement_complete', current);
-                        setTimeout(() => handleTile(current), 500);
+        function movePlayerVisual(steps, p) {
+            const token = document.getElementById(`token-${p.id}`); if (!token) return;
+            let cur = parseInt(token.parentElement.id.replace('holder-', '')); let stepC = 0;
+            const moveInt = setInterval(() => {
+                cur = (cur + 1) % 32; stepC++;
+                document.getElementById(`holder-${cur}`).appendChild(token);
+                if (stepC >= steps) {
+                    clearInterval(moveInt);
+                    if (p.id === mySocketId) {
+                        socket.emit('movement_complete', { pos: cur });
+                        setTimeout(() => handleTile(cur, p), 500);
+                    } else if (p.isBot && isMyRoomHost) { // Host chạy não cho Bot
+                        socket.emit('movement_complete', { pos: cur, targetId: p.id });
+                        setTimeout(() => handleBotTile(cur, p), 500);
                     }
                 }
             }, 150);
         }
 
-        socket.on('player_is_answering', (playerId) => {
-            const p = players.find(x => x.id === playerId);
-            if (p) showNotify(`🧠 <b>${p.avatar} ${p.name}</b> đang giải câu hỏi...`);
-        });
+        // --- XỬ LÝ SỰ KIỆN BÀN CỜ ---
+        socket.on('player_is_answering', (pId) => { const p = players.find(x => x.id === pId); if (p) showNotify(`🧠 <b>${p.username}</b> đang giải câu hỏi...`); });
 
-        function handleTile(pos) {
+        function handleTile(pos, p) {
             const tile = BOARD_CONFIG[pos];
-            const p = players.find(pl => pl.id === mySocketId);
-
-            if (p) {
-                if (tile.type === 'prop') {
-                    socket.emit('answering_event');
-                    openQuestion(pos);
-                } else if (tile.type === 'chance' || tile.type === 'chest') {
-                    const bonus = Math.floor(Math.random() * 100) - 30;
-                    socket.emit('answered_result', { correct: true, points: bonus, isBonus: true });
-                    showNotify(`${bonus >= 0 ? "🍀 MAY MẮN" : "☠️ XUI XẺO"}! <b>${p.name}</b> được ${bonus >= 0 ? '+' : ''}${bonus}đ`);
-                    setTimeout(() => socket.emit('next_turn'), 1500);
-                } else if (tile.name === 'JAIL') {
-                    showNotify(`🚨 <b>${p.name}</b> BỊ BẮT VÀO TÙ!`);
-                    setTimeout(() => socket.emit('next_turn'), 1500);
-                } else {
-                    setTimeout(() => socket.emit('next_turn'), 1000);
-                }
-            }
+            if (tile.type === 'prop') { socket.emit('answering_event'); openQuestion(pos); }
+            else if (tile.type === 'chance' || tile.type === 'chest') { const bonus = Math.floor(Math.random() * 100) - 30; socket.emit('answered_result', { correct: true, points: bonus, isBonus: true }); showNotify(`${bonus >= 0 ? "🍀" : "☠️"} <b>${p.username}</b> ${bonus >= 0 ? '+' : ''}${bonus}đ`); setTimeout(() => socket.emit('next_turn'), 1500); }
+            else if (tile.name === 'JAIL') { showNotify(`🚨 <b>${p.username}</b> BỊ BẮT VÀO TÙ!`); setTimeout(() => socket.emit('next_turn'), 1500); }
+            else { setTimeout(() => socket.emit('next_turn'), 1000); }
         }
 
-        socket.on('turn_changed', (newTurnIdx) => {
-            curPlayerIdx = newTurnIdx; isRolling = false; updateTurnDisplay();
-        });
+        socket.on('turn_changed', (nIdx) => { curPlayerIdx = nIdx; isRolling = false; updateTurnDisplay(); });
 
-        // --- CÂU HỎI & KINH TẾ ---
-        function openQuestion(tileIndex) {
-            const modal = document.getElementById('modal-q');
-            const p = players.find(pl => pl.id === mySocketId);
-            const cycle = p.qCount % 10;
-            let diffKey = 'easy', rewardPoints = 50;
-            if (cycle >= 5 && cycle <= 8) { diffKey = 'medium'; rewardPoints = 100; } else if (cycle === 9) { diffKey = 'hard'; rewardPoints = 200; }
+        // --- BOT NGHĨ VÀ ĐƯA RA QUYẾT ĐỊNH ---
+        function handleBotTile(pos, p) {
+            const tile = BOARD_CONFIG[pos];
+            if (tile.type === 'prop') {
+                socket.emit('answering_event', p.id);
+                // Cho bot giả vờ suy nghĩ 2 giây
+                setTimeout(() => {
+                    let pts = (p.qCount % 10) >= 5 ? 100 : 50; if ((p.qCount % 10) === 9) pts = 200;
+                    let isCor = Math.random() < 0.75; // 75% Bot trả lời đúng
+                    socket.emit('answered_result', { targetId: p.id, correct: isCor, points: isCor ? pts : 0, isBonus: false });
 
-            const pool = QUESTIONS[diffKey];
-            const q = pool[Math.floor(Math.random() * pool.length)];
+                    setTimeout(() => {
+                        if (isCor) {
+                            if (tile.owner && tile.owner !== p.id) { botPayRent(pos, p); }
+                            else { handleBotPropTx(pos, p); }
+                        } else {
+                            if (tile.owner && tile.owner !== p.id) { botPayRent(pos, p); }
+                            else { socket.emit('next_turn', p.id); }
+                        }
+                    }, 1500);
+                }, 2000);
+            }
+            else if (tile.type === 'chance' || tile.type === 'chest') { const bonus = Math.floor(Math.random() * 100) - 30; socket.emit('answered_result', { targetId: p.id, correct: true, points: bonus, isBonus: true }); showNotify(`${bonus >= 0 ? "🍀" : "☠️"} <b>${p.username}</b> ${bonus >= 0 ? '+' : ''}${bonus}đ`); setTimeout(() => socket.emit('next_turn', p.id), 1500); }
+            else if (tile.name === 'JAIL') { showNotify(`🚨 <b>${p.username}</b> BỊ BẮT VÀO TÙ!`); setTimeout(() => socket.emit('next_turn', p.id), 1500); }
+            else { setTimeout(() => socket.emit('next_turn', p.id), 1000); }
+        }
 
-            document.getElementById('mq-title').innerText = `📚 CHỌN ĐÁP ÁN ĐÚNG - ${rewardPoints} ĐIỂM`;
-            document.getElementById('mq-text').innerText = q.q;
+        function botPayRent(tIdx, p) { const tile = BOARD_CONFIG[tIdx]; socket.emit('pay_rent', { targetId: p.id, ownerId: tile.owner, amount: tile.rent + (tile.houses * tile.rent * 2) }); setTimeout(() => socket.emit('next_turn', p.id), 1000); }
+
+        function handleBotPropTx(tIdx, p) {
+            const tile = BOARD_CONFIG[tIdx];
+            if (!tile.owner && p.score >= tile.price + 100) { // Bot dư tiền thì mua
+                socket.emit('property_action', { targetId: p.id, action: 'buy', tileIndex: tIdx, cost: tile.price, playerName: p.username });
+            } else if (tile.owner === p.id && tile.houses < 4 && p.score >= tile.housePrice + 100) { // Bot dư tiền thì xây
+                socket.emit('property_action', { targetId: p.id, action: 'build', tileIndex: tIdx, cost: tile.housePrice, playerName: p.username });
+            }
+            setTimeout(() => socket.emit('next_turn', p.id), 1000);
+        }
+
+        // --- CÂU HỎI CHO NGƯỜI CHƠI ---
+        function openQuestion(tIdx) {
+            const modal = document.getElementById('modal-q'); const p = players.find(pl => pl.id === mySocketId);
+            let diff = 'easy', pts = 50; if ((p.qCount % 10) >= 5) { diff = 'medium'; pts = 100; } if ((p.qCount % 10) === 9) { diff = 'hard'; pts = 200; }
+            const q = QUESTIONS[diff][Math.floor(Math.random() * QUESTIONS[diff].length)];
+            document.getElementById('mq-title').innerText = `📚 CÂU HỎI - ${pts} ĐIỂM`; document.getElementById('mq-text').innerText = q.q;
             const optsDiv = document.getElementById('mq-opts'); optsDiv.innerHTML = '';
-
-            q.a.forEach((ans, idx) => {
-                const btn = document.createElement('button'); btn.className = 'ans-btn'; btn.innerText = ans;
-                btn.onclick = () => answerQuestion(idx === q.c, rewardPoints, tileIndex);
-                optsDiv.appendChild(btn);
-            });
+            q.a.forEach((ans, idx) => { const btn = document.createElement('button'); btn.className = 'ans-btn'; btn.innerText = ans; btn.onclick = () => answerQuestion(idx === q.c, pts, tIdx); optsDiv.appendChild(btn); });
             modal.style.display = 'flex';
         }
 
-        function answerQuestion(isCorrect, rewardPoints, tileIndex) {
-            document.getElementById('modal-q').style.display = 'none';
-            const tile = BOARD_CONFIG[tileIndex];
-            socket.emit('answered_result', { correct: isCorrect, points: isCorrect ? rewardPoints : 0, isBonus: false });
-
-            setTimeout(() => {
-                if (isCorrect) {
-                    if (tile.owner !== null && tile.owner !== mySocketId) payRent(tileIndex);
-                    else handlePropertyTransaction(tileIndex);
-                } else {
-                    if (tile.owner !== null && tile.owner !== mySocketId) payRent(tileIndex);
-                    else socket.emit('next_turn');
-                }
-            }, 1500);
+        function answerQuestion(isCor, pts, tIdx) {
+            document.getElementById('modal-q').style.display = 'none'; const tile = BOARD_CONFIG[tIdx];
+            socket.emit('answered_result', { correct: isCor, points: isCor ? pts : 0, isBonus: false });
+            setTimeout(() => { if (isCor) { if (tile.owner && tile.owner !== mySocketId) payRent(tIdx); else handlePropTx(tIdx); } else { if (tile.owner && tile.owner !== mySocketId) payRent(tIdx); else socket.emit('next_turn'); } }, 1500);
         }
 
-        function getRent(tile) { return (!tile || tile.type !== 'prop') ? 0 : tile.rent + (tile.houses * tile.rent * 2); }
+        function payRent(tIdx) { const tile = BOARD_CONFIG[tIdx]; socket.emit('pay_rent', { ownerId: tile.owner, amount: tile.rent + (tile.houses * tile.rent * 2) }); setTimeout(() => socket.emit('next_turn'), 1000); }
 
-        function payRent(tileIndex) {
-            const tile = BOARD_CONFIG[tileIndex];
-            socket.emit('pay_rent', { ownerId: tile.owner, amount: getRent(tile) });
-            setTimeout(() => socket.emit('next_turn'), 1000);
+        function handlePropTx(tIdx) {
+            const tile = BOARD_CONFIG[tIdx]; const p = players.find(pl => pl.id === mySocketId);
+            if (!tile.owner) { if (p.score >= tile.price) showBuyModal(tIdx, 'buy'); else { showNotify(`❌ Không đủ tiền mua!`); socket.emit('next_turn'); } }
+            else if (tile.owner === mySocketId) { if (tile.houses < 4 && p.score >= tile.housePrice) showBuyModal(tIdx, 'build'); else { socket.emit('next_turn'); } }
         }
 
-        function handlePropertyTransaction(tileIndex) {
-            const tile = BOARD_CONFIG[tileIndex];
-            const p = players.find(pl => pl.id === mySocketId);
-
-            if (tile.owner === null) {
-                if (p.score >= tile.price) showBuyModal(tileIndex, 'buy');
-                else { showNotify(`❌ Bạn không đủ tiền mua ${tile.name}!`); socket.emit('next_turn'); }
-            } else if (tile.owner === mySocketId) {
-                if (tile.houses < 4 && p.score >= tile.housePrice) showBuyModal(tileIndex, 'build');
-                else { showNotify(tile.houses >= 4 ? `Đã xây tối đa!` : `Không đủ tiền!`); socket.emit('next_turn'); }
-            }
-        }
-
-        function showBuyModal(tileIndex, action) {
-            const tile = BOARD_CONFIG[tileIndex];
-            const modal = document.getElementById('modal-buy');
-            const title = document.getElementById('mb-title'); const text = document.getElementById('mb-text');
-            const btnYes = document.getElementById('btn-buy-yes'); const btnNo = document.getElementById('btn-buy-no');
-            const me = players.find(pl => pl.id === mySocketId);
-
-            if (action === 'buy') {
-                title.innerText = "🏛️ MUA ĐỊA DANH";
-                text.innerHTML = `Mua <b>${tile.name}</b>?<br>Giá: <span style="color:var(--secondary)">${tile.price}đ</span><br>Thuế cơ bản: ${getRent(tile)}đ`;
-                btnYes.innerText = `MUA (${tile.price}đ)`;
-                btnYes.onclick = () => { socket.emit('property_action', { action: 'buy', tileIndex: tileIndex, cost: tile.price, playerName: me.name }); modal.style.display = 'none'; socket.emit('next_turn'); };
-            } else if (action === 'build') {
-                title.innerText = "🏠 NÂNG CẤP NHÀ";
-                text.innerHTML = `Nâng cấp nhà ở <b>${tile.name}</b>?<br>Giá: <span style="color:var(--secondary)">${tile.housePrice}đ</span><br>Thuế tăng: <b>${tile.rent + ((tile.houses + 1) * tile.rent * 2)}đ</b>`;
-                btnYes.innerText = `NÂNG CẤP (${tile.housePrice}đ)`;
-                btnYes.onclick = () => { socket.emit('property_action', { action: 'build', tileIndex: tileIndex, cost: tile.housePrice, playerName: me.name }); modal.style.display = 'none'; socket.emit('next_turn'); };
-            }
-            btnNo.onclick = () => { modal.style.display = 'none'; socket.emit('next_turn'); };
+        function showBuyModal(tIdx, act) {
+            const tile = BOARD_CONFIG[tIdx]; const modal = document.getElementById('modal-buy'); const me = players.find(pl => pl.id === mySocketId);
+            document.getElementById('mb-title').innerText = act === 'buy' ? "🏛️ MUA ĐỊA DANH" : "🏠 NÂNG CẤP NHÀ";
+            document.getElementById('mb-text').innerHTML = act === 'buy' ? `Mua <b>${tile.name}</b>?<br>Giá: ${tile.price}đ` : `Nâng cấp nhà?<br>Giá: ${tile.housePrice}đ`;
+            const btnYes = document.getElementById('btn-buy-yes'); btnYes.innerText = act === 'buy' ? `MUA (${tile.price}đ)` : `NÂNG CẤP (${tile.housePrice}đ)`;
+            btnYes.onclick = () => { socket.emit('property_action', { action: act, tileIndex: tIdx, cost: act === 'buy' ? tile.price : tile.housePrice, playerName: me.username }); modal.style.display = 'none'; socket.emit('next_turn'); };
+            document.getElementById('btn-buy-no').onclick = () => { modal.style.display = 'none'; socket.emit('next_turn'); };
             modal.style.display = 'flex';
         }
 
         socket.on('sync_board', (data) => {
-            const tile = BOARD_CONFIG[data.tileIndex];
-            if (data.action === 'buy') { tile.owner = data.playerId; showNotify(`🏛️ <b>${data.playerName}</b> đã trở thành chủ của <b>${tile.name}</b>!`); }
-            else if (data.action === 'build') { tile.houses++; showNotify(`🏠 <b>${data.playerName}</b> đã nâng cấp nhà tại <b>${tile.name}</b>!`); }
+            const t = BOARD_CONFIG[data.tileIndex]; if (data.action === 'buy') t.owner = data.playerId; else if (data.action === 'build') t.houses++;
             updateBoardVisuals();
         });
 
-        // --- HÀM VẼ GIAO DIỆN BÀN CỜ ---
+        // --- VẼ GIAO DIỆN BÀN CỜ ---
         function renderBoard() {
-            const board = document.getElementById('board'); const hub = board.querySelector('.center-hub');
-            board.innerHTML = ''; board.appendChild(hub);
-            BOARD_CONFIG.forEach((tileData, index) => {
-                let r, c; if (index <= 8) { r = 1; c = index + 1; } else if (index <= 16) { r = index - 8 + 1; c = 9; } else if (index <= 24) { r = 9; c = 9 - (index - 16); } else { r = 9 - (index - 24); c = 1; }
-                const div = document.createElement('div'); div.className = `tile ${tileData.type === 'corner' ? 'corner' : ''}`;
-                div.style.gridRow = r; div.style.gridColumn = c; div.id = `tile-${index}`;
-                if (tileData.type === 'prop') div.innerHTML = `<div class="bar" style="background:${tileData.color}"></div><div class="tile-name">${tileData.name}</div>`;
-                else div.innerHTML = `<span style="color:${tileData.color}; font-weight: 900;">${tileData.name}</span>`;
-                const holder = document.createElement('div'); holder.className = 'token-holder'; holder.id = `holder-${index}`;
-                div.appendChild(holder); board.appendChild(div);
+            const board = document.getElementById('board'); board.innerHTML = ''; board.appendChild(document.querySelector('.center-hub'));
+            BOARD_CONFIG.forEach((t, i) => {
+                let r, c; if (i <= 8) { r = 1; c = i + 1; } else if (i <= 16) { r = i - 7; c = 9; } else if (i <= 24) { r = 9; c = 25 - i; } else { r = 33 - i; c = 1; }
+                const d = document.createElement('div'); d.className = `tile ${t.type === 'corner' ? 'corner' : ''}`; d.style.gridRow = r; d.style.gridColumn = c; d.id = `tile-${i}`;
+                d.innerHTML = t.type === 'prop' ? `<div class="bar" style="background:${t.color}"></div><div class="tile-name">${t.name}</div>` : `<span style="color:${t.color}; font-weight:900;">${t.name}</span>`;
+                const h = document.createElement('div'); h.className = 'token-holder'; h.id = `holder-${i}`; d.appendChild(h); board.appendChild(d);
             });
-            players.forEach((p) => {
-                const t = document.createElement('div'); t.className = 'token'; t.style.border = `2px solid ${p.color}`;
-                t.innerText = p.avatar; t.id = `token-${p.id}`; document.getElementById(`holder-${p.pos}`).appendChild(t);
-            });
+            players.forEach(p => { const t = document.createElement('div'); t.className = 'token'; t.style.border = `2px solid ${p.color}`; t.innerText = p.avatar; t.id = `token-${p.id}`; document.getElementById(`holder-${p.pos}`).appendChild(t); });
             updateBoardVisuals();
         }
 
         function updateBoardVisuals() {
-            BOARD_CONFIG.forEach((tile, index) => {
-                if (tile.type === 'prop' && tile.owner !== null) {
-                    const el = document.getElementById(`tile-${index}`);
-                    const owner = players.find(p => p.id === tile.owner);
-                    if (!owner) return;
-                    const bar = el.querySelector('.bar'); bar.style.background = owner.color; bar.style.display = 'flex'; bar.style.alignItems = 'center'; bar.style.justifyContent = 'center';
-                    bar.innerHTML = `<span style="font-size: 14px; text-shadow: 0 0 3px rgba(255,255,255,0.8);">${owner.avatar}</span>`;
-                    let houseDiv = el.querySelector('.house-container');
-                    if (!houseDiv) { houseDiv = document.createElement('div'); houseDiv.className = 'house-container'; el.appendChild(houseDiv); }
-                    houseDiv.innerHTML = '🏠'.repeat(tile.houses);
+            BOARD_CONFIG.forEach((t, i) => {
+                if (t.type === 'prop' && t.owner) {
+                    const el = document.getElementById(`tile-${i}`); const o = players.find(p => p.id === t.owner); if (!o) return;
+                    el.querySelector('.bar').style.background = o.color; el.querySelector('.bar').innerHTML = `<span style="font-size:14px;">${o.avatar}</span>`;
+                    let hD = el.querySelector('.house-container'); if (!hD) { hD = document.createElement('div'); hD.className = 'house-container'; el.appendChild(hD); } hD.innerHTML = '🏠'.repeat(t.houses);
                 }
             });
         }
 
         function updateStats() {
-            const detailedStats = document.getElementById('detailed-stats'); if (!detailedStats) return;
-            detailedStats.innerHTML = '';
+            const ds = document.getElementById('detailed-stats'); if (!ds) return; ds.innerHTML = '';
             players.forEach((p, idx) => {
-                let isActive = idx === curPlayerIdx;
-                detailedStats.innerHTML += `<div style="padding: 12px; border-radius: 12px; background: ${isActive ? 'rgba(0,184,148,0.15)' : '#f8f9fa'}; border-left: 6px solid ${p.color}; margin-bottom: 12px;"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;"><span style="font-weight: 700; color: ${p.color};">${p.avatar} ${p.name} ${p.id === mySocketId ? '(Bạn)' : ''}</span><span style="font-size: 1.2rem; font-weight: 900;">${p.score}</span></div></div>`;
+                ds.innerHTML += `<div style="padding:12px; border-radius:12px; background:${idx === curPlayerIdx ? 'rgba(0,184,148,0.15)' : '#f8f9fa'}; border-left:6px solid ${p.color}; margin-bottom:12px;"><div style="display:flex; justify-content:space-between;"><span style="font-weight:700; color:${p.color};">${p.avatar} ${p.username} ${p.currentStreak > 0 ? `(🔥${p.currentStreak})` : ''}</span><span style="font-weight:900;">${p.score}</span></div></div>`;
             });
         }
     </script>
