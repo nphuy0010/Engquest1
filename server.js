@@ -190,10 +190,31 @@ io.on('connection', (socket) => {
         }
     });
 
+    // Sửa lỗi kẹt lượt: Check điều kiện kỹ hơn
     socket.on('next_turn', (targetId) => {
         const roomId = socketToRoom[socket.id]; if (roomId && rooms[roomId]) {
-            const room = rooms[roomId]; const actor = getActor(room, socket.id, targetId);
-            if (actor && room.players[room.currentTurnIdx]?.id === actor.id) { room.currentTurnIdx = (room.currentTurnIdx + 1) % room.players.length; io.to(roomId).emit('turn_changed', room.currentTurnIdx); }
+            const room = rooms[roomId];
+            let actor = room.players.find(p => p.id === socket.id);
+            if (targetId && room.host === socket.id) {
+                const bot = room.players.find(p => p.id === targetId && p.isBot);
+                if (bot) actor = bot;
+            }
+
+            if (actor && room.players[room.currentTurnIdx]?.id === actor.id) {
+                room.currentTurnIdx = (room.currentTurnIdx + 1) % room.players.length;
+                io.to(roomId).emit('turn_changed', room.currentTurnIdx);
+            }
+        }
+    });
+
+    // Tính năng ép chuyển lượt dành cho Chủ phòng (Cứu kẹt)
+    socket.on('force_next_turn', () => {
+        const roomId = socketToRoom[socket.id];
+        if (roomId && rooms[roomId] && rooms[roomId].host === socket.id) {
+            const room = rooms[roomId];
+            room.currentTurnIdx = (room.currentTurnIdx + 1) % room.players.length;
+            io.to(roomId).emit('turn_changed', room.currentTurnIdx);
+            io.to(roomId).emit('log_msg', `⚙️ Chủ phòng đã sử dụng quyền Ép chuyển lượt!`);
         }
     });
 

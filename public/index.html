@@ -524,6 +524,7 @@
             font-size: 1rem;
             cursor: pointer;
             font-weight: 600;
+            transition: 0.2s;
         }
 
         .ans-btn:hover {
@@ -955,8 +956,8 @@
                 <div id="detailed-stats" style="flex: 1; overflow-y: auto; margin-bottom: 15px; padding-right: 5px;">
                 </div>
                 <h3 class="sp-title" style="border-top: 2px dashed #ddd; padding-top: 15px;">🎯 TRẠNG THÁI</h3>
-                <div id="current-action-display"
-                    style="text-align: center; color: #555; font-weight: 600; font-size: 1rem; padding: 10px; background: #f1f2f6; border-radius: 10px;">
+                <div id="current-action-display" onclick="if(isMyRoomHost) { socket.emit('force_next_turn'); }"
+                    style="text-align: center; color: #555; font-weight: 600; font-size: 1rem; padding: 10px; background: #f1f2f6; border-radius: 10px; cursor: pointer;">
                 </div>
             </div>
         </div>
@@ -1056,7 +1057,7 @@
 
         function showNotify(msg) {
             const entry = document.createElement('div'); entry.style.padding = '12px'; entry.style.borderRadius = '8px'; entry.style.fontSize = '0.9rem'; entry.style.lineHeight = '1.4';
-            let bC = 'var(--primary)', bgC = '#f8f9fa'; if (msg.includes('✅') || msg.includes('nhận') || msg.includes('mua') || msg.includes('CƯỚP')) { bC = 'var(--secondary)'; bgC = 'rgba(0,184,148,0.1)'; } else if (msg.includes('❌') || msg.includes('TÙ') || msg.includes('thu') || msg.includes('Hết giờ')) { bC = 'var(--accent)'; bgC = 'rgba(255,107,107,0.1)'; } else if (msg.includes('🎲') || msg.includes('⏱️')) { bC = 'var(--accent-light)'; bgC = 'rgba(253, 203, 110, 0.1)'; }
+            let bC = 'var(--primary)', bgC = '#f8f9fa'; if (msg.includes('✅') || msg.includes('nhận') || msg.includes('mua') || msg.includes('CƯỚP')) { bC = 'var(--secondary)'; bgC = 'rgba(0,184,148,0.1)'; } else if (msg.includes('❌') || msg.includes('TÙ') || msg.includes('thu') || msg.includes('Hết giờ')) { bC = 'var(--accent)'; bgC = 'rgba(255,107,107,0.1)'; } else if (msg.includes('🎲') || msg.includes('⏱️') || msg.includes('⚙️')) { bC = 'var(--accent-light)'; bgC = 'rgba(253, 203, 110, 0.1)'; }
             entry.style.borderLeft = `4px solid ${bC}`; entry.style.background = bgC; entry.innerHTML = msg;
             const n = document.getElementById('notification'); n.innerHTML = msg; n.style.display = 'block'; setTimeout(() => n.style.display = 'none', 3000);
             const logDiv = document.getElementById('activity-log'); if (logDiv) { logDiv.appendChild(entry); logDiv.scrollTop = logDiv.scrollHeight; }
@@ -1144,7 +1145,7 @@
 
             modal.style.display = 'flex'; currentStealTimeValue = 0;
 
-            // ĐÃ CHỈNH SỬA: Hiển thị đồng hồ 2 GIÂY trước khi chuyển thành ??.??
+            // ĐÃ CHỈNH SỬA: Hiển thị đồng hồ TRONG 2 GIÂY
             currentStealTimer = setInterval(() => {
                 currentStealTimeValue += 0.05;
                 if (currentStealTimeValue <= 2.0) { display.innerText = currentStealTimeValue.toFixed(2); }
@@ -1185,7 +1186,9 @@
 
                 data.questionData.a.forEach((ans, idx) => {
                     const btn = document.createElement('button'); btn.className = 'ans-btn'; btn.innerText = ans;
-                    btn.onclick = () => {
+                    btn.onclick = (e) => {
+                        // KHÓA NÚT CHỐNG CLICK ĐÚP TẠO LỖI KẸT SERVER
+                        document.querySelectorAll('.ans-btn').forEach(b => b.disabled = true);
                         modal.style.display = 'none';
                         socket.emit('answered_result', { correct: (idx === data.questionData.c), points: (idx === data.questionData.c) ? 100 : 0, isBonus: false, isStealAnswer: true });
                     };
@@ -1195,14 +1198,22 @@
             }
         });
 
-        // ĐÃ CHỈNH SỬA: Chống kẹt lượt đi (Fallback System)
+        // BẢN VÁ LỖI CỨU KẸT LƯỢT ĐI
         socket.on('resume_original_turn', () => {
-            setTimeout(() => { // Đợi 2 giây để người chơi xem thông báo cướp xong
+            // Tắt hết Modal còn sót lại trên màn hình
+            document.getElementById('modal-q').style.display = 'none';
+            document.getElementById('modal-spectator').style.display = 'none';
+            document.getElementById('modal-clock').style.display = 'none';
+            isRolling = false; // Mở lại quyền bấm xúc xắc
+
+            setTimeout(() => {
                 try {
                     const activePlayer = players[curPlayerIdx];
+                    if (!activePlayer) return socket.emit('next_turn');
+
                     if (activePlayer.id === mySocketId) {
                         const tIdx = originalPlayerTileIndex; const tile = BOARD_CONFIG[tIdx];
-                        // Nếu đứng trên đất người khác thì nộp phạt, còn không thì tự động sang lượt
+                        // Nếu đứng trên đất của người khác thì nộp phạt
                         if (tile && tile.type === 'prop' && tile.owner && tile.owner !== mySocketId) {
                             payRent(tIdx);
                         } else {
@@ -1217,10 +1228,10 @@
                         }
                     }
                 } catch (err) {
-                    console.error("Lỗi khi Resume Turn, kích hoạt cứu kẹt...", err);
-                    socket.emit('next_turn'); // Nếu có lỗi xảy ra vẫn ép chuyển lượt
+                    console.error("Cứu kẹt tự động...", err);
+                    socket.emit('next_turn');
                 }
-            }, 2000);
+            }, 2500);
         });
 
 
@@ -1267,7 +1278,15 @@
             socket.emit('share_question', q);
             document.getElementById('mq-title').innerText = `📚 CÂU HỎI - ${pts} ĐIỂM`; document.getElementById('mq-text').innerText = q.q;
             const optsDiv = document.getElementById('mq-opts'); optsDiv.innerHTML = '';
-            q.a.forEach((ans, idx) => { const btn = document.createElement('button'); btn.className = 'ans-btn'; btn.innerText = ans; btn.onclick = () => answerQuestion(idx === q.c, pts, tIdx, q); optsDiv.appendChild(btn); });
+            q.a.forEach((ans, idx) => {
+                const btn = document.createElement('button'); btn.className = 'ans-btn'; btn.innerText = ans;
+                btn.onclick = (e) => {
+                    // KHÓA NÚT CHỐNG CLICK ĐÚP
+                    document.querySelectorAll('.ans-btn').forEach(b => b.disabled = true);
+                    answerQuestion(idx === q.c, pts, tIdx, q);
+                };
+                optsDiv.appendChild(btn);
+            });
             modal.style.display = 'flex';
         }
 
@@ -1302,6 +1321,8 @@
             document.getElementById('btn-buy-no').onclick = () => { modal.style.display = 'none'; socket.emit('next_turn'); };
             modal.style.display = 'flex';
         }
+
+        socket.on('turn_changed', (nIdx) => { curPlayerIdx = nIdx; isRolling = false; updateTurnDisplay(); });
 
         socket.on('sync_board', (data) => {
             const t = BOARD_CONFIG[data.tileIndex]; if (data.action === 'buy') t.owner = data.playerId; else if (data.action === 'build') t.houses++;
