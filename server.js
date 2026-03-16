@@ -16,23 +16,41 @@ function generateRoomCode() {
 }
 
 function getActor(room, socketId, targetId) {
-    if (targetId && room.host === socketId) return room.players.find(p => p.id === targetId && p.isBot);
+    if (targetId && targetId !== socketId && room.host === socketId) {
+        return room.players.find(p => p.id === targetId && p.isBot);
+    }
     return room.players.find(p => p.id === socketId);
+}
+
+function checkBankrupt(roomId, p) {
+    const room = rooms[roomId];
+    if (p.score < 0 && !p.bankrupt) {
+        p.bankrupt = true;
+        p.score = "PHÁ SẢN";
+        io.to(roomId).emit('log_msg', `☠️ <b>${p.username}</b> đã vỡ nợ và PHÁ SẢN! Toàn bộ đất đai bị tịch thu.`);
+        io.to(roomId).emit('player_bankrupt', p.id);
+
+        const alive = room.players.filter(pl => !pl.bankrupt);
+        if (alive.length === 1) {
+            io.to(roomId).emit('game_over', { winnerName: alive[0].username, score: alive[0].score });
+            room.isPlaying = false;
+        }
+    }
 }
 
 io.on('connection', (socket) => {
     socket.on('play_with_bot', (pInfo) => {
         const roomId = generateRoomCode(); socket.join(roomId); socketToRoom[socket.id] = roomId;
-        const newPlayer = { id: socket.id, username: pInfo.username, avatar: pInfo.avatar, color: pInfo.color, isReady: true, score: 500, pos: 0, jail: false, qCount: 0, currentStreak: 0, isBot: false };
-        const botPlayer = { id: 'bot_' + Math.random().toString(36).substr(2, 9), username: 'Máy (AI)', avatar: '🤖', color: '#00cec9', isReady: true, score: 500, pos: 0, jail: false, qCount: 0, currentStreak: 0, isBot: true };
-        rooms[roomId] = { id: roomId, host: socket.id, players: [newPlayer, botPlayer], isPlaying: true, currentTurnIdx: 0, stealData: null };
+        const newPlayer = { id: socket.id, username: pInfo.username, avatar: pInfo.avatar, color: pInfo.color, isReady: true, score: 1500, pos: 0, jail: false, bankrupt: false, qCount: 0, currentStreak: 0, isBot: false };
+        const botPlayer = { id: 'bot_' + Math.random().toString(36).substr(2, 9), username: 'Máy (AI)', avatar: '🤖', color: '#00cec9', isReady: true, score: 1500, pos: 0, jail: false, bankrupt: false, qCount: 0, currentStreak: 0, isBot: true };
+        rooms[roomId] = { id: roomId, host: socket.id, players: [newPlayer, botPlayer], isPlaying: true, currentTurnIdx: 0, stealData: null, difficulty: pInfo.difficulty || 'easy' };
         socket.emit('room_created', roomId); io.to(roomId).emit('update_lobby', rooms[roomId]); io.to(roomId).emit('game_started', rooms[roomId]);
     });
 
     socket.on('create_room', (pInfo) => {
         const roomId = generateRoomCode(); socket.join(roomId); socketToRoom[socket.id] = roomId;
-        const newPlayer = { id: socket.id, username: pInfo.username, avatar: pInfo.avatar, color: pInfo.color, isReady: true, score: 500, pos: 0, jail: false, qCount: 0, currentStreak: 0, isBot: false };
-        rooms[roomId] = { id: roomId, host: socket.id, players: [newPlayer], isPlaying: false, currentTurnIdx: 0, stealData: null };
+        const newPlayer = { id: socket.id, username: pInfo.username, avatar: pInfo.avatar, color: pInfo.color, isReady: true, score: 1500, pos: 0, jail: false, bankrupt: false, qCount: 0, currentStreak: 0, isBot: false };
+        rooms[roomId] = { id: roomId, host: socket.id, players: [newPlayer], isPlaying: false, currentTurnIdx: 0, stealData: null, difficulty: pInfo.difficulty || 'easy' };
         socket.emit('room_created', roomId); io.to(roomId).emit('update_lobby', rooms[roomId]);
     });
 
@@ -42,7 +60,7 @@ io.on('connection', (socket) => {
         if (room.isPlaying) return socket.emit('error_msg', "Phòng đang chơi rồi!");
         if (room.players.length >= 4) return socket.emit('error_msg', "Phòng đã đầy!");
         socket.join(roomId); socketToRoom[socket.id] = roomId;
-        const newPlayer = { id: socket.id, username: pInfo.username, avatar: pInfo.avatar, color: pInfo.color, isReady: false, score: 500, pos: 0, jail: false, qCount: 0, currentStreak: 0, isBot: false };
+        const newPlayer = { id: socket.id, username: pInfo.username, avatar: pInfo.avatar, color: pInfo.color, isReady: false, score: 1500, pos: 0, jail: false, bankrupt: false, qCount: 0, currentStreak: 0, isBot: false };
         room.players.push(newPlayer); io.to(roomId).emit('update_lobby', room);
     });
 
@@ -66,26 +84,46 @@ io.on('connection', (socket) => {
         const roomId = socketToRoom[socket.id]; if (roomId && rooms[roomId]) {
             const room = rooms[roomId]; const actor = getActor(room, socket.id, targetId);
             if (actor && room.players[room.currentTurnIdx]?.id === actor.id) {
-                const val = Math.floor(Math.random() * 6) + 1;
+                let val;
                 if (actor.jail) {
+                    if (Math.random() < 0.2666) { val = 6; } else { val = Math.floor(Math.random() * 5) + 1; }
+
                     if (val === 6) {
                         actor.jail = false; io.to(roomId).emit('sync_players', room.players);
-                        io.to(roomId).emit('dice_rolled', { value: val, playerId: actor.id, escaped: true });
+                        io.to(roomId).emit('jail_escaped', { value: val, playerId: actor.id });
                     } else {
                         io.to(roomId).emit('dice_rolled', { value: val, playerId: actor.id, remainInJail: true });
                     }
                 } else {
+                    val = Math.floor(Math.random() * 6) + 1;
                     io.to(roomId).emit('dice_rolled', { value: val, playerId: actor.id });
                 }
             }
         }
     });
 
+    // 🎯 ĐÃ SỬA TẠI ĐÂY: ÉP POS VỀ 8 KHI VÀO TÙ
     socket.on('player_jailed', (data) => {
         const roomId = socketToRoom[socket.id];
         if (roomId && rooms[roomId]) {
             const p = getActor(rooms[roomId], socket.id, data.targetId);
-            if (p) { p.jail = true; io.to(roomId).emit('sync_players', rooms[roomId].players); }
+            if (p) {
+                p.jail = true;
+                p.pos = 8; // Bắt buộc dịch chuyển về ô số 8 (JAIL)
+                io.to(roomId).emit('sync_players', rooms[roomId].players);
+            }
+        }
+    });
+
+    socket.on('force_move', (data) => {
+        const roomId = socketToRoom[socket.id];
+        if (roomId && rooms[roomId]) {
+            const p = getActor(rooms[roomId], socket.id, data.targetId);
+            if (p) {
+                p.pos = data.pos;
+                if (data.pos === 0) { p.score += 200; io.to(roomId).emit('log_msg', `🎉 <b>${p.avatar} ${p.username}</b> được thưởng 200đ khi bay về GO!`); }
+                io.to(roomId).emit('sync_players', rooms[roomId].players);
+            }
         }
     });
 
@@ -110,14 +148,7 @@ io.on('connection', (socket) => {
             const room = rooms[roomId]; const p = getActor(room, socket.id, data.targetId);
             if (p) {
                 if (data.isStealAnswer) {
-                    if (data.correct) {
-                        p.score += data.points; p.currentStreak++;
-                        io.to(roomId).emit('log_msg', `🔥 Khét quá! <b>${p.avatar} ${p.username}</b> cướp thành công và nhận ${data.points}đ!`);
-                    } else {
-                        p.currentStreak = 0; io.to(roomId).emit('log_msg', `❌ <b>${p.avatar} ${p.username}</b> cướp hụt rồi!`);
-                    }
-                    io.to(roomId).emit('sync_players', room.players);
-                    io.to(roomId).emit('resume_original_turn');
+                    handleStealAnswer(roomId, p, data.correct, data.points);
                     return;
                 }
 
@@ -125,21 +156,44 @@ io.on('connection', (socket) => {
 
                 if (data.correct || data.isBonus) {
                     p.score += data.points; p.currentStreak++;
-                    io.to(roomId).emit('log_msg', `${data.correct ? '✅' : '🍀'} <b>${p.avatar} ${p.username}</b> trả lời ${data.correct ? 'ĐÚNG' : 'MAY MẮN'}!`);
+                    io.to(roomId).emit('log_msg', `${data.correct ? '✅' : '🍀'} <b>${p.avatar} ${p.username}</b> ${data.isBonus ? 'rút thẻ' : 'trả lời ĐÚNG'} và nhận được <b>${data.points}đ</b>!`);
                     io.to(roomId).emit('sync_players', room.players);
-                    socket.emit('process_property_action', { tileIndex: data.tileIndex });
+
+                    if (data.isBonus) { setTimeout(() => { io.to(roomId).emit('resume_original_turn'); }, 1500); }
+                    else { socket.emit('process_property_action', { tileIndex: data.tileIndex, playerId: p.id }); }
                 } else {
+                    if (data.isBonus) {
+                        p.score += data.points;
+                        io.to(roomId).emit('log_msg', `❌ <b>${p.avatar} ${p.username}</b> bị trừ ${Math.abs(data.points)}đ!`);
+                        io.to(roomId).emit('sync_players', room.players);
+                        checkBankrupt(roomId, p);
+                        setTimeout(() => { io.to(roomId).emit('resume_original_turn'); }, 1500);
+                        return;
+                    }
+
                     p.currentStreak = 0;
                     io.to(roomId).emit('log_msg', `❌ <b>${p.avatar} ${p.username}</b> trả lời SAI! Cơ hội cướp điểm bắt đầu!`);
                     io.to(roomId).emit('sync_players', room.players);
 
-                    if (room.players.length > 1) {
+                    const activePlayers = room.players.filter(pl => !pl.bankrupt && !pl.jail);
+                    if (activePlayers.length > 1) {
                         const targetTime = (Math.random() * 4 + 3).toFixed(2);
                         room.stealData = { originalPlayerId: p.id, targetTime: parseFloat(targetTime), submissions: [], tileIndex: data.tileIndex, questionData: data.questionData };
                         io.to(roomId).emit('start_steal_clock', { targetTime, originalPlayerId: p.id, questionData: data.questionData });
+
+                        const botInRoom = activePlayers.find(pl => pl.isBot);
+                        if (botInRoom && botInRoom.id !== p.id) {
+                            const botStopTime = parseFloat(targetTime) + (Math.random() * 1.5 - 0.75);
+                            setTimeout(() => {
+                                if (rooms[roomId] && rooms[roomId].stealData) {
+                                    rooms[roomId].stealData.submissions.push({ pId: botInRoom.id, stoppedAt: botStopTime });
+                                    if (rooms[roomId].stealData.submissions.length >= activePlayers.length - 1) evaluateStealGame(roomId);
+                                }
+                            }, botStopTime * 1000);
+                        }
                         setTimeout(() => { evaluateStealGame(roomId); }, 10000);
                     } else {
-                        socket.emit('process_property_action', { tileIndex: data.tileIndex });
+                        socket.emit('process_property_action', { tileIndex: data.tileIndex, playerId: p.id });
                     }
                 }
             }
@@ -152,7 +206,8 @@ io.on('connection', (socket) => {
             const room = rooms[roomId]; const pId = data.targetId ? data.targetId : socket.id;
             if (pId === room.stealData.originalPlayerId || room.stealData.submissions.find(s => s.pId === pId)) return;
             room.stealData.submissions.push({ pId: pId, stoppedAt: data.stoppedAt });
-            if (room.stealData.submissions.length >= room.players.length - 1) { evaluateStealGame(roomId); }
+            const activeCount = room.players.filter(pl => !pl.bankrupt && !pl.jail).length;
+            if (room.stealData.submissions.length >= activeCount - 1) { evaluateStealGame(roomId); }
         }
     });
 
@@ -174,45 +229,71 @@ io.on('connection', (socket) => {
         const pWinner = room.players.find(p => p.id === winner);
         io.to(roomId).emit('log_msg', `⏱️ <b>${pWinner.username}</b> bấm đồng hồ chuẩn nhất (Sai số: ${minDiff.toFixed(2)}s) và giành quyền CƯỚP!`);
         io.to(roomId).emit('steal_winner_selected', { winnerId: winner, questionData: sd.questionData });
+
+        if (pWinner.isBot) {
+            setTimeout(() => {
+                if (rooms[roomId]) {
+                    const isCor = Math.random() < 0.75;
+                    handleStealAnswer(roomId, pWinner, isCor, room.difficulty === 'easy' ? 50 : (room.difficulty === 'medium' ? 100 : 200));
+                }
+            }, 2500);
+        }
+    }
+
+    function handleStealAnswer(roomId, p, isCor, points) {
+        const room = rooms[roomId];
+        if (isCor) {
+            p.score += points; p.currentStreak++;
+            io.to(roomId).emit('log_msg', `🔥 Khét quá! <b>${p.avatar} ${p.username}</b> cướp thành công và nhận ${points}đ!`);
+        } else {
+            p.currentStreak = 0; io.to(roomId).emit('log_msg', `❌ <b>${p.avatar} ${p.username}</b> cướp hụt rồi!`);
+        }
+        io.to(roomId).emit('sync_players', room.players);
+        io.to(roomId).emit('resume_original_turn');
     }
 
     socket.on('property_action', (data) => {
         const roomId = socketToRoom[socket.id]; if (roomId && rooms[roomId]) {
-            const p = getActor(rooms[roomId], socket.id, data.targetId);
-            if (p) { p.score -= data.cost; io.to(roomId).emit('sync_players', rooms[roomId].players); io.to(roomId).emit('sync_board', { action: data.action, tileIndex: data.tileIndex, playerId: p.id, playerName: p.username }); }
+            const room = rooms[roomId];
+            const p = getActor(room, socket.id, data.targetId);
+            if (p) {
+                p.score -= parseInt(data.cost);
+                io.to(roomId).emit('sync_players', room.players);
+                io.to(roomId).emit('sync_board', { action: data.action, tileIndex: data.tileIndex, playerId: p.id, playerName: p.username });
+                io.to(roomId).emit('log_msg', `🏢 <b>${p.avatar} ${p.username}</b> vừa ${data.action === 'buy' ? 'mua' : 'nâng cấp'} <b>${data.tileName}</b> với giá <b>${data.cost}đ</b>!`);
+                checkBankrupt(roomId, p);
+            }
         }
     });
 
     socket.on('pay_rent', (data) => {
         const roomId = socketToRoom[socket.id]; if (roomId && rooms[roomId]) {
             const room = rooms[roomId]; const payer = getActor(room, socket.id, data.targetId); const payee = room.players.find(x => x.id === data.ownerId);
-            if (payer && payee) { payer.score -= data.amount; payee.score += data.amount; io.to(roomId).emit('sync_players', room.players); io.to(roomId).emit('log_msg', `💸 <b>${payer.avatar} ${payer.username}</b> nộp ${data.amount}đ cho <b>${payee.username}</b>!`); }
+            if (payer && payee && !payee.bankrupt) {
+                payer.score -= data.amount; payee.score += data.amount;
+                io.to(roomId).emit('sync_players', room.players);
+                io.to(roomId).emit('log_msg', `💸 <b>${payer.avatar} ${payer.username}</b> nộp ${data.amount}đ cho <b>${payee.username}</b>!`);
+                checkBankrupt(roomId, payer);
+            }
         }
     });
 
-    // Sửa lỗi kẹt lượt: Check điều kiện kỹ hơn
     socket.on('next_turn', (targetId) => {
         const roomId = socketToRoom[socket.id]; if (roomId && rooms[roomId]) {
             const room = rooms[roomId];
-            let actor = room.players.find(p => p.id === socket.id);
-            if (targetId && room.host === socket.id) {
-                const bot = room.players.find(p => p.id === targetId && p.isBot);
-                if (bot) actor = bot;
-            }
-
+            const actor = getActor(room, socket.id, targetId);
             if (actor && room.players[room.currentTurnIdx]?.id === actor.id) {
-                room.currentTurnIdx = (room.currentTurnIdx + 1) % room.players.length;
+                do { room.currentTurnIdx = (room.currentTurnIdx + 1) % room.players.length; } while (room.players[room.currentTurnIdx].bankrupt);
                 io.to(roomId).emit('turn_changed', room.currentTurnIdx);
             }
         }
     });
 
-    // Tính năng ép chuyển lượt dành cho Chủ phòng (Cứu kẹt)
     socket.on('force_next_turn', () => {
         const roomId = socketToRoom[socket.id];
         if (roomId && rooms[roomId] && rooms[roomId].host === socket.id) {
             const room = rooms[roomId];
-            room.currentTurnIdx = (room.currentTurnIdx + 1) % room.players.length;
+            do { room.currentTurnIdx = (room.currentTurnIdx + 1) % room.players.length; } while (room.players[room.currentTurnIdx].bankrupt);
             io.to(roomId).emit('turn_changed', room.currentTurnIdx);
             io.to(roomId).emit('log_msg', `⚙️ Chủ phòng đã sử dụng quyền Ép chuyển lượt!`);
         }
