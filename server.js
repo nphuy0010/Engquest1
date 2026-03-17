@@ -11,15 +11,28 @@ app.use(express.static('public'));
 const rooms = {};
 const socketToRoom = {};
 
+// Kho Avatar để random không đụng hàng
+const AVATARS = ['🐶', '🐱', '🦊', '🐼', '🦁', '🐸', '🐯', '🐰', '🐔', '🐧', '🦄', '🐲'];
+
 function generateRoomCode() {
     let code; do { code = Math.floor(100000 + Math.random() * 900000).toString(); } while (rooms[code]); return code;
 }
 
 function getActor(room, socketId, targetId) {
-    if (targetId && targetId !== socketId && room.host === socketId) {
-        return room.players.find(p => p.id === targetId && p.isBot);
-    }
+    if (targetId && targetId !== socketId && room.host === socketId) { return room.players.find(p => p.id === targetId && p.isBot); }
     return room.players.find(p => p.id === socketId);
+}
+
+function getAvailableAvatar(roomPlayers) {
+    const used = roomPlayers.map(p => p.avatar);
+    const available = AVATARS.filter(a => !used.includes(a));
+    return available.length > 0 ? available[Math.floor(Math.random() * available.length)] : '👽';
+}
+
+function getStartingMoney(difficulty) {
+    if (difficulty === 'medium') return 3000;
+    if (difficulty === 'hard') return 5000;
+    return 2000; // easy
 }
 
 function checkBankrupt(roomId, p) {
@@ -41,15 +54,20 @@ function checkBankrupt(roomId, p) {
 io.on('connection', (socket) => {
     socket.on('play_with_bot', (pInfo) => {
         const roomId = generateRoomCode(); socket.join(roomId); socketToRoom[socket.id] = roomId;
-        const newPlayer = { id: socket.id, username: pInfo.username, avatar: pInfo.avatar, color: pInfo.color, isReady: true, score: 1500, pos: 0, jail: false, bankrupt: false, qCount: 0, currentStreak: 0, isBot: false };
-        const botPlayer = { id: 'bot_' + Math.random().toString(36).substr(2, 9), username: 'Máy (AI)', avatar: '🤖', color: '#00cec9', isReady: true, score: 1500, pos: 0, jail: false, bankrupt: false, qCount: 0, currentStreak: 0, isBot: true };
-        rooms[roomId] = { id: roomId, host: socket.id, players: [newPlayer, botPlayer], isPlaying: true, currentTurnIdx: 0, stealData: null, difficulty: pInfo.difficulty || 'easy' };
+        const startMoney = getStartingMoney(pInfo.difficulty || 'easy');
+
+        const newPlayer = { id: socket.id, username: pInfo.username, avatar: getAvailableAvatar([]), color: pInfo.color, isReady: true, score: startMoney, pos: 0, jail: false, bankrupt: false, qCount: 0, currentStreak: 0, isBot: false };
+        const botPlayer = { id: 'bot_' + Math.random().toString(36).substr(2, 9), username: 'Máy (AI)', avatar: getAvailableAvatar([newPlayer]), color: '#00cec9', isReady: true, score: startMoney, pos: 0, jail: false, bankrupt: false, qCount: 0, currentStreak: 0, isBot: true };
+
+        rooms[roomId] = { id: roomId, host: socket.id, players: [newPlayer, botPlayer], isPlaying: true, currentTurnIdx: 0, stealData: null, difficulty: pInfo.difficulty || 'easy', gameStartTime: Date.now() };
         socket.emit('room_created', roomId); io.to(roomId).emit('update_lobby', rooms[roomId]); io.to(roomId).emit('game_started', rooms[roomId]);
     });
 
     socket.on('create_room', (pInfo) => {
         const roomId = generateRoomCode(); socket.join(roomId); socketToRoom[socket.id] = roomId;
-        const newPlayer = { id: socket.id, username: pInfo.username, avatar: pInfo.avatar, color: pInfo.color, isReady: true, score: 1500, pos: 0, jail: false, bankrupt: false, qCount: 0, currentStreak: 0, isBot: false };
+        const startMoney = getStartingMoney(pInfo.difficulty || 'easy');
+
+        const newPlayer = { id: socket.id, username: pInfo.username, avatar: getAvailableAvatar([]), color: pInfo.color, isReady: true, score: startMoney, pos: 0, jail: false, bankrupt: false, qCount: 0, currentStreak: 0, isBot: false };
         rooms[roomId] = { id: roomId, host: socket.id, players: [newPlayer], isPlaying: false, currentTurnIdx: 0, stealData: null, difficulty: pInfo.difficulty || 'easy' };
         socket.emit('room_created', roomId); io.to(roomId).emit('update_lobby', rooms[roomId]);
     });
@@ -60,8 +78,19 @@ io.on('connection', (socket) => {
         if (room.isPlaying) return socket.emit('error_msg', "Phòng đang chơi rồi!");
         if (room.players.length >= 4) return socket.emit('error_msg', "Phòng đã đầy!");
         socket.join(roomId); socketToRoom[socket.id] = roomId;
-        const newPlayer = { id: socket.id, username: pInfo.username, avatar: pInfo.avatar, color: pInfo.color, isReady: false, score: 1500, pos: 0, jail: false, bankrupt: false, qCount: 0, currentStreak: 0, isBot: false };
+
+        const startMoney = getStartingMoney(room.difficulty);
+        const newPlayer = { id: socket.id, username: pInfo.username, avatar: getAvailableAvatar(room.players), color: pInfo.color, isReady: false, score: startMoney, pos: 0, jail: false, bankrupt: false, qCount: 0, currentStreak: 0, isBot: false };
         room.players.push(newPlayer); io.to(roomId).emit('update_lobby', room);
+    });
+
+    // 🎯 CHAT SYSTEM
+    socket.on('send_chat', (msg) => {
+        const roomId = socketToRoom[socket.id];
+        if (roomId && rooms[roomId]) {
+            const p = rooms[roomId].players.find(x => x.id === socket.id);
+            if (p) io.to(roomId).emit('receive_chat', { sender: p.username, avatar: p.avatar, color: p.color, text: msg });
+        }
     });
 
     socket.on('toggle_ready', () => {
@@ -76,25 +105,21 @@ io.on('connection', (socket) => {
             const room = rooms[roomId]; if (room.host !== socket.id) return;
             if (!room.players.every(p => p.isReady)) return socket.emit('error_msg', "Chưa Sẵn sàng hết!");
             if (room.players.length < 2) return socket.emit('error_msg', "Cần ít nhất 2 người!");
-            room.isPlaying = true; io.to(roomId).emit('game_started', room);
+            room.isPlaying = true;
+            room.gameStartTime = Date.now(); // Lưu thời gian bắt đầu để tính Time Limit
+            io.to(roomId).emit('game_started', room);
         }
     });
 
-    // 🎯 TÍNH NĂNG MỚI: Xử lý tìm người thắng cuộc khi Host bấm Kết Thúc Ván
     socket.on('end_game', () => {
         const roomId = socketToRoom[socket.id];
         if (roomId && rooms[roomId] && rooms[roomId].host === socket.id) {
-            const room = rooms[roomId];
-            room.isPlaying = false;
-
-            // Lọc ra những người chưa phá sản và xếp hạng điểm
+            const room = rooms[roomId]; room.isPlaying = false;
             const alivePlayers = room.players.filter(p => !p.bankrupt);
             if (alivePlayers.length > 0) {
-                alivePlayers.sort((a, b) => b.score - a.score);
-                const winner = alivePlayers[0];
+                alivePlayers.sort((a, b) => b.score - a.score); const winner = alivePlayers[0];
                 io.to(roomId).emit('game_over', { winnerName: winner.username, winnerAvatar: winner.avatar, score: winner.score });
             } else {
-                // Trường hợp hòa hoặc tất cả đều phá sản
                 io.to(roomId).emit('game_over', { winnerName: "Không ai", winnerAvatar: "💀", score: 0 });
             }
         }

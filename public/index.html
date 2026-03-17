@@ -41,7 +41,7 @@
             color: var(--text);
             min-height: 100vh;
             overflow-x: hidden;
-            overflow-y: auto;
+            overflow-y: hidden;
         }
 
         ::-webkit-scrollbar {
@@ -317,28 +317,28 @@
             align-items: stretch;
             padding: 20px;
             margin-top: 80px;
-            gap: 25px;
+            gap: 20px;
         }
 
         .side-panel {
-            width: 280px;
+            width: 300px;
             height: 100%;
-            max-height: 80vmin;
+            max-height: 85vmin;
             background: var(--glass-bg);
             border-radius: 24px;
             box-shadow: var(--shadow-glass);
             display: flex;
             flex-direction: column;
-            padding: 25px;
+            padding: 20px;
             backdrop-filter: blur(15px);
             border: 1px solid var(--border);
         }
 
         .sp-title {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 800;
             color: var(--darker);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-align: center;
             letter-spacing: 1px;
             display: flex;
@@ -348,8 +348,8 @@
         }
 
         #board {
-            width: 80vmin;
-            height: 80vmin;
+            width: 85vmin;
+            height: 85vmin;
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
             display: grid;
@@ -386,7 +386,7 @@
         }
 
         .bar {
-            height: 35%;
+            height: 15px;
             width: 100%;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             position: relative;
@@ -444,33 +444,32 @@
             border-width: 3px !important;
         }
 
-        .house-container {
-            position: absolute;
-            top: -2px;
-            left: 0;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            font-size: 11px;
-            z-index: 5;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-        }
-
-        /* 🎯 MỚI: CSS CHO ICON CHỦ SỞ HỮU ĐÈ LÊN GÓC Ô ĐẤT */
+        /* CỜ ĐÁNH DẤU CHỦ SỞ HỮU GÓC Ô ĐẤT */
         .owner-badge {
             position: absolute;
-            top: -6px;
-            left: -6px;
+            top: 2px;
+            left: 2px;
             background: white;
             border-radius: 50%;
-            width: 22px;
-            height: 22px;
+            width: 18px;
+            height: 18px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 14px;
+            font-size: 11px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
             z-index: 25;
+        }
+
+        .house-container {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            display: flex;
+            flex-direction: row-reverse;
+            font-size: 9px;
+            z-index: 5;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         .center-hub {
@@ -489,7 +488,7 @@
 
         .hub-title {
             color: white;
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             font-weight: 900;
             letter-spacing: 4px;
             margin: 0;
@@ -662,21 +661,23 @@
 
         .modal-header {
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            padding: 25px;
+            padding: 20px 25px;
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 800;
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
         .modal-body {
-            padding: 40px;
+            padding: 30px 40px;
         }
 
         .q-text {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             margin-bottom: 25px;
             font-weight: 700;
             text-align: center;
@@ -687,13 +688,13 @@
         .ans-btn {
             display: block;
             width: 100%;
-            padding: 16px 20px;
-            margin: 12px 0;
+            padding: 14px 20px;
+            margin: 10px 0;
             background: white;
             border: 2px solid var(--border);
-            border-radius: 14px;
+            border-radius: 12px;
             text-align: left;
-            font-size: 1.05rem;
+            font-size: 1rem;
             cursor: pointer;
             font-weight: 600;
             transition: var(--transition);
@@ -757,12 +758,7 @@
                 justify-content: center;
             }
 
-            #my-avatar {
-                width: 100% !important;
-                margin-bottom: 10px;
-            }
-
-            #join-code {
+            #my-name {
                 margin-bottom: 10px;
             }
 
@@ -817,7 +813,7 @@
                 min-height: 250px;
                 height: auto !important;
                 margin-bottom: 20px;
-                padding: 20px;
+                padding: 15px;
             }
 
             .center-hub {
@@ -902,24 +898,24 @@
             #game-wrapper {
                 flex-direction: row;
                 flex-wrap: nowrap;
-                padding: 15px;
+                padding: 10px;
                 margin-top: 60px;
                 gap: 15px;
                 align-items: stretch;
                 overflow-x: auto;
-                overflow-y: auto;
+                overflow-y: hidden;
             }
 
             .side-panel {
-                width: 28vw;
+                width: 25vw;
                 min-width: 200px;
-                padding: 15px;
+                padding: 12px;
                 border-radius: 16px;
             }
 
             #board {
-                width: 75vh;
-                height: 75vh;
+                width: 85vh;
+                height: 85vh;
                 margin-bottom: 0;
                 border-width: 3px;
                 order: 0;
@@ -928,62 +924,62 @@
             }
 
             .game-header {
-                height: 60px;
+                height: 50px;
                 padding: 0 20px;
             }
 
             .game-title {
-                font-size: 1.4rem;
-            }
-
-            .menu-btn {
-                padding: 8px 16px;
-                font-size: 0.85rem;
-            }
-
-            .sp-title {
-                font-size: 0.9rem;
-                margin-bottom: 10px;
-            }
-
-            .hub-title {
                 font-size: 1.2rem;
             }
 
+            .menu-btn {
+                padding: 6px 14px;
+                font-size: 0.8rem;
+            }
+
+            .sp-title {
+                font-size: 0.85rem;
+                margin-bottom: 8px;
+            }
+
+            .hub-title {
+                font-size: 1.5rem;
+            }
+
             .dice-area {
-                width: 55px;
-                height: 55px;
+                width: 50px;
+                height: 50px;
             }
 
             .face {
-                width: 55px;
-                height: 55px;
+                width: 50px;
+                height: 50px;
                 font-size: 2rem;
                 border-width: 2px;
             }
 
             .f1 {
-                transform: translateZ(27.5px);
+                transform: translateZ(25px);
             }
 
             .f6 {
-                transform: rotateY(180deg) translateZ(27.5px);
+                transform: rotateY(180deg) translateZ(25px);
             }
 
             .f3 {
-                transform: rotateY(90deg) translateZ(27.5px);
+                transform: rotateY(90deg) translateZ(25px);
             }
 
             .f4 {
-                transform: rotateY(-90deg) translateZ(27.5px);
+                transform: rotateY(-90deg) translateZ(25px);
             }
 
             .f2 {
-                transform: rotateX(90deg) translateZ(27.5px);
+                transform: rotateX(90deg) translateZ(25px);
             }
 
             .f5 {
-                transform: rotateX(-90deg) translateZ(27.5px);
+                transform: rotateX(-90deg) translateZ(25px);
             }
 
             .tile {
@@ -1007,13 +1003,13 @@
             }
 
             #activity-log div {
-                padding: 10px;
-                font-size: 0.8rem;
+                padding: 8px;
+                font-size: 0.75rem;
             }
 
             #detailed-stats>div {
-                padding: 10px;
-                margin-bottom: 10px;
+                padding: 8px;
+                margin-bottom: 8px;
             }
 
             .notification {
@@ -1025,16 +1021,16 @@
 
             .modal-box {
                 width: 95%;
-                max-width: 450px;
+                max-width: 400px;
             }
 
             .modal-header {
-                padding: 15px;
-                font-size: 1.2rem;
+                padding: 12px 15px;
+                font-size: 1.1rem;
             }
 
             .modal-body {
-                padding: 25px;
+                padding: 20px;
             }
         }
     </style>
@@ -1059,8 +1055,8 @@
             <p style="color: #7f8fa6; font-size: 1.1rem; margin-bottom: 5px;">Tổng tài sản:</p>
             <p id="victory-score" style="font-size: 2.2rem; color: #2ecc71; font-weight: 900; margin-bottom: 30px;">1500
                 VNĐ</p>
-            <button class="btn btn-primary" style="width: 100%; font-size: 1.1rem;" onclick="navTo('sc-lobby')">↩ VỀ
-                PHÒNG CHỜ</button>
+            <button class="btn btn-primary" style="width: 100%; font-size: 1.1rem;" onclick="navTo('sc-menu')">↩ VỀ
+                TRANG CHỦ</button>
         </div>
     </div>
 
@@ -1069,70 +1065,53 @@
             <h1 class="title" style="text-align: center;">EngQuest</h1>
             <p class="subtitle" style="text-align: center;">🌍 eSports Monopoly Edition 🌍</p>
 
-            <div class="input-row" style="display: flex; gap: 12px; align-items: center; margin-bottom: 15px;">
-                <select id="my-avatar"
-                    style="width: 85px; font-size: 1.8rem; text-align: center; border-radius: 12px; cursor: pointer;">
-                    <option value="🐶">🐶</option>
-                    <option value="🐱">🐱</option>
-                    <option value="🦊">🦊</option>
-                    <option value="🐼">🐼</option>
-                    <option value="🦁">🦁</option>
-                    <option value="🐸">🐸</option>
-                </select>
+            <div class="input-row" style="margin-bottom: 15px;">
                 <input id="my-name" type="text" placeholder="Nhập tên của bạn..." value="Gamer"
-                    style="flex: 1; font-weight: bold; font-size: 1.15rem; color: var(--dark);">
+                    style="width: 100%; font-weight: bold; font-size: 1.15rem; color: var(--dark); text-align: center;">
             </div>
 
             <div class="input-row" style="margin-bottom: 25px;">
                 <label
                     style="color: var(--dark); font-weight: bold; margin-bottom: 8px; display: block; font-size: 0.95rem;">Độ
-                    khó (Tăng Giá đất & Tiền phạt):</label>
+                    khó (Tiền & Giá Đất):</label>
                 <select id="room-difficulty"
-                    style="width: 100%; font-weight: bold; cursor: pointer; color: var(--primary);">
-                    <option value="easy">🌟 Dễ (Kinh tế x1)</option>
-                    <option value="medium">🔥 Vừa (Kinh tế x1.5)</option>
-                    <option value="hard">💀 Khó (Kinh tế x2)</option>
+                    style="width: 100%; font-weight: bold; cursor: pointer; color: var(--primary); text-align: center;">
+                    <option value="easy">🌟 Dễ (Bắt đầu: 2000đ | Giá x1)</option>
+                    <option value="medium">🔥 Vừa (Bắt đầu: 3000đ | Giá x1.5)</option>
+                    <option value="hard">💀 Khó (Bắt đầu: 5000đ | Giá x2)</option>
                 </select>
             </div>
 
             <div style="display: flex; gap: 12px; margin-bottom: 15px;">
-                <button class="btn btn-primary" onclick="navTo('sc-setup')" style="flex: 1;">👥 VỚI BẠN</button>
-                <button class="btn btn-info" onclick="reqPlayBot()" style="flex: 1;">🤖 VỚI MÁY</button>
+                <button class="btn btn-primary" onclick="reqCreateRoom()" style="flex: 1;">➕ TẠO PHÒNG</button>
+                <button class="btn btn-info" onclick="reqPlayBot()" style="flex: 1;">🤖 CHƠI VỚI MÁY</button>
             </div>
+
+            <div style="display: flex; gap: 12px; margin-bottom: 15px;">
+                <input id="join-code" type="text" placeholder="Mã 6 số..." maxlength="6"
+                    style="flex: 1; text-align: center; font-family: 'Space Mono'; font-weight: bold; letter-spacing: 2px;">
+                <button class="btn btn-secondary" onclick="reqJoinRoom()">🚪 VÀO PHÒNG</button>
+            </div>
+
             <button class="btn btn-warning" onclick="document.getElementById('modal-rules').style.display='flex';"
-                style="width: 100%;">📖 LUẬT CHƠI MỚI</button>
+                style="width: 100%; padding: 10px;">📖 LUẬT CHƠI MỚI</button>
         </div>
     </div>
 
     <div id="modal-rules" class="modal-wrap">
         <div class="modal-box">
-            <div class="modal-header">📖 LUẬT CHƠI ENGQUEST</div>
+            <div class="modal-header" style="justify-content: center;">📖 LUẬT CHƠI ENGQUEST</div>
             <div class="modal-body" style="font-size: 0.95rem; line-height: 1.6; color: var(--dark);">
-                <p style="margin-bottom: 10px;"><b style="color: var(--primary);">1. Tiền & Đất:</b> Bắt đầu với 1500đ.
-                    Sở hữu TẤT CẢ đất cùng màu, tiền thuê được nhân đôi (x2)! Giá đất tăng theo độ khó phòng.</p>
-                <p style="margin-bottom: 10px;"><b style="color: var(--accent);">2. Phá sản:</b> Nếu bị trừ âm tiền (<
-                        0), bạn lập tức bị loại! Toàn bộ đất đai trả lại nhà nước.</p>
-                        <p style="margin-bottom: 10px;"><b style="color: var(--darker);">3. Vượt ngục:</b> Tỉ lệ đổ ra 6
-                            được cộng thêm 10%. Sau khi phá khóa Tù, bạn được đổ xúc xắc lại lần nữa để đi tiếp!</p>
-                        <p style="margin-bottom: 10px;"><b style="color: var(--accent-light);">4. Cướp điểm:</b> Cấm
-                            người đang ở Tù tham gia cướp. Người bấm đồng hồ sát nhất nhận điểm.</p>
-                        <button class="btn btn-success"
-                            onclick="document.getElementById('modal-rules').style.display='none';"
-                            style="width: 100%; margin-top: 20px;">ĐÃ HIỂU, CHIẾN THÔI!</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="sc-setup" class="screen">
-        <button class="btn btn-back" onclick="navTo('sc-menu')">← TRỞ LẠI</button>
-        <div class="glass-panel">
-            <h2>CHƠI MULTIPLAYER</h2>
-            <div style="display: flex; gap: 15px;"><button class="btn btn-primary" onclick="reqCreateRoom()"
-                    style="flex: 1;">➕ TẠO PHÒNG MỚI</button></div>
-            <div style="display: flex; gap: 12px; margin-top: 20px;">
-                <input id="join-code" type="text" placeholder="Nhập mã 6 số..." maxlength="6"
-                    style="flex: 1; text-align: center; font-family: 'Space Mono'; font-weight: bold; letter-spacing: 2px;">
-                <button class="btn btn-secondary" onclick="reqJoinRoom()">🚪 VÀO PHÒNG</button>
+                <p style="margin-bottom: 10px;"><b style="color: var(--primary);">1. Tiền & Đất:</b> Sở hữu TẤT CẢ đất
+                    cùng màu, tiền thuê được nhân đôi (x2)! Giá đất tăng theo độ khó phòng.</p>
+                <p style="margin-bottom: 10px;"><b style="color: var(--accent);">2. Áp lực thời gian:</b> Mặc định 10s.
+                    Cứ 5 phút trôi qua, thời gian trả lời giảm 1 giây.</p>
+                <p style="margin-bottom: 10px;"><b style="color: var(--darker);">3. Phá sản:</b> Bị trừ âm tiền (< 0) ->
+                        LOẠI! Đất đai trả lại nhà nước.</p>
+                <p style="margin-bottom: 10px;"><b style="color: var(--accent-light);">4. Cướp điểm:</b> Trả lời sai sẽ
+                    bị cướp. Người bấm đồng hồ mù sát nhất nhận điểm.</p>
+                <button class="btn btn-success" onclick="document.getElementById('modal-rules').style.display='none';"
+                    style="width: 100%; margin-top: 20px;">ĐÃ HIỂU, CHIẾN THÔI!</button>
             </div>
         </div>
     </div>
@@ -1165,13 +1144,31 @@
             <button class="menu-btn" onclick="if(confirm('Bạn có chắc muốn thoát game?')) location.reload();">🏠
                 THOÁT</button>
         </div>
+
         <div id="game-wrapper">
-            <div class="side-panel" id="log-panel">
-                <h3 class="sp-title">📜 NHẬT KÝ</h3>
-                <div id="activity-log"
-                    style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding-right: 8px;">
+            <div class="side-panel" id="left-panel" style="padding: 15px;">
+                <div style="flex: 1; display: flex; flex-direction: column; min-height: 0; margin-bottom: 10px;">
+                    <h3 class="sp-title" style="margin-bottom: 10px; font-size: 1rem;">📜 NHẬT KÝ</h3>
+                    <div id="activity-log"
+                        style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-right: 5px;">
+                    </div>
+                </div>
+                <div
+                    style="flex: 1; display: flex; flex-direction: column; min-height: 0; border-top: 2px dashed rgba(0,0,0,0.1); padding-top: 10px;">
+                    <h3 class="sp-title" style="margin-bottom: 10px; font-size: 1rem;">💬 TRÒ CHUYỆN</h3>
+                    <div id="chat-box"
+                        style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; padding-right: 5px; margin-bottom: 10px;">
+                    </div>
+                    <div style="display: flex; gap: 5px;">
+                        <input type="text" id="chat-input" placeholder="Gáy đi..."
+                            style="flex: 1; padding: 8px 12px; border-radius: 10px; border: 1px solid #ddd; font-family: 'Poppins', sans-serif; font-size: 0.9rem; outline: none;"
+                            onkeypress="if(event.key==='Enter') sendChat()">
+                        <button onclick="sendChat()"
+                            style="padding: 8px 15px; background: var(--primary); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-family: 'Poppins', sans-serif;">GỬI</button>
+                    </div>
                 </div>
             </div>
+
             <div id="board">
                 <div class="center-hub">
                     <h2 class="hub-title">EngQuest</h2>
@@ -1188,6 +1185,7 @@
                     <p class="dice-label">CLICK TO ROLL</p>
                 </div>
             </div>
+
             <div class="side-panel" id="side-panel">
                 <h3 class="sp-title">📊 XẾP HẠNG</h3>
                 <div id="detailed-stats" style="flex: 1; overflow-y: auto; margin-bottom: 20px; padding-right: 8px;">
@@ -1207,25 +1205,35 @@
 
     <div id="modal-q" class="modal-wrap">
         <div class="modal-box">
-            <div class="modal-header" id="mq-title">CHALLENGE</div>
+            <div class="modal-header">
+                <span id="mq-title">CHALLENGE</span>
+                <span id="q-timer"
+                    style="background: white; color: var(--accent); padding: 2px 10px; border-radius: 20px; font-size: 1rem;">10s</span>
+            </div>
             <div class="modal-body">
                 <div class="q-text" id="mq-text">Question?</div>
                 <div id="mq-opts"></div>
             </div>
         </div>
     </div>
+
     <div id="modal-spectator" class="modal-wrap">
         <div class="modal-box" style="background: var(--glass-bg);">
-            <div class="modal-header" style="background: var(--dark)">ĐANG TRẢ LỜI...</div>
+            <div class="modal-header" style="background: var(--dark)">
+                <span>ĐANG TRẢ LỜI...</span>
+                <span id="ms-timer"
+                    style="background: rgba(255,255,255,0.2); color: white; padding: 2px 10px; border-radius: 20px; font-size: 1rem;"></span>
+            </div>
             <div class="modal-body">
                 <div class="q-text" id="ms-text">Question?</div>
                 <div id="ms-opts" style="opacity: 0.5; pointer-events: none;"></div>
             </div>
         </div>
     </div>
+
     <div id="modal-buy" class="modal-wrap">
         <div class="modal-box">
-            <div class="modal-header" id="mb-title">BẤT ĐỘNG SẢN</div>
+            <div class="modal-header" id="mb-title" style="justify-content: center;">BẤT ĐỘNG SẢN</div>
             <div class="modal-body" style="text-align: center;">
                 <div id="mb-text" class="q-text">Bạn muốn mua?</div>
                 <div style="display: flex; gap: 15px; margin-top: 30px;"><button class="btn btn-success"
@@ -1234,9 +1242,11 @@
             </div>
         </div>
     </div>
+
     <div id="modal-clock" class="modal-wrap" style="background: rgba(30, 39, 46, 0.95)">
         <div class="modal-box" style="background: #2D3436; color: white; border: 1px solid rgba(255,255,255,0.1);">
-            <div class="modal-header" style="background: linear-gradient(135deg, var(--accent), #e15f41);">🚨 CƠ HỘI
+            <div class="modal-header"
+                style="background: linear-gradient(135deg, var(--accent), #e15f41); justify-content: center;">🚨 CƠ HỘI
                 CƯỚP ĐIỂM!</div>
             <div class="modal-body" style="text-align: center;">
                 <div class="target-box">Mục tiêu: <span id="clock-target-txt"
@@ -1486,15 +1496,35 @@
         };
 
         let players = []; let curPlayerIdx = 0; let isRolling = false; let currentRotX = 0, currentRotY = 0;
-        let originalPlayerTileIndex = -1; let currentRoomDifficulty = 'easy';
+        let originalPlayerTileIndex = -1; let currentRoomDifficulty = 'easy'; let gameStartTime = 0;
+        let questionTimerInterval = null;
 
         function navTo(screenId) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(screenId).classList.add('active'); }
-        function getMyInfo() { return { username: document.getElementById('my-name').value || "Gamer", avatar: document.getElementById('my-avatar').value, color: COLORS[Math.floor(Math.random() * COLORS.length)], difficulty: document.getElementById('room-difficulty').value }; }
+        function getMyInfo() { return { username: document.getElementById('my-name').value || "Gamer", avatar: '👽', color: COLORS[Math.floor(Math.random() * COLORS.length)], difficulty: document.getElementById('room-difficulty').value }; }
         function reqPlayBot() { socket.emit('play_with_bot', getMyInfo()); }
         function reqCreateRoom() { socket.emit('create_room', getMyInfo()); }
         function reqJoinRoom() { const code = document.getElementById('join-code').value.trim(); if (code.length !== 6) return; socket.emit('join_room', { roomId: code, pInfo: getMyInfo() }); }
         function reqToggleReady() { socket.emit('toggle_ready'); }
         function reqStartGame() { socket.emit('start_game'); }
+
+        // 🎯 CHAT FUNCTIONS
+        function sendChat() {
+            const input = document.getElementById('chat-input');
+            const msg = input.value.trim();
+            if (msg) {
+                socket.emit('send_chat', msg);
+                input.value = '';
+            }
+        }
+
+        socket.on('receive_chat', (data) => {
+            const box = document.getElementById('chat-box');
+            const entry = document.createElement('div');
+            entry.style.padding = '8px 12px'; entry.style.borderRadius = '10px'; entry.style.fontSize = '0.85rem'; entry.style.background = 'white'; entry.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)';
+            entry.innerHTML = `<b style="color:${data.color}">${data.avatar} ${data.sender}:</b> ${data.text}`;
+            box.appendChild(entry);
+            box.scrollTop = box.scrollHeight; // Auto cuộn
+        });
 
         socket.on('update_lobby', (roomData) => {
             currentRoomDifficulty = roomData.difficulty;
@@ -1518,16 +1548,16 @@
                 if (!p.bankrupt) {
                     const token = document.getElementById(`token-${p.id}`);
                     const holder = document.getElementById(`holder-${p.pos}`);
-                    if (token && holder && token.parentElement !== holder) {
-                        holder.appendChild(token);
-                    }
+                    if (token && holder && token.parentElement !== holder) { holder.appendChild(token); }
                 }
             });
         });
 
         socket.on('game_started', (roomData) => {
-            currentRoomDifficulty = roomData.difficulty; players = roomData.players; curPlayerIdx = roomData.currentTurnIdx; isMyRoomHost = (roomData.host === mySocketId);
-            document.getElementById('activity-log').innerHTML = ''; document.getElementById('header-room-code').innerText = `ID: ${roomData.id}`;
+            currentRoomDifficulty = roomData.difficulty;
+            gameStartTime = Date.now(); // Lấy mốc thời gian bắt đầu
+            players = roomData.players; curPlayerIdx = roomData.currentTurnIdx; isMyRoomHost = (roomData.host === mySocketId);
+            document.getElementById('activity-log').innerHTML = ''; document.getElementById('chat-box').innerHTML = ''; document.getElementById('header-room-code').innerText = `ID: ${roomData.id}`;
             renderBoard(); updateStats(); navTo('sc-game'); document.getElementById('btn-end-game').style.display = isMyRoomHost ? 'block' : 'none'; updateTurnDisplay();
         });
 
@@ -1538,35 +1568,28 @@
             renderBoard();
         });
 
-        // 🏆 TÍNH NĂNG MỚI: Màn hình Vinh Danh hoành tráng
         socket.on('game_over', (data) => {
-            playSound('ting'); setTimeout(() => playSound('ting'), 500); // Phát âm thanh chiến thắng
-            document.getElementById('victory-avatar').innerText = data.winnerAvatar;
-            document.getElementById('victory-name').innerText = data.winnerName;
-            document.getElementById('victory-score').innerText = data.score + " VNĐ";
+            playSound('ting'); setTimeout(() => playSound('ting'), 500);
+            document.getElementById('victory-avatar').innerText = data.winnerAvatar; document.getElementById('victory-name').innerText = data.winnerName; document.getElementById('victory-score').innerText = data.score + " VNĐ";
             navTo('sc-victory');
             BOARD_CONFIG.forEach(t => { if (t.type === 'prop') { t.owner = null; t.houses = 0; } });
         });
 
-        socket.on('hide_spectator', () => { document.getElementById('modal-spectator').style.display = 'none'; });
+        socket.on('hide_spectator', () => { document.getElementById('modal-spectator').style.display = 'none'; clearInterval(questionTimerInterval); });
 
         socket.on('turn_changed', (nIdx) => {
-            document.getElementById('modal-q').style.display = 'none';
-            document.getElementById('modal-spectator').style.display = 'none';
-            document.getElementById('modal-clock').style.display = 'none';
-            document.getElementById('modal-buy').style.display = 'none';
+            document.getElementById('modal-q').style.display = 'none'; document.getElementById('modal-spectator').style.display = 'none'; document.getElementById('modal-clock').style.display = 'none'; document.getElementById('modal-buy').style.display = 'none';
+            clearInterval(questionTimerInterval);
             curPlayerIdx = nIdx; isRolling = false; updateTurnDisplay();
         });
 
         function showNotify(msg) {
-            const entry = document.createElement('div'); entry.style.padding = '14px'; entry.style.borderRadius = '12px'; entry.style.fontSize = '0.9rem'; entry.style.lineHeight = '1.4'; entry.style.boxShadow = '0 2px 6px rgba(0,0,0,0.03)';
+            const entry = document.createElement('div'); entry.style.padding = '12px 14px'; entry.style.borderRadius = '12px'; entry.style.fontSize = '0.85rem'; entry.style.lineHeight = '1.4'; entry.style.boxShadow = '0 2px 6px rgba(0,0,0,0.03)';
             let bC = 'var(--primary)', bgC = 'white';
-
             if (msg.includes('✅') || msg.includes('nhận') || msg.includes('mua') || msg.includes('CƯỚP') || msg.includes('🎉') || msg.includes('nâng cấp')) { bC = 'var(--secondary)'; bgC = 'rgba(0,184,148,0.08)'; playSound('ting'); }
             else if (msg.includes('❌') || msg.includes('thu') || msg.includes('Hết giờ') || msg.includes('trừ')) { bC = 'var(--accent)'; bgC = 'rgba(255,107,107,0.08)'; playSound('fail'); }
             else if (msg.includes('🚨') || msg.includes('TÙ') || msg.includes('☠️') || msg.includes('🚓')) { bC = 'var(--accent)'; bgC = 'rgba(255,107,107,0.08)'; playSound('jail'); }
             else if (msg.includes('🎲') || msg.includes('⏱️') || msg.includes('⚙️') || msg.includes('🏢') || msg.includes('💸') || msg.includes('🃏')) { bC = 'var(--accent-light)'; bgC = 'rgba(253, 203, 110, 0.1)'; }
-
             entry.style.borderLeft = `5px solid ${bC}`; entry.style.background = bgC; entry.innerHTML = msg;
             const n = document.getElementById('notification'); n.innerHTML = msg; n.style.display = 'block'; setTimeout(() => n.style.display = 'none', 3500);
             const logDiv = document.getElementById('activity-log'); if (logDiv) { logDiv.appendChild(entry); logDiv.scrollTop = logDiv.scrollHeight; }
@@ -1581,14 +1604,12 @@
                 if (isMyRoomHost && p.id !== mySocketId && !p.isBot) btnSkip.style.display = 'block'; else btnSkip.style.display = 'none';
 
                 if (p.jail) {
-                    document.getElementById('current-action-display').innerHTML = (p.id === mySocketId) ? `<span style="color:var(--accent)">🚨 BẠN ĐANG Ở TÙ! Hãy đổ ra số 6 để thoát.</span>` : `Đang chờ <span style="color:${p.color}">${p.username}</span> đổ 6 để ra tù...`;
+                    document.getElementById('current-action-display').innerHTML = (p.id === mySocketId) ? `<span style="color:var(--accent)">🚨 BẠN ĐANG Ở TÙ! Đổ 6 để thoát.</span>` : `Đang chờ <span style="color:${p.color}">${p.username}</span> đổ 6 để ra tù...`;
                 } else {
                     document.getElementById('current-action-display').innerHTML = (p.id === mySocketId) ? `<span style="color:var(--secondary)">Lượt của BẠN! 🎲 Hãy đổ xúc xắc.</span>` : `Đang chờ <span style="color:${p.color}; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">${p.username}</span> đi...`;
                 }
 
-                if (p.isBot && isMyRoomHost && !isRolling) {
-                    setTimeout(() => { socket.emit('request_roll', p.id); }, 1500);
-                }
+                if (p.isBot && isMyRoomHost && !isRolling) { setTimeout(() => { socket.emit('request_roll', p.id); }, 1500); }
             }
         }
 
@@ -1605,8 +1626,7 @@
                 const p = players.find(x => x.id === data.playerId);
                 if (p) {
                     showNotify(`🎉 <b>${p.username}</b> đổ được <b>6</b>! Đã phá khóa Tù thành công! Đổ xúc xắc lần nữa để đi tiếp.`);
-                    isRolling = false;
-                    updateTurnDisplay();
+                    isRolling = false; updateTurnDisplay();
                     if (p.isBot && isMyRoomHost) { setTimeout(() => socket.emit('request_roll', p.id), 1500); }
                 }
             }, 2000);
@@ -1649,29 +1669,43 @@
 
         function calcRent(tIdx) {
             const tile = BOARD_CONFIG[tIdx]; if (!tile.owner) return 0;
-            let m = getDifficultyMulti();
-            let base = tile.rent * m;
+            let m = getDifficultyMulti(); let base = tile.rent * m;
             const groupProps = BOARD_CONFIG.filter(t => t.group === tile.group);
             const ownsAll = groupProps.every(t => t.owner === tile.owner);
             if (ownsAll) base *= 2;
             return base + (tile.houses * tile.rent * m * 2);
         }
 
+        // 🎯 TÍNH TOÁN THỜI GIAN TRẢ LỜI CÂU HỎI
+        function getQuestionTimeLimit() {
+            const passedMins = Math.floor((Date.now() - gameStartTime) / 60000);
+            return Math.max(3, 10 - Math.floor(passedMins / 5)); // Base 10s, trừ 1s mỗi 5p, Min 3s
+        }
+
         let currentStealTimer = null; let currentStealTimeValue = 0;
         socket.on('player_is_answering', (pId) => { const p = players.find(x => x.id === pId); if (p) showNotify(`🧠 <b>${p.username}</b> đang giải câu hỏi...`); });
+
         socket.on('show_shared_question', (data) => {
             const modal = document.getElementById('modal-spectator'); document.getElementById('ms-text').innerText = data.q;
             const optsDiv = document.getElementById('ms-opts'); optsDiv.innerHTML = '';
             data.a.forEach(ans => { const btn = document.createElement('button'); btn.className = 'ans-btn'; btn.innerText = ans; optsDiv.appendChild(btn); });
+
+            // Cập nhật bộ đếm cho khán giả xem cùng
+            let timeLimit = data.timeLimit;
+            document.getElementById('ms-timer').innerText = timeLimit + 's';
+            clearInterval(questionTimerInterval);
+            questionTimerInterval = setInterval(() => {
+                timeLimit--; document.getElementById('ms-timer').innerText = timeLimit + 's';
+                if (timeLimit <= 0) clearInterval(questionTimerInterval);
+            }, 1000);
+
             modal.style.display = 'flex';
         });
 
         socket.on('start_steal_clock', (data) => {
-            document.getElementById('modal-spectator').style.display = 'none';
+            document.getElementById('modal-spectator').style.display = 'none'; clearInterval(questionTimerInterval);
             if (data.originalPlayerId !== mySocketId) {
-                const p = players.find(x => x.id === data.originalPlayerId);
-                const me = players.find(x => x.id === mySocketId);
-
+                const p = players.find(x => x.id === data.originalPlayerId); const me = players.find(x => x.id === mySocketId);
                 if (me && !me.jail && !me.bankrupt && !(p && p.isBot && !isMyRoomHost)) {
                     const modal = document.getElementById('modal-clock'); const display = document.getElementById('clock-display'); const btn = document.getElementById('btn-stop-clock');
                     document.getElementById('clock-target-txt').innerText = data.targetTime; display.innerText = "0.00"; display.style.color = 'var(--accent)';
@@ -1698,11 +1732,21 @@
             document.getElementById('modal-clock').style.display = 'none';
             if (data.winnerId === mySocketId) {
                 const modal = document.getElementById('modal-q'); document.getElementById('mq-title').innerText = `🔥 CƠ HỘI CƯỚP ĐIỂM`; document.getElementById('mq-text').innerText = data.questionData.q;
+
+                // Mở lại Đồng hồ đếm ngược khi cướp (giống y hệt thời gian lúc đầu)
+                let timeLeft = data.questionData.timeLimit;
+                document.getElementById('q-timer').innerText = timeLeft + 's';
+                clearInterval(questionTimerInterval);
+                questionTimerInterval = setInterval(() => {
+                    timeLeft--; document.getElementById('q-timer').innerText = timeLeft + 's';
+                    if (timeLeft <= 0) { clearInterval(questionTimerInterval); answerQuestion(false, 0, -1, data.questionData); } // Hết giờ = Sai
+                }, 1000);
+
                 const optsDiv = document.getElementById('mq-opts'); optsDiv.innerHTML = '';
                 data.questionData.a.forEach((ans, idx) => {
                     const btn = document.createElement('button'); btn.className = 'ans-btn'; btn.innerText = ans;
                     btn.onclick = (e) => {
-                        document.querySelectorAll('.ans-btn').forEach(b => b.disabled = true); modal.style.display = 'none';
+                        document.querySelectorAll('.ans-btn').forEach(b => b.disabled = true); clearInterval(questionTimerInterval); modal.style.display = 'none';
                         let pts = currentRoomDifficulty === 'easy' ? 50 : (currentRoomDifficulty === 'medium' ? 100 : 200);
                         socket.emit('answered_result', { correct: (idx === data.questionData.c), points: (idx === data.questionData.c) ? pts : 0, isBonus: false, isStealAnswer: true });
                     };
@@ -1714,6 +1758,7 @@
 
         socket.on('resume_original_turn', () => {
             document.getElementById('modal-q').style.display = 'none'; document.getElementById('modal-spectator').style.display = 'none'; document.getElementById('modal-clock').style.display = 'none';
+            clearInterval(questionTimerInterval);
             setTimeout(() => {
                 try {
                     const activePlayer = players[curPlayerIdx]; if (!activePlayer) return socket.emit('next_turn');
@@ -1751,14 +1796,19 @@
             const tile = BOARD_CONFIG[pos]; originalPlayerTileIndex = pos;
             if (tile.type === 'prop') {
                 socket.emit('answering_event', p.id);
+                let timeLimit = getQuestionTimeLimit();
                 setTimeout(() => {
                     let diff = currentRoomDifficulty; let pts = diff === 'easy' ? 50 : (diff === 'medium' ? 100 : 200);
                     let isCor = Math.random() < 0.75;
                     const qPool = QUESTIONS[diff]; const rawQ = qPool[Math.floor(Math.random() * qPool.length)];
                     const shuffledA = rawQ.a.map((ans, idx) => ({ text: ans, isCorrect: idx === rawQ.c })).sort(() => Math.random() - 0.5);
-                    const qData = { q: rawQ.q, a: shuffledA.map(o => o.text), c: shuffledA.findIndex(o => o.isCorrect) };
-                    socket.emit('share_question', qData); socket.emit('answered_result', { targetId: p.id, correct: isCor, points: isCor ? pts : 0, isBonus: false, tileIndex: pos, questionData: qData });
-                }, 2000);
+                    const qData = { q: rawQ.q, a: shuffledA.map(o => o.text), c: shuffledA.findIndex(o => o.isCorrect), timeLimit: timeLimit };
+
+                    socket.emit('share_question', qData);
+                    // Bot trả lời ngẫu nhiên trong khoảng 1s đến timeLimit
+                    let botAnswerTime = (Math.random() * (timeLimit - 1) + 1) * 1000;
+                    setTimeout(() => { socket.emit('answered_result', { targetId: p.id, correct: isCor, points: isCor ? pts : 0, isBonus: false, tileIndex: pos, questionData: qData }); }, botAnswerTime);
+                }, 1000); // 1s trễ rồi mới mở câu hỏi
             }
             else if (tile.type === 'chance' || tile.type === 'chest') { handleChanceCard(p.id, p.username); }
             else if (tile.type === 'go_jail') { showNotify(`🚓 <b>${p.username}</b> bị Cảnh sát tóm! Đi thẳng vào TÙ!`); socket.emit('force_move', { targetId: p.id, pos: 8 }); socket.emit('player_jailed', { targetId: p.id }); setTimeout(() => socket.emit('next_turn', p.id), 1500); }
@@ -1773,15 +1823,33 @@
             let diff = currentRoomDifficulty; let pts = diff === 'easy' ? 50 : (diff === 'medium' ? 100 : 200);
             const qPool = QUESTIONS[diff]; const rawQ = qPool[Math.floor(Math.random() * qPool.length)];
             const shuffledA = rawQ.a.map((ans, idx) => ({ text: ans, isCorrect: idx === rawQ.c })).sort(() => Math.random() - 0.5);
-            const qData = { q: rawQ.q, a: shuffledA.map(o => o.text), c: shuffledA.findIndex(o => o.isCorrect) };
+
+            let timeLimit = getQuestionTimeLimit();
+            const qData = { q: rawQ.q, a: shuffledA.map(o => o.text), c: shuffledA.findIndex(o => o.isCorrect), timeLimit: timeLimit };
 
             socket.emit('share_question', qData);
             document.getElementById('mq-title').innerText = `📚 CÂU HỎI - ${pts} ĐIỂM`; document.getElementById('mq-text').innerText = qData.q;
 
+            // Khởi động đồng hồ
+            let timeLeft = timeLimit;
+            document.getElementById('q-timer').innerText = timeLeft + 's';
+            clearInterval(questionTimerInterval);
+            questionTimerInterval = setInterval(() => {
+                timeLeft--; document.getElementById('q-timer').innerText = timeLeft + 's';
+                if (timeLeft <= 0) {
+                    clearInterval(questionTimerInterval);
+                    document.querySelectorAll('.ans-btn').forEach(b => b.disabled = true);
+                    answerQuestion(false, 0, tIdx, qData); // Hết giờ auto Sai
+                }
+            }, 1000);
+
             const optsDiv = document.getElementById('mq-opts'); optsDiv.innerHTML = '';
             qData.a.forEach((ans, idx) => {
                 const btn = document.createElement('button'); btn.className = 'ans-btn'; btn.innerText = ans;
-                btn.onclick = (e) => { document.querySelectorAll('.ans-btn').forEach(b => b.disabled = true); answerQuestion(idx === qData.c, pts, tIdx, qData); };
+                btn.onclick = (e) => {
+                    clearInterval(questionTimerInterval); // Dừng đồng hồ
+                    document.querySelectorAll('.ans-btn').forEach(b => b.disabled = true); answerQuestion(idx === qData.c, pts, tIdx, qData);
+                };
                 optsDiv.appendChild(btn);
             });
             modal.style.display = 'flex';
@@ -1819,7 +1887,6 @@
             modal.style.display = 'flex';
         }
 
-        // 🎯 ĐÃ SỬA: Vẽ lại bàn cờ bằng cách thêm icon (Badge) thay vì đổi màu .bar
         function renderBoard() {
             let m = getDifficultyMulti();
             const board = document.getElementById('board'); const hub = document.querySelector('.center-hub'); board.innerHTML = ''; if (hub) board.appendChild(hub);
@@ -1827,8 +1894,9 @@
                 let r, c; if (i <= 8) { r = 1; c = i + 1; } else if (i <= 16) { r = i - 7; c = 9; } else if (i <= 24) { r = 9; c = 25 - i; } else { r = 33 - i; c = 1; }
                 const d = document.createElement('div'); d.className = `tile ${t.type === 'corner' || t.type === 'go_jail' ? 'corner' : ''}`; d.style.gridRow = r; d.style.gridColumn = c; d.id = `tile-${i}`;
                 if (t.type === 'prop') {
-                    // Giữ nguyên dải màu background trên .bar
-                    d.innerHTML = `<div class="bar" style="background:${t.color}"></div><div class="tile-name">${t.name}<br><span style="font-size:0.5rem; font-weight:normal;">$${t.price * m}</span></div>`;
+                    // 🎯 HIỂN THỊ CẢ GIÁ MUA VÀ GIÁ THUÊ NẾU ĐÃ CÓ CHỦ
+                    let displayPrice = t.owner ? `<span style="color: #e74c3c; font-weight: 800;">Thuế: $${calcRent(i)}</span>` : `$${t.price * m}`;
+                    d.innerHTML = `<div class="bar" style="background:transparent; border-top: 6px solid ${t.color}"></div><div class="tile-name">${t.name}<br><span style="font-size:0.5rem; font-weight:normal;" id="price-tag-${i}">${displayPrice}</span></div>`;
                 } else {
                     d.innerHTML = `<span style="color:${t.color}; font-weight:900;">${t.name}</span>`;
                 }
@@ -1848,15 +1916,13 @@
                 if (t.type === 'prop' && t.owner) {
                     const o = players.find(p => p.id === t.owner); if (!o) return;
 
-                    // 🎯 ĐÃ SỬA: Chỉ gắn badge icon vào góc, không thay đổi màu .bar
                     let badge = el.querySelector('.owner-badge');
-                    if (!badge) {
-                        badge = document.createElement('div');
-                        badge.className = 'owner-badge';
-                        el.appendChild(badge);
-                    }
-                    badge.style.border = `2px solid ${o.color}`;
-                    badge.innerHTML = o.avatar;
+                    if (!badge) { badge = document.createElement('div'); badge.className = 'owner-badge'; el.appendChild(badge); }
+                    badge.style.border = `2px solid ${o.color}`; badge.innerHTML = o.avatar;
+
+                    // Cập nhật lại giá tiền thuế
+                    let priceTag = document.getElementById(`price-tag-${i}`);
+                    if (priceTag) priceTag.innerHTML = `<span style="color: #e74c3c; font-weight: 800;">Thuế: $${calcRent(i)}</span>`;
 
                     const groupProps = BOARD_CONFIG.filter(prop => prop.group === t.group);
                     const ownsAll = groupProps.every(prop => prop.owner === t.owner);
@@ -1865,7 +1931,6 @@
 
                     let hD = el.querySelector('.house-container'); if (!hD) { hD = document.createElement('div'); hD.className = 'house-container'; el.appendChild(hD); } hD.innerHTML = '🏠'.repeat(t.houses);
                 } else if (t.type === 'prop' && !t.owner) {
-                    // Xóa badge nếu không có chủ
                     let badge = el.querySelector('.owner-badge'); if (badge) badge.remove();
                     let hD = el.querySelector('.house-container'); if (hD) hD.remove();
                     let mTag = el.querySelector('.monopoly-tag'); if (mTag) mTag.remove();
