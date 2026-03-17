@@ -87,7 +87,6 @@ io.on('connection', (socket) => {
                 let val;
                 if (actor.jail) {
                     if (Math.random() < 0.2666) { val = 6; } else { val = Math.floor(Math.random() * 5) + 1; }
-
                     if (val === 6) {
                         actor.jail = false; io.to(roomId).emit('sync_players', room.players);
                         io.to(roomId).emit('jail_escaped', { value: val, playerId: actor.id });
@@ -102,16 +101,11 @@ io.on('connection', (socket) => {
         }
     });
 
-    // 🎯 ĐÃ SỬA TẠI ĐÂY: ÉP POS VỀ 8 KHI VÀO TÙ
     socket.on('player_jailed', (data) => {
         const roomId = socketToRoom[socket.id];
         if (roomId && rooms[roomId]) {
             const p = getActor(rooms[roomId], socket.id, data.targetId);
-            if (p) {
-                p.jail = true;
-                p.pos = 8; // Bắt buộc dịch chuyển về ô số 8 (JAIL)
-                io.to(roomId).emit('sync_players', rooms[roomId].players);
-            }
+            if (p) { p.jail = true; p.pos = 8; io.to(roomId).emit('sync_players', rooms[roomId].players); }
         }
     });
 
@@ -147,18 +141,16 @@ io.on('connection', (socket) => {
         if (roomId && rooms[roomId]) {
             const room = rooms[roomId]; const p = getActor(room, socket.id, data.targetId);
             if (p) {
-                if (data.isStealAnswer) {
-                    handleStealAnswer(roomId, p, data.correct, data.points);
-                    return;
-                }
+                // 🎯 LỆNH MỚI: Báo cho toàn bộ phòng tắt bảng khán giả ngay khi có người trả lời xong
+                io.to(roomId).emit('hide_spectator');
+
+                if (data.isStealAnswer) { handleStealAnswer(roomId, p, data.correct, data.points); return; }
 
                 if (!data.isBonus) p.qCount++;
-
                 if (data.correct || data.isBonus) {
                     p.score += data.points; p.currentStreak++;
                     io.to(roomId).emit('log_msg', `${data.correct ? '✅' : '🍀'} <b>${p.avatar} ${p.username}</b> ${data.isBonus ? 'rút thẻ' : 'trả lời ĐÚNG'} và nhận được <b>${data.points}đ</b>!`);
                     io.to(roomId).emit('sync_players', room.players);
-
                     if (data.isBonus) { setTimeout(() => { io.to(roomId).emit('resume_original_turn'); }, 1500); }
                     else { socket.emit('process_property_action', { tileIndex: data.tileIndex, playerId: p.id }); }
                 } else {
