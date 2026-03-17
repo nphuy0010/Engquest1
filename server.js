@@ -32,7 +32,7 @@ function checkBankrupt(roomId, p) {
 
         const alive = room.players.filter(pl => !pl.bankrupt);
         if (alive.length === 1) {
-            io.to(roomId).emit('game_over', { winnerName: alive[0].username, score: alive[0].score });
+            io.to(roomId).emit('game_over', { winnerName: alive[0].username, winnerAvatar: alive[0].avatar, score: alive[0].score });
             room.isPlaying = false;
         }
     }
@@ -77,6 +77,26 @@ io.on('connection', (socket) => {
             if (!room.players.every(p => p.isReady)) return socket.emit('error_msg', "Chưa Sẵn sàng hết!");
             if (room.players.length < 2) return socket.emit('error_msg', "Cần ít nhất 2 người!");
             room.isPlaying = true; io.to(roomId).emit('game_started', room);
+        }
+    });
+
+    // 🎯 TÍNH NĂNG MỚI: Xử lý tìm người thắng cuộc khi Host bấm Kết Thúc Ván
+    socket.on('end_game', () => {
+        const roomId = socketToRoom[socket.id];
+        if (roomId && rooms[roomId] && rooms[roomId].host === socket.id) {
+            const room = rooms[roomId];
+            room.isPlaying = false;
+
+            // Lọc ra những người chưa phá sản và xếp hạng điểm
+            const alivePlayers = room.players.filter(p => !p.bankrupt);
+            if (alivePlayers.length > 0) {
+                alivePlayers.sort((a, b) => b.score - a.score);
+                const winner = alivePlayers[0];
+                io.to(roomId).emit('game_over', { winnerName: winner.username, winnerAvatar: winner.avatar, score: winner.score });
+            } else {
+                // Trường hợp hòa hoặc tất cả đều phá sản
+                io.to(roomId).emit('game_over', { winnerName: "Không ai", winnerAvatar: "💀", score: 0 });
+            }
         }
     });
 
@@ -141,7 +161,6 @@ io.on('connection', (socket) => {
         if (roomId && rooms[roomId]) {
             const room = rooms[roomId]; const p = getActor(room, socket.id, data.targetId);
             if (p) {
-                // 🎯 LỆNH MỚI: Báo cho toàn bộ phòng tắt bảng khán giả ngay khi có người trả lời xong
                 io.to(roomId).emit('hide_spectator');
 
                 if (data.isStealAnswer) { handleStealAnswer(roomId, p, data.correct, data.points); return; }
