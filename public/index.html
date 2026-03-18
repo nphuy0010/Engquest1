@@ -1052,7 +1052,7 @@
             <h3 id="victory-name" style="color: var(--dark); font-size: 2.2rem; font-weight: 800; margin-bottom: 10px;">
                 Gamer</h3>
             <p style="color: #7f8fa6; font-size: 1.1rem; margin-bottom: 5px;">Tổng tài sản:</p>
-            <p id="victory-score" style="font-size: 2.2rem; color: #2ecc71; font-weight: 900; margin-bottom: 30px;">1500
+            <p id="victory-score" style="font-size: 2.2rem; color: #2ecc71; font-weight: 900; margin-bottom: 30px;">2000
                 VNĐ</p>
             <button class="btn btn-primary" style="width: 100%; font-size: 1.1rem;" onclick="navTo('sc-menu')">↩ VỀ
                 TRANG CHỦ</button>
@@ -1075,9 +1075,9 @@
                     khó (Tiền & Giá Đất):</label>
                 <select id="room-difficulty"
                     style="width: 100%; font-weight: bold; cursor: pointer; color: var(--primary); text-align: center;">
-                    <option value="easy">🌟 Dễ (Bắt đầu: 1500đ | Giá x1)</option>
-                    <option value="medium">🔥 Vừa (Bắt đầu: 2000đ | Giá x1.5)</option>
-                    <option value="hard">💀 Khó (Bắt đầu: 3000đ | Giá x2)</option>
+                    <option value="easy">🌟 Dễ (Bắt đầu: 2000đ | Giá x1)</option>
+                    <option value="medium">🔥 Vừa (Bắt đầu: 3000đ | Giá x1.5)</option>
+                    <option value="hard">💀 Khó (Bắt đầu: 5000đ | Giá x2)</option>
                 </select>
             </div>
 
@@ -1102,8 +1102,8 @@
             <div class="modal-header" style="justify-content: center;">📖 LUẬT CHƠI ENGQUEST</div>
             <div class="modal-body" style="font-size: 0.95rem; line-height: 1.6; color: var(--dark);">
                 <p style="margin-bottom: 10px;"><b style="color: var(--primary);">1. Tiền & Đất:</b> Tiền bắt đầu phụ
-                    thuộc vào độ khó. Sở hữu TẤT CẢ đất cùng màu, tiền thuê được nhân đôi (x2)! Giá đất tăng theo độ khó
-                    phòng.</p>
+                    thuộc vào độ khó (2000đ - 5000đ). Sở hữu TẤT CẢ đất cùng màu, tiền thuê x2! Giá đất tăng theo độ
+                    khó.</p>
                 <p style="margin-bottom: 10px;"><b style="color: var(--accent);">2. Áp lực thời gian:</b> Mặc định 10s.
                     Cứ 5 phút trôi qua, thời gian trả lời giảm 1 giây.</p>
                 <p style="margin-bottom: 10px;"><b style="color: var(--darker);">3. Phá sản:</b> Bị trừ âm tiền (< 0) ->
@@ -1263,7 +1263,6 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        // 🎯 Lệnh Mở khóa Âm Thanh Toàn Cục (Vượt rào Autoplay của Trình duyệt)
         let audioUnlocked = false;
         document.body.addEventListener('click', () => {
             if (!audioUnlocked) {
@@ -1331,7 +1330,18 @@
             { text: "Bạn được học bổng du học! Bay thẳng về ô GO và nhận 200đ.", type: "move", pos: 0 },
             { text: "Bị tình nghi buôn lậu! Đi thẳng vào nhà TÙ.", type: "jail" },
             { text: "Trúng vé số độc đắc! Nhận ngay 200đ.", type: "cash", val: 200 },
-            { text: "Đóng thuế thu nhập cá nhân. Mất 100đ.", type: "cash", val: -100 }
+            { text: "Đóng thuế thu nhập cá nhân. Mất 100đ.", type: "cash", val: -100 },
+            { text: " Bạn giúp đỡ người già qua đường, được thưởng 50đ.", type: "cash", val: 50 },
+            { text: "Bị mất ví! Trừ 50đ.", type: "cash", val: -50 },
+            { text: "Bạn được thừa kế tài sản! Nhận 150đ.", type: "cash", val: 150 },
+            { text: "Đi du lịch miễn phí đến ô Tokyo!", type: "move", pos: 11 },
+            { text: "Bị hỏng xe giữa đường! Sửa xe 50đ.", type: "cash", val: -50 },
+            { text: "Bạn tình cờ làm rơi tiền! Nhặt được 50đ.", type: "cash", val: 50 },
+            { text: "Bị phạt vì xả rác! Trừ 30đ.", type: "cash", val: -30 },
+            { text: "Bạn được mời tham dự tiệc sang trọng! Nhận 100đ.", type: "cash", val: 100 },
+            { text: "Bị mất điện thoại! Trừ 100đ.", type: "cash", val: -100 },
+            { text: "Bạn giúp đỡ cứu hỏa dập tắt đám cháy, được thưởng 80đ.", type: "cash", val: 80 },
+            { text: "Đi thẳng đến ô JAIL và bị giam giữ một lượt.", type: "jail" }
         ];
 
         const QUESTIONS = {
@@ -1390,7 +1400,57 @@
                 { q: "The sun ___ in the East.", a: ["rise", "rises", "rising", "rose"], c: 1 },
                 { q: "She ___ speak English.", a: ["doesn't", "don't", "isn't", "not"], c: 0 },
                 { q: "This is ___ interesting story.", a: ["a", "an", "the", "any"], c: 1 },
-                { q: "What time ___ it?", a: ["is", "am", "are", "be"], c: 0 }
+                { q: "What time ___ it?", a: ["is", "am", "are", "be"], c: 0 },
+                { q: "My mother ___ cooking dinner.", a: ["is", "am", "are", "be"], c: 0 },
+                { q: "I have ___ lunch at school.", a: ["a", "an", "the", "-"], c: 3 },
+                { q: "___ you like chocolate?", a: ["Do", "Does", "Is", "Are"], c: 0 },
+                { q: "There is ___ water in the bottle.", a: ["some", "any", "many", "a"], c: 0 },
+                { q: "We ___ to the park on Saturdays.", a: ["go", "goes", "going", "gone"], c: 0 },
+                { q: "This is my car and that is ___.", a: ["you", "your", "yours", "yourself"], c: 2 },
+                { q: "Look! The baby ___.", a: ["sleep", "sleeps", "is sleeping", "slept"], c: 2 },
+                { q: "He doesn't ___ a computer.", a: ["has", "have", "having", "had"], c: 1 },
+                { q: "How ___ is this book?", a: ["many", "much", "old", "often"], c: 1 },
+                { q: "I usually go to bed ___ 11 PM.", a: ["at", "on", "in", "to"], c: 0 },
+                { q: "The weather is ___ today.", a: ["sun", "sunny", "sunnies", "sunnier"], c: 1 },
+                { q: "I ___ my homework yesterday.", a: ["do", "does", "did", "done"], c: 2 },
+                { q: "___ is your favorite teacher?", a: ["Who", "What", "Where", "How"], c: 0 },
+                { q: "These apples ___ very sweet.", a: ["is", "am", "are", "be"], c: 2 },
+                { q: "She ___ swim very well.", a: ["can", "is", "does", "has"], c: 0 },
+                { q: "Where ___ you last night?", a: ["was", "were", "are", "did"], c: 1 },
+                { q: "I want to buy ___ new phone.", a: ["a", "an", "some", "any"], c: 0 },
+                { q: "He ___ a black jacket today.", a: ["wear", "wears", "is wearing", "wore"], c: 2 },
+                { q: "My cat is ___ the bed.", a: ["on", "in", "at", "between"], c: 0 },
+                { q: "___ many students are in the class?", a: ["How", "What", "Who", "Where"], c: 0 },
+                { q: "I ___ born in Vietnam.", a: ["is", "am", "was", "were"], c: 2 },
+                { q: "They ___ watching a movie now.", a: ["is", "am", "are", "be"], c: 2 },
+                { q: "Does she ___ in a flat?", a: ["live", "lives", "lived", "living"], c: 0 },
+                { q: "This cake is ___ than that one.", a: ["good", "better", "best", "gooder"], c: 1 },
+                { q: "I have two ___.", a: ["child", "children", "childs", "childrens"], c: 1 },
+                { q: "___ your father work in a bank?", a: ["Do", "Does", "Is", "Are"], c: 1 },
+                { q: "We ___ breakfast every morning.", a: ["has", "have", "having", "eats"], c: 1 },
+                { q: "It ___ often rain in summer.", a: ["don't", "doesn't", "isn't", "not"], c: 1 },
+                { q: "Can you ___ the door?", a: ["open", "opens", "opening", "opened"], c: 0 },
+                { q: "I ___ a nurse.", a: ["is", "am", "are", "be"], c: 1 },
+                { q: "Who is ___ boy over there?", a: ["this", "that", "these", "those"], c: 1 },
+                { q: "My birthday is ___ October.", a: ["at", "on", "in", "for"], c: 2 },
+                { q: "He ___ to school by bike.", a: ["go", "goes", "going", "gone"], c: 1 },
+                { q: "I don't have ___ money.", a: ["some", "any", "a", "an"], c: 1 },
+                { q: "___ is the station?", a: ["Who", "What", "Where", "How"], c: 2 },
+                { q: "They ___ soccer yesterday.", a: ["play", "plays", "played", "playing"], c: 2 },
+                { q: "I am ___ than you.", a: ["old", "older", "oldest", "more old"], c: 1 },
+                { q: "Listen! Someone ___.", a: ["sing", "sings", "is singing", "sang"], c: 2 },
+                { q: "We are ___ at the moment.", a: ["study", "studies", "studying", "studied"], c: 2 },
+                { q: "___ you at home yesterday?", a: ["Was", "Were", "Are", "Did"], c: 1 },
+                { q: "She ___ have a car.", a: ["don't", "doesn't", "isn't", "hasn't"], c: 1 },
+                { q: "This is ___ interesting movie.", a: ["a", "an", "the", "some"], c: 1 },
+                { q: "How ___ is the ticket?", a: ["many", "much", "often", "far"], c: 1 },
+                { q: "He ___ very fast.", a: ["run", "runs", "is running", "ran"], c: 1 },
+                { q: "I like ___ books.", a: ["read", "reads", "reading", "readed"], c: 2 },
+                { q: "They ___ my cousins.", a: ["is", "am", "are", "be"], c: 2 },
+                { q: "Is ___ your bag?", a: ["this", "these", "those", "they"], c: 0 },
+                { q: "I ___ to music every day.", a: ["listen", "listens", "listening", "listened"], c: 0 },
+                { q: "Wait ___ me!", a: ["to", "for", "with", "at"], c: 1 },
+                { q: "The birds are ___ in the sky.", a: ["fly", "flies", "flying", "flew"], c: 2 }
             ],
             medium: [
                 { q: "Many students find that playing games ___ vocabulary.", a: ["improve", "improves", "improving", "improved"], c: 1 }, { q: "If I ___ more time, I would learn code.", a: ["have", "had", "have had", "having"], c: 1 }, { q: "She hasn't finished her homework ___.", a: ["already", "just", "yet", "still"], c: 2 }, { q: "I look forward to ___ you soon.", a: ["see", "seeing", "saw", "be seen"], c: 1 }, { q: "He is the man ___ stole my car.", a: ["which", "who", "whom", "whose"], c: 1 }, { q: "By this time next year, I ___ my degree.", a: ["will finish", "will have finished", "finish", "finished"], c: 1 }, { q: "This is the most beautiful song I have ___ heard.", a: ["never", "ever", "just", "already"], c: 1 }, { q: "Despite ___ tired, he kept working.", a: ["be", "is", "being", "was"], c: 2 }, { q: "I suggest ___ a break.", a: ["take", "to take", "taking", "took"], c: 2 }, { q: "The building ___ in 1999.", a: ["was built", "built", "builds", "is built"], c: 0 },
@@ -1447,7 +1507,57 @@
                 { q: "She is ___ old to drive.", a: ["too", "enough", "very", "so"], c: 0 },
                 { q: "The students ___ by the teacher.", a: ["taught", "were taught", "are teaching", "teach"], c: 1 },
                 { q: "I've lost my phone. ___ you seen it?", a: ["Did", "Have", "Do", "Are"], c: 1 },
-                { q: "We should ___ the environment.", a: ["protect", "protecting", "to protect", "protected"], c: 0 }
+                { q: "We should ___ the environment.", a: ["protect", "protecting", "to protect", "protected"], c: 0 },
+                { q: "The letter ___ yesterday.", a: ["posted", "was posted", "is posted", "posts"], c: 1 },
+                { q: "I wish I ___ more languages.", a: ["know", "knew", "known", "knowing"], c: 1 },
+                { q: "This is the restaurant ___ we had dinner.", a: ["where", "which", "when", "who"], c: 0 },
+                { q: "She has been working here ___ 5 years.", a: ["since", "for", "during", "in"], c: 1 },
+                { q: "If I win the lottery, I ___ a boat.", a: ["buy", "will buy", "bought", "would buy"], c: 1 },
+                { q: "He is interested ___ collecting stamps.", a: ["in", "on", "at", "to"], c: 0 },
+                { q: "The more you learn, ___ you earn.", a: ["more", "the more", "most", "the most"], c: 1 },
+                { q: "I don't know ___ to drive a car.", a: ["what", "how", "which", "where"], c: 1 },
+                { q: "They ___ the house when I arrived.", a: ["clean", "cleaned", "were cleaning", "have cleaned"], c: 2 },
+                { q: "She is good ___ math.", a: ["at", "in", "on", "with"], c: 0 },
+                { q: "He asked me ___ I was tired.", a: ["if", "that", "what", "which"], c: 0 },
+                { q: "I'm looking forward to ___ you again.", a: ["see", "seeing", "to see", "seen"], c: 1 },
+                { q: "The news ___ very shocking.", a: ["was", "were", "are", "be"], c: 0 },
+                { q: "He ___ his homework yet.", a: ["didn't finish", "hasn't finished", "isn't finishing", "doesn't finish"], c: 1 },
+                { q: "This is the ___ expensive car I've seen.", a: ["most", "more", "much", "many"], c: 0 },
+                { q: "You ___ better not be late for school.", a: ["had", "would", "should", "did"], c: 0 },
+                { q: "I enjoy ___ to the beach.", a: ["go", "to go", "going", "goes"], c: 2 },
+                { q: "The children are excited ___ the trip.", a: ["about", "with", "for", "at"], c: 0 },
+                { q: "He is the man ___ son won the prize.", a: ["who", "whom", "whose", "which"], c: 2 },
+                { q: "If it ___ tomorrow, we'll stay home.", a: ["rains", "will rain", "rained", "rain"], c: 0 },
+                { q: "I have never ___ such a beautiful place.", a: ["visit", "visited", "visiting", "to visit"], c: 1 },
+                { q: "The bridge ___ in 1990.", a: ["built", "was built", "is built", "builds"], c: 1 },
+                { q: "She told me she ___ already seen the film.", a: ["has", "had", "was", "is"], c: 1 },
+                { q: "I'm not used to ___ up early.", a: ["get", "getting", "to get", "gotten"], c: 1 },
+                { q: "Neither Peter nor his friends ___ there.", a: ["is", "was", "were", "am"], c: 2 },
+                { q: "He apologized ___ being rude.", a: ["for", "at", "to", "with"], c: 0 },
+                { q: "The cake ___ by my sister now.", a: ["is made", "is being made", "makes", "made"], c: 1 },
+                { q: "I'd rather ___ at home tonight.", a: ["stay", "to stay", "staying", "stayed"], c: 0 },
+                { q: "She is ___ intelligent than her sister.", a: ["more", "most", "as", "much"], c: 0 },
+                { q: "I haven't seen him ___ last Monday.", a: ["since", "for", "during", "at"], c: 0 },
+                { q: "He failed the exam ___ he didn't study.", a: ["because", "although", "but", "so"], c: 0 },
+                { q: "This is the ___ book I've ever read.", a: ["best", "better", "good", "well"], c: 0 },
+                { q: "You should avoid ___ too much sugar.", a: ["eat", "to eat", "eating", "eaten"], c: 2 },
+                { q: "The person ___ lives next door is a doctor.", a: ["who", "which", "whose", "whom"], c: 0 },
+                { q: "If I ___ you, I'd go to the doctor.", a: ["am", "was", "were", "be"], c: 2 },
+                { q: "We ___ have a party next Sunday.", a: ["are going to", "will to", "going to", "shall to"], c: 0 },
+                { q: "He's very fond ___ animals.", a: ["at", "in", "of", "with"], c: 2 },
+                { q: "The meeting ___ already started.", a: ["has", "have", "had", "is"], c: 0 },
+                { q: "I'll call you as soon as I ___.", a: ["arrive", "will arrive", "arrived", "arriving"], c: 0 },
+                { q: "The house is ___ small for us.", a: ["too", "enough", "so", "very"], c: 0 },
+                { q: "She makes me ___ every time.", a: ["laugh", "to laugh", "laughing", "laughed"], c: 0 },
+                { q: "I don't mind ___ you with the bags.", a: ["help", "helping", "to help", "helped"], c: 1 },
+                { q: "They've lived here ___ 2010.", a: ["for", "since", "during", "at"], c: 1 },
+                { q: "The car was repaired ___ the mechanic.", a: ["by", "with", "from", "for"], c: 0 },
+                { q: "I'm not sure ___ she is coming.", a: ["that", "if", "what", "which"], c: 1 },
+                { q: "He is proud ___ his new job.", a: ["of", "at", "on", "with"], c: 0 },
+                { q: "The film was so ___ that I cried.", a: ["bore", "boring", "bored", "bores"], c: 1 },
+                { q: "I'll wait here until she ___.", a: ["comes", "will come", "come", "coming"], c: 0 },
+                { q: "You ___ to bring your passport.", a: ["must", "should", "need", "can"], c: 2 },
+                { q: "This is the ___ difficult task.", a: ["most", "more", "much", "many"], c: 0 }
             ],
             hard: [
                 { q: "Had the startup secured funding, they ___ the project.", a: ["would complete", "will have completed", "would have completed", "completed"], c: 2 }, { q: "Not only ___ late, but he also forgot his passport.", a: ["he was", "was he", "did he", "he did"], c: 1 }, { q: "Scarcely ___ the house when it started to rain.", a: ["I had left", "had I left", "I left", "did I leave"], c: 1 }, { q: "The CEO objected to ___ at the meeting.", a: ["his being criticized", "him be criticized", "he being criticized", "him criticizing"], c: 0 }, { q: "___ it not been for your help, I would have failed.", a: ["If", "Had", "Were", "Should"], c: 1 }, { q: "She was alleged ___ secrets to the rival company.", a: ["to leak", "leaking", "to have leaked", "having leaked"], c: 2 }, { q: "It's high time you ___ taking this seriously.", a: ["start", "started", "starting", "should start"], c: 1 }, { q: "He speaks English as though he ___ a native speaker.", a: ["is", "was", "were", "be"], c: 2 }, { q: "Only when you grow up ___ the truth.", a: ["you will understand", "will you understand", "you understand", "do you understand"], c: 1 }, { q: "___ that the CEO resigned, the stock price dropped.", a: ["Such was the scandal", "So scandal was", "Such a scandal it was", "So the scandal was"], c: 0 },
@@ -1502,7 +1612,58 @@
                 { q: "On no account ___ you leave the room.", a: ["must", "must you", "you must", "should"], c: 1 },
                 { q: "I'm having my car ___ tomorrow.", a: ["repair", "repairing", "repaired", "to repair"], c: 2 },
                 { q: "By next month, I ___ for this company for 10 years.", a: ["will work", "will have been working", "work", "am working"], c: 1 },
-                { q: "He looks exhausted; he ___ all night.", a: ["must work", "must have been working", "should work", "can work"], c: 1 }
+                { q: "He looks exhausted; he ___ all night.", a: ["must work", "must have been working", "should work", "can work"], c: 1 },
+                { q: "Only after she left ___ I realize my mistake.", a: ["I did", "did I", "I had", "had I"], c: 1 },
+                { q: "I'd rather you ___ the window now.", a: ["don't open", "didn't open", "not open", "not to open"], c: 1 },
+                { q: "It is crucial that the report ___ finished by noon.", a: ["is", "be", "was", "were"], c: 1 },
+                { q: "Scarcely ___ started when the phone rang.", a: ["the film had", "had the film", "the film", "did the film"], c: 1 },
+                { q: "Not until much later ___ the truth.", a: ["did we learn", "we learned", "learned we", "we did learn"], c: 0 },
+                { q: "___ for your support, I wouldn't have succeeded.", a: ["If", "But", "Had it not been", "Were it not"], c: 2 },
+                { q: "He spoke to me as if I ___ a child.", a: ["am", "was", "were", "be"], c: 2 },
+                { q: "Supposing he ___ the truth, what would you do?", a: ["tells", "told", "had told", "telling"], c: 1 },
+                { q: "The suspect is alleged ___ the money.", a: ["to steal", "to have stolen", "stealing", "stole"], c: 1 },
+                { q: "No sooner had I sat down ___ the doorbell rang.", a: ["when", "than", "then", "that"], c: 1 },
+                { q: "On no account ___ you leave the building.", a: ["should", "must", "can", "must you"], c: 3 },
+                { q: "Had I known about the party, I ___.", a: ["would come", "would have come", "came", "will come"], c: 1 },
+                { q: "Seldom ___ such a beautiful voice.", a: ["one hears", "does one hear", "hears one", "one did hear"], c: 1 },
+                { q: "It's high time you ___ for a job.", a: ["look", "looked", "to look", "looking"], c: 1 },
+                { q: "The teacher suggested that he ___ harder.", a: ["study", "studies", "studied", "should to study"], c: 0 },
+                { q: "Never before ___ such an amazing sunset.", a: ["I have seen", "have I seen", "did I see", "I saw"], c: 1 },
+                { q: "Rarely ___ she go to the cinema.", a: ["does", "do", "is", "are"], c: 0 },
+                { q: "Hardly had the meeting begun ___ it started to rain.", a: ["when", "than", "then", "that"], c: 0 },
+                { q: "I would appreciate ___ from you soon.", a: ["hear", "to hear", "hearing", "heard"], c: 2 },
+                { q: "Little ___ that he was being cheated.", a: ["did he know", "he knew", "knew he", "he did know"], c: 0 },
+                { q: "Should you ___ any help, please let me know.", a: ["need", "needed", "will need", "needing"], c: 0 },
+                { q: "I regret ___ you that the flight is delayed.", a: ["to inform", "informing", "inform", "informed"], c: 0 },
+                { q: "By next Friday, we ___ the project.", a: ["will finish", "will have finished", "finish", "finished"], c: 1 },
+                { q: "The car needs ___ immediately.", a: ["to repair", "repairing", "repaired", "to be repairing"], c: 1 },
+                { q: "Under no circumstances ___ touch that wire.", a: ["you should", "should you", "you must", "must"], c: 1 },
+                { q: "Were he ___ here, he would be very angry.", a: ["be", "to be", "is", "being"], c: 1 },
+                { q: "Having ___ my breakfast, I went to work.", a: ["finish", "finishing", "finished", "to finish"], c: 2 },
+                { q: "He is rumored ___ a secret agent.", a: ["to be", "being", "be", "is"], c: 0 },
+                { q: "In no way ___ responsible for this.", a: ["am I", "I am", "I be", "be I"], c: 0 },
+                { q: "Try ___ he might, he couldn't lift it.", a: ["as", "how", "what", "even"], c: 0 },
+                { q: "So ___ was the wind that the trees fell.", a: ["strong", "stronger", "strongly", "strength"], c: 0 },
+                { q: "I'd sooner you ___ anyone the news.", a: ["don't tell", "didn't tell", "not tell", "not to tell"], c: 1 },
+                { q: "Barely had I arrived ___ it started to snow.", a: ["when", "than", "then", "that"], c: 0 },
+                { q: "It is essential that he ___ here on time.", a: ["is", "be", "was", "were"], c: 1 },
+                { q: "Only by ___ hard can you pass the exam.", a: ["work", "working", "to work", "worked"], c: 1 },
+                { q: "The furniture ___ yet.", a: ["hasn't delivered", "hasn't been delivered", "didn't deliver", "not delivered"], c: 1 },
+                { q: "I'm having my hair ___ tomorrow.", a: ["cut", "cutting", "to cut", "cuts"], c: 0 },
+                { q: "He was seen ___ the office late.", a: ["leave", "leaving", "left", "to be left"], c: 1 },
+                { q: "The problem is worth ___.", a: ["discussing", "to discuss", "discuss", "discussed"], c: 0 },
+                { q: "I ___ for this company for 20 years by 2030.", a: ["will work", "will have been working", "work", "am working"], c: 1 },
+                { q: "But for his help, I ___.", a: ["would fail", "would have failed", "failed", "will fail"], c: 1 },
+                { q: "Not only ___ but he also sings.", a: ["is he rich", "he is rich", "does he rich", "rich he is"], c: 0 },
+                { q: "Providing ___ you help me, I'll help you.", a: ["that", "which", "what", "if"], c: 0 },
+                { q: "The cake, ___ by my mother, was great.", a: ["making", "made", "to make", "was made"], c: 1 },
+                { q: "He looks tired; he ___ all day.", a: ["must work", "must have been working", "should work", "can work"], c: 1 },
+                { q: "I wish I ___ there last night.", a: ["am", "was", "had been", "were"], c: 2 },
+                { q: "The news is thought ___ true.", a: ["to be", "being", "be", "is"], c: 0 },
+                { q: "Rarely ___ anyone disagree with her.", a: ["does", "do", "is", "are"], c: 0 },
+                { q: "The building is supposed ___ haunted.", a: ["to be", "being", "be", "is"], c: 0 },
+                { q: "I'd rather ___ gone to the party.", a: ["have", "had", "not", "not have"], c: 0 }
+
             ]
         };
 
@@ -1618,7 +1779,6 @@
                     }
                 }
 
-                // 🎯 TỰ ĐỘNG TUNG XÚC XẮC CHO NGƯỜI CHƠI SAU 5 GIÂY (CHỐNG AFK)
                 if (p.id === mySocketId && !isRolling) {
                     let sec = 5;
                     autoRollTimer = setInterval(() => {
@@ -1627,7 +1787,7 @@
                         if (secEl) secEl.innerText = sec;
                         if (sec <= 0) {
                             clearInterval(autoRollTimer);
-                            if (!isRolling) userRollDice(); // Tự động gọi hàm tung xúc xắc
+                            if (!isRolling) userRollDice();
                         }
                     }, 1000);
                 }
@@ -1639,12 +1799,11 @@
             }
         }
 
-        // 🎯 ĐÃ SỬA: Phát âm thanh NGAY LẬP TỨC khi click đổ xúc xắc để tạo cảm giác mượt
         function userRollDice() {
             if (!isRolling && !players[curPlayerIdx].isBot && players[curPlayerIdx].id === mySocketId) {
                 clearInterval(autoRollTimer);
                 isRolling = true;
-                playSound('dice'); // Kêu ngay!
+                playSound('dice');
                 socket.emit('request_roll');
             }
         }
@@ -1652,7 +1811,7 @@
         socket.on('jail_escaped', (data) => {
             clearInterval(autoRollTimer);
             isRolling = true; const val = data.value; const cube = document.getElementById('dice-cube');
-            if (data.playerId !== mySocketId) playSound('dice'); // Không phát lại nếu máy mình đã bấm
+            if (data.playerId !== mySocketId) playSound('dice');
 
             const rots = { 1: { x: 0, y: 0 }, 6: { x: 0, y: 180 }, 3: { x: 0, y: -90 }, 4: { x: 0, y: 90 }, 2: { x: -90, y: 0 }, 5: { x: 90, y: 0 } };
             const getA = (c, t, s) => c + (t - ((c % 360) + 360) % 360 + (t - ((c % 360) + 360) % 360 <= 0 ? 360 : 0)) + (s * 360);
@@ -1673,7 +1832,7 @@
         socket.on('dice_rolled', (data) => {
             clearInterval(autoRollTimer);
             isRolling = true; const val = data.value; const cube = document.getElementById('dice-cube');
-            if (data.playerId !== mySocketId) playSound('dice'); // Không phát lại nếu máy mình đã bấm
+            if (data.playerId !== mySocketId) playSound('dice');
 
             const rots = { 1: { x: 0, y: 0 }, 6: { x: 0, y: 180 }, 3: { x: 0, y: -90 }, 4: { x: 0, y: 90 }, 2: { x: -90, y: 0 }, 5: { x: 90, y: 0 } };
             const getA = (c, t, s) => c + (t - ((c % 360) + 360) % 360 + (t - ((c % 360) + 360) % 360 <= 0 ? 360 : 0)) + (s * 360);
@@ -1917,13 +2076,6 @@
             document.getElementById('btn-buy-no').onclick = () => { modal.style.display = 'none'; socket.emit('next_turn'); };
             modal.style.display = 'flex';
         }
-
-        socket.on('turn_changed', (nIdx) => { curPlayerIdx = nIdx; isRolling = false; updateTurnDisplay(); });
-
-        socket.on('sync_board', (data) => {
-            const t = BOARD_CONFIG[data.tileIndex]; if (data.action === 'buy') t.owner = data.playerId; else if (data.action === 'build') t.houses++;
-            updateBoardVisuals();
-        });
 
         function renderBoard() {
             let m = getDifficultyMulti();

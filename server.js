@@ -30,10 +30,11 @@ function getAvailableAvatar(roomPlayers) {
     return available.length > 0 ? available[Math.floor(Math.random() * available.length)] : '👽';
 }
 
+// 🎯 ĐÃ SỬA: Cập nhật mức tiền khởi đầu mới
 function getStartingMoney(difficulty) {
-    if (difficulty === 'medium') return 2000;
-    if (difficulty === 'hard') return 3000;
-    return 1500;
+    if (difficulty === 'medium') return 3000;
+    if (difficulty === 'hard') return 5000;
+    return 2000; // easy
 }
 
 function checkBankrupt(roomId, p) {
@@ -131,13 +132,7 @@ io.on('connection', (socket) => {
             if (actor && room.players[room.currentTurnIdx]?.id === actor.id) {
                 let val;
                 if (actor.jail) {
-                    // 🎯 ĐÃ CẬP NHẬT: Tăng tỉ lệ ra 6 lên 50% (0.5) khi ở tù
-                    if (Math.random() < 0.5) {
-                        val = 6;
-                    } else {
-                        val = Math.floor(Math.random() * 5) + 1;
-                    }
-
+                    if (Math.random() < 0.5) { val = 6; } else { val = Math.floor(Math.random() * 5) + 1; }
                     if (val === 6) {
                         actor.jail = false; io.to(roomId).emit('sync_players', room.players);
                         io.to(roomId).emit('jail_escaped', { value: val, playerId: actor.id });
