@@ -119,7 +119,6 @@ io.on('connection', (socket) => {
         const roomId = socketToRoom[socket.id]; if (roomId && rooms[roomId]) {
             const room = rooms[roomId]; const actor = getActor(room, socket.id, targetId);
             if (actor && room.players[room.currentTurnIdx]?.id === actor.id) {
-                // 🚀 ĐÃ ĐỒNG BỘ: Sinh 1 giá trị từ 1 đến 6
                 let val;
                 if (actor.jail) {
                     if (Math.random() < 0.5) { val = 6; } else { val = Math.floor(Math.random() * 5) + 1; }
