@@ -28,10 +28,11 @@ function getAvailableAvatar(roomPlayers) {
     return available.length > 0 ? available[Math.floor(Math.random() * available.length)] : '👽';
 }
 
+// 🚀 ĐÃ CHỈNH SỬA: Hạ tiền khởi đầu về 1500, 2000, 3000
 function getStartingMoney(difficulty) {
-    if (difficulty === 'medium') return 20000;
-    if (difficulty === 'hard') return 30000;
-    return 15000;
+    if (difficulty === 'medium') return 2000;
+    if (difficulty === 'hard') return 3000;
+    return 1500;
 }
 
 function checkBankrupt(roomId, p) {
@@ -150,7 +151,8 @@ io.on('connection', (socket) => {
             const p = getActor(rooms[roomId], socket.id, data.targetId);
             if (p) {
                 p.pos = data.pos;
-                if (data.pos === 0) { p.score += 2000; io.to(roomId).emit('log_msg', `🎉 <b>${p.avatar} ${p.username}</b> được thưởng 2000đ khi bay về GO!`); }
+                // 🚀 ĐÃ CHỈNH SỬA: Giảm thưởng qua GO còn 200đ
+                if (data.pos === 0) { p.score += 200; io.to(roomId).emit('log_msg', `🎉 <b>${p.avatar} ${p.username}</b> được thưởng 200đ khi bay về GO!`); }
                 io.to(roomId).emit('sync_players', rooms[roomId].players);
             }
         }
@@ -160,7 +162,8 @@ io.on('connection', (socket) => {
         const roomId = socketToRoom[socket.id]; if (roomId && rooms[roomId]) {
             const room = rooms[roomId]; const p = getActor(room, socket.id, data.targetId); const finalPos = data.pos;
             if (p) {
-                if (p.pos > finalPos && finalPos < 12) { p.score += 2000; io.to(roomId).emit('log_msg', `✅ <b>${p.avatar} ${p.username}</b> qua cờ GO (+2000đ)`); }
+                // 🚀 ĐÃ CHỈNH SỬA: Giảm thưởng qua GO còn 200đ
+                if (p.pos > finalPos && finalPos < 12) { p.score += 200; io.to(roomId).emit('log_msg', `✅ <b>${p.avatar} ${p.username}</b> qua cờ GO (+200đ)`); }
                 p.pos = finalPos; io.to(roomId).emit('sync_players', room.players);
             }
         }
