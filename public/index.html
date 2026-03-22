@@ -149,20 +149,10 @@
             color: white;
         }
 
-        .btn-primary:hover {
-            box-shadow: 0 10px 25px rgba(108, 92, 231, 0.4);
-            transform: translateY(-2px);
-        }
-
         .btn-secondary {
             background: white;
             color: var(--primary);
             border: 2px solid var(--primary);
-        }
-
-        .btn-secondary:hover {
-            background: var(--light);
-            transform: translateY(-2px);
         }
 
         .btn-success {
@@ -170,29 +160,14 @@
             color: white;
         }
 
-        .btn-success:hover {
-            box-shadow: 0 10px 25px rgba(0, 184, 148, 0.4);
-            transform: translateY(-2px);
-        }
-
         .btn-info {
             background: linear-gradient(135deg, #0984e3, #74b9ff);
             color: white;
         }
 
-        .btn-info:hover {
-            box-shadow: 0 10px 25px rgba(9, 132, 227, 0.4);
-            transform: translateY(-2px);
-        }
-
         .btn-warning {
             background: linear-gradient(135deg, var(--accent), #e15f41);
             color: white;
-        }
-
-        .btn-warning:hover {
-            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
-            transform: translateY(-2px);
         }
 
         .btn-back {
@@ -207,10 +182,6 @@
             font-size: 0.9rem;
             backdrop-filter: blur(5px);
             z-index: 50;
-        }
-
-        .btn-back:hover {
-            background: rgba(255, 255, 255, 0.3);
         }
 
         h1.title {
@@ -248,12 +219,7 @@
             outline: none;
             background: rgba(255, 255, 255, 0.9);
             transition: var(--transition);
-        }
-
-        .input-row input:focus,
-        .input-row select:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.1);
+            width: 100%;
         }
 
         .room-code-display {
@@ -283,10 +249,6 @@
             font-weight: 600;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
             transition: var(--transition);
-        }
-
-        .player-list-item:hover {
-            transform: translateX(5px);
         }
 
         .status-badge {
@@ -365,7 +327,7 @@
         }
 
         .tile {
-            background: white;
+            background: #2d3436;
             border-radius: 8px;
             position: relative;
             display: flex;
@@ -375,13 +337,13 @@
             text-align: center;
             overflow: hidden;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             transition: var(--transition);
         }
 
         .tile:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
             z-index: 5;
         }
 
@@ -390,6 +352,30 @@
             width: 100%;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             position: relative;
+            z-index: 3;
+        }
+
+        .tile-bg-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            z-index: 1;
+            transition: transform 0.3s ease;
+        }
+
+        .tile-bg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.8));
+            z-index: 2;
+            transition: background 0.3s ease;
         }
 
         .tile-name {
@@ -401,9 +387,11 @@
             padding: 2px;
             line-height: 1.2;
             word-break: break-word;
-            color: var(--dark);
-            z-index: 2;
+            color: white;
+            z-index: 3;
             font-size: 0.65rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9);
+            transition: opacity 0.3s;
         }
 
         .corner {
@@ -412,6 +400,34 @@
             align-items: center;
             font-size: 0.9rem;
             text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+            color: var(--dark);
+            border: none;
+        }
+
+        /* 🚀 TÍNH NĂNG MỚI: CSS KHI Ô ĐẤT ĐÃ ĐƯỢC MUA (.owned) */
+        .tile.owned .tile-bg-overlay {
+            /* Làm sáng toàn bộ ảnh, chỉ hơi tối nhẹ ở đáy để nhìn rõ viền nhà và tiền */
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 40%);
+        }
+
+        .tile.owned .tile-name {
+            display: none !important;
+            /* Xóa sổ tên và giá ở giữa */
+        }
+
+        .rent-badge {
+            position: absolute;
+            bottom: 2px;
+            left: 2px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #FFD700;
+            font-size: 10px;
+            font-weight: 900;
+            padding: 2px 5px;
+            border-radius: 6px;
+            z-index: 25;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+            letter-spacing: 0.5px;
         }
 
         .token-holder {
@@ -442,21 +458,22 @@
             background: white;
             z-index: 15;
             border-width: 3px !important;
+            border-style: solid;
         }
 
         .owner-badge {
             position: absolute;
-            top: 2px;
-            left: 2px;
+            top: -5px;
+            left: -5px;
             background: white;
             border-radius: 50%;
-            width: 18px;
-            height: 18px;
+            width: 24px;
+            height: 24px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 11px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
             z-index: 25;
         }
 
@@ -470,8 +487,8 @@
             font-weight: bold;
             padding: 3px 6px;
             border-radius: 10px;
-            z-index: 20;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            z-index: 25;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
         }
 
         .house-container {
@@ -480,9 +497,12 @@
             right: 2px;
             display: flex;
             flex-direction: row-reverse;
-            font-size: 9px;
-            z-index: 5;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            font-size: 11px;
+            z-index: 25;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 2px 4px;
+            border-radius: 6px;
         }
 
         .center-hub {
@@ -624,7 +644,63 @@
             transform: translateY(-2px);
         }
 
-        /* MODALS & NOTIFICATION */
+        .city-showcase {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 380px;
+            height: 120px;
+            border-radius: 16px;
+            border: 3px solid var(--primary-light);
+            display: none;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            z-index: 999;
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .city-showcase::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.3));
+            z-index: 1;
+        }
+
+        .showcase-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .showcase-p {
+            font-size: 0.85rem;
+            color: var(--accent-light);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .showcase-c {
+            font-size: 1.8rem;
+            color: white;
+            font-weight: 900;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
+            margin-top: 5px;
+        }
+
         .notification {
             position: fixed;
             bottom: 40px;
@@ -745,7 +821,6 @@
             margin-bottom: 15px;
         }
 
-        /* RESPONSIVE */
         @media screen and (max-width: 900px) and (orientation: portrait) {
             .glass-panel {
                 width: 92% !important;
@@ -890,6 +965,16 @@
                 font-size: 0.95rem !important;
                 bottom: 15px !important;
             }
+
+            .city-showcase {
+                width: 90%;
+                bottom: 10px;
+                height: 100px;
+            }
+
+            .showcase-c {
+                font-size: 1.4rem;
+            }
         }
 
         @media screen and (max-height: 600px) and (orientation: landscape),
@@ -1031,6 +1116,17 @@
             .modal-body {
                 padding: 20px;
             }
+
+            .city-showcase {
+                height: 90px;
+                width: 300px;
+                bottom: 10px;
+            }
+
+            .showcase-c {
+                font-size: 1.3rem;
+                margin-top: 0;
+            }
         }
     </style>
 </head>
@@ -1054,7 +1150,7 @@
             <p style="color: #7f8fa6; font-size: 1.1rem; margin-bottom: 5px;">Tổng tài sản:</p>
             <p id="victory-score" style="font-size: 2.2rem; color: #2ecc71; font-weight: 900; margin-bottom: 30px;">2000
                 VNĐ</p>
-            <button class="btn btn-primary" style="width: 100%; font-size: 1.1rem;" onclick="navTo('sc-menu')">↩ VỀ
+            <button class="btn btn-primary" style="width: 100%; font-size: 1.1rem;" onclick="location.reload()">↩ VỀ
                 TRANG CHỦ</button>
         </div>
     </div>
@@ -1062,7 +1158,7 @@
     <div id="sc-menu" class="screen active">
         <div class="glass-panel">
             <h1 class="title" style="text-align: center;">EngQuest</h1>
-            <p class="subtitle" style="text-align: center;">🌍 eSports Monopoly Edition 🌍</p>
+            <p class="subtitle" style="text-align: center;">🌍 Flat eSports Edition 🌍</p>
 
             <div class="input-row" style="margin-bottom: 15px;">
                 <input id="my-name" type="text" placeholder="Nhập tên của bạn..." value="Gamer"
@@ -1075,9 +1171,9 @@
                     khó (Tiền & Giá Đất):</label>
                 <select id="room-difficulty"
                     style="width: 100%; font-weight: bold; cursor: pointer; color: var(--primary); text-align: center;">
-                    <option value="easy">🌟 Dễ (Bắt đầu: 2000đ | Giá x1)</option>
-                    <option value="medium">🔥 Vừa (Bắt đầu: 3000đ | Giá x1.5)</option>
-                    <option value="hard">💀 Khó (Bắt đầu: 5000đ | Giá x2)</option>
+                    <option value="easy">🌟 Dễ (Bắt đầu: 1500đ | Giá x1)</option>
+                    <option value="medium">🔥 Vừa (Bắt đầu: 2000đ | Giá x1.5)</option>
+                    <option value="hard">💀 Khó (Bắt đầu: 3000đ | Giá x2)</option>
                 </select>
             </div>
 
@@ -1102,8 +1198,8 @@
             <div class="modal-header" style="justify-content: center;">📖 LUẬT CHƠI ENGQUEST</div>
             <div class="modal-body" style="font-size: 0.95rem; line-height: 1.6; color: var(--dark);">
                 <p style="margin-bottom: 10px;"><b style="color: var(--primary);">1. Tiền & Đất:</b> Tiền bắt đầu phụ
-                    thuộc vào độ khó (2000đ - 5000đ). Sở hữu TẤT CẢ đất cùng màu, tiền thuê x2! Giá đất tăng theo độ
-                    khó.</p>
+                    thuộc vào độ khó. Sở hữu TẤT CẢ đất cùng màu, tiền thuê được nhân đôi (x2)! Giá đất tăng theo độ khó
+                    phòng.</p>
                 <p style="margin-bottom: 10px;"><b style="color: var(--accent);">2. Áp lực thời gian:</b> Mặc định 10s.
                     Cứ 5 phút trôi qua, thời gian trả lời giảm 1 giây.</p>
                 <p style="margin-bottom: 10px;"><b style="color: var(--darker);">3. Phá sản:</b> Bị trừ âm tiền (< 0) ->
@@ -1133,6 +1229,14 @@
 
     <div id="sc-game" class="screen">
         <div id="notification" class="notification"></div>
+
+        <div id="city-showcase" class="city-showcase">
+            <div class="showcase-content">
+                <div id="showcase-p" class="showcase-p">Gamer đang ở</div>
+                <div id="showcase-c" class="showcase-c">New York</div>
+            </div>
+        </div>
+
         <div class="game-header">
             <div class="game-title">⚡ EngQuest <span id="header-room-code"
                     style="font-size: 0.9rem; color: var(--accent-light); margin-left: 15px; background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 8px;"></span>
@@ -1205,9 +1309,7 @@
 
     <div id="modal-q" class="modal-wrap">
         <div class="modal-box">
-            <div class="modal-header">
-                <span id="mq-title">CHALLENGE</span>
-                <span id="q-timer"
+            <div class="modal-header"><span id="mq-title">CHALLENGE</span><span id="q-timer"
                     style="background: white; color: var(--accent); padding: 2px 10px; border-radius: 20px; font-size: 1rem;">10s</span>
             </div>
             <div class="modal-body">
@@ -1216,12 +1318,9 @@
             </div>
         </div>
     </div>
-
     <div id="modal-spectator" class="modal-wrap">
         <div class="modal-box" style="background: var(--glass-bg);">
-            <div class="modal-header" style="background: var(--dark)">
-                <span>ĐANG TRẢ LỜI...</span>
-                <span id="ms-timer"
+            <div class="modal-header" style="background: var(--dark)"><span>ĐANG TRẢ LỜI...</span><span id="ms-timer"
                     style="background: rgba(255,255,255,0.2); color: white; padding: 2px 10px; border-radius: 20px; font-size: 1rem;"></span>
             </div>
             <div class="modal-body">
@@ -1230,7 +1329,6 @@
             </div>
         </div>
     </div>
-
     <div id="modal-buy" class="modal-wrap">
         <div class="modal-box">
             <div class="modal-header" id="mb-title" style="justify-content: center;">BẤT ĐỘNG SẢN</div>
@@ -1242,7 +1340,6 @@
             </div>
         </div>
     </div>
-
     <div id="modal-clock" class="modal-wrap" style="background: rgba(30, 39, 46, 0.95)">
         <div class="modal-box" style="background: #2D3436; color: white; border: 1px solid rgba(255,255,255,0.1);">
             <div class="modal-header"
@@ -1253,8 +1350,7 @@
                         style="color: var(--accent-light); font-size:1.6rem">5.00</span>s</div>
                 <p style="font-size: 0.9rem; color: #b2bec3; margin-top: 5px;">(Đồng hồ sẽ bị mù sau 2 giây. Hãy nhẩm
                     đếm!)</p>
-                <div id="clock-display">0.00</div>
-                <button class="btn btn-warning" id="btn-stop-clock"
+                <div id="clock-display">0.00</div><button class="btn btn-warning" id="btn-stop-clock"
                     style="width:100%; font-size:1.3rem; padding: 20px; box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);"
                     onclick="stopStealClock()">⏸️ BẤM DỪNG!</button>
             </div>
@@ -1263,65 +1359,46 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        let audioUnlocked = false;
-        document.body.addEventListener('click', () => {
-            if (!audioUnlocked) {
-                Object.values(SOUNDS).forEach(audio => {
-                    audio.play().then(() => { audio.pause(); audio.currentTime = 0; }).catch(() => { });
-                });
-                audioUnlocked = true;
-            }
-        }, { once: true });
-
-        const SOUNDS = {
-            dice: new Audio('https://actions.google.com/sounds/v1/foley/casque_rattle.ogg'),
-            ting: new Audio('https://actions.google.com/sounds/v1/cartoon/magic_chime_chord.ogg'),
-            fail: new Audio('https://actions.google.com/sounds/v1/cartoon/slip_slide_fail.ogg'),
-            jail: new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg'),
-            tick: new Audio('https://actions.google.com/sounds/v1/science_fiction/geiger_counter_ticking.ogg')
-        };
-        Object.values(SOUNDS).forEach(audio => audio.volume = 0.5);
-        function playSound(type) { try { const s = SOUNDS[type]; if (s) { s.currentTime = 0; s.play().catch(e => { }); } } catch (e) { } }
-
         const socket = io({ transports: ['websocket', 'polling'] });
         let mySocketId = ""; let isMyRoomHost = false;
         socket.on('connect', () => { mySocketId = socket.id; });
         socket.on('error_msg', (msg) => { alert("⚠️ " + msg); });
 
         const COLORS = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA502'];
+
         const BOARD_CONFIG = [
             { type: 'corner', name: 'GO', color: '#fff' },
-            { type: 'prop', group: 1, name: 'Hanoi', color: '#e17055', price: 60, housePrice: 50, rent: 10, owner: null, houses: 0 },
+            { type: 'prop', group: 1, name: 'Hanoi', color: '#e17055', price: 60, housePrice: 50, rent: 10, owner: null, houses: 0, img: '/img/hanoi.png' },
             { type: 'chest', name: 'CHEST', color: '#a29bfe' },
-            { type: 'prop', group: 1, name: 'Sapa', color: '#e17055', price: 60, housePrice: 50, rent: 10, owner: null, houses: 0 },
+            { type: 'prop', group: 1, name: 'Sapa', color: '#e17055', price: 60, housePrice: 50, rent: 10, owner: null, houses: 0, img: '/img/sapa.png' },
             { type: 'chance', name: 'CHANCE', color: '#fab1a0' },
-            { type: 'prop', group: 2, name: 'Bangkok', color: '#74b9ff', price: 100, housePrice: 50, rent: 15, owner: null, houses: 0 },
-            { type: 'prop', group: 2, name: 'Bali', color: '#74b9ff', price: 100, housePrice: 50, rent: 15, owner: null, houses: 0 },
-            { type: 'prop', group: 2, name: 'Phuket', color: '#74b9ff', price: 120, housePrice: 50, rent: 20, owner: null, houses: 0 },
+            { type: 'prop', group: 2, name: 'Bangkok', color: '#74b9ff', price: 100, housePrice: 50, rent: 15, owner: null, houses: 0, img: '/img/bangkok.png' },
+            { type: 'prop', group: 2, name: 'Bali', color: '#74b9ff', price: 100, housePrice: 50, rent: 15, owner: null, houses: 0, img: '/img/bali.png' },
+            { type: 'prop', group: 2, name: 'Phuket', color: '#74b9ff', price: 120, housePrice: 50, rent: 20, owner: null, houses: 0, img: '/img/phuket.png' },
             { type: 'corner', name: 'JAIL', color: '#b2bec3' },
-            { type: 'prop', group: 3, name: 'Seoul', color: '#fd79a8', price: 140, housePrice: 100, rent: 25, owner: null, houses: 0 },
-            { type: 'prop', group: 3, name: 'Busan', color: '#fd79a8', price: 140, housePrice: 100, rent: 25, owner: null, houses: 0 },
+            { type: 'prop', group: 3, name: 'Seoul', color: '#fd79a8', price: 140, housePrice: 100, rent: 25, owner: null, houses: 0, img: '/img/seoul.png' },
+            { type: 'prop', group: 3, name: 'Busan', color: '#fd79a8', price: 140, housePrice: 100, rent: 25, owner: null, houses: 0, img: '/img/busan.png' },
             { type: 'chest', name: 'CHEST', color: '#a29bfe' },
-            { type: 'prop', group: 3, name: 'Tokyo', color: '#fd79a8', price: 160, housePrice: 100, rent: 30, owner: null, houses: 0 },
-            { type: 'prop', group: 4, name: 'Osaka', color: '#e15f41', price: 180, housePrice: 100, rent: 35, owner: null, houses: 0 },
+            { type: 'prop', group: 3, name: 'Tokyo', color: '#fd79a8', price: 160, housePrice: 100, rent: 30, owner: null, houses: 0, img: '/img/tokyo.png' },
+            { type: 'prop', group: 4, name: 'Osaka', color: '#e15f41', price: 180, housePrice: 100, rent: 35, owner: null, houses: 0, img: '/img/osaka.png' },
             { type: 'chance', name: 'CHANCE', color: '#fab1a0' },
-            { type: 'prop', group: 4, name: 'Kyoto', color: '#e15f41', price: 200, housePrice: 100, rent: 40, owner: null, houses: 0 },
+            { type: 'prop', group: 4, name: 'Kyoto', color: '#e15f41', price: 200, housePrice: 100, rent: 40, owner: null, houses: 0, img: '/img/kyoto.png' },
             { type: 'corner', name: 'FREE', color: '#74b9ff' },
-            { type: 'prop', group: 5, name: 'Paris', color: '#ff7675', price: 220, housePrice: 150, rent: 45, owner: null, houses: 0 },
-            { type: 'prop', group: 5, name: 'Lyon', color: '#ff7675', price: 220, housePrice: 150, rent: 45, owner: null, houses: 0 },
+            { type: 'prop', group: 5, name: 'Paris', color: '#ff7675', price: 220, housePrice: 150, rent: 45, owner: null, houses: 0, img: '/img/paris.png' },
+            { type: 'prop', group: 5, name: 'Lyon', color: '#ff7675', price: 220, housePrice: 150, rent: 45, owner: null, houses: 0, img: '/img/lyon.png' },
             { type: 'chest', name: 'CHEST', color: '#a29bfe' },
-            { type: 'prop', group: 5, name: 'Rome', color: '#ff7675', price: 240, housePrice: 150, rent: 50, owner: null, houses: 0 },
-            { type: 'prop', group: 6, name: 'Berlin', color: '#ffeaa7', price: 260, housePrice: 150, rent: 55, owner: null, houses: 0 },
+            { type: 'prop', group: 5, name: 'Rome', color: '#ff7675', price: 240, housePrice: 150, rent: 50, owner: null, houses: 0, img: '/img/rome.png' },
+            { type: 'prop', group: 6, name: 'Berlin', color: '#ffeaa7', price: 260, housePrice: 150, rent: 55, owner: null, houses: 0, img: '/img/berlin.png' },
             { type: 'chance', name: 'CHANCE', color: '#fab1a0' },
-            { type: 'prop', group: 6, name: 'Madrid', color: '#ffeaa7', price: 280, housePrice: 150, rent: 60, owner: null, houses: 0 },
+            { type: 'prop', group: 6, name: 'Madrid', color: '#ffeaa7', price: 280, housePrice: 150, rent: 60, owner: null, houses: 0, img: '/img/madrid.png' },
             { type: 'go_jail', name: 'VÀO TÙ', color: '#d63031' },
-            { type: 'prop', group: 7, name: 'London', color: '#55efc4', price: 300, housePrice: 200, rent: 70, owner: null, houses: 0 },
-            { type: 'prop', group: 7, name: 'Dubai', color: '#55efc4', price: 300, housePrice: 200, rent: 70, owner: null, houses: 0 },
+            { type: 'prop', group: 7, name: 'London', color: '#55efc4', price: 300, housePrice: 200, rent: 70, owner: null, houses: 0, img: '/img/london.png' },
+            { type: 'prop', group: 7, name: 'Dubai', color: '#55efc4', price: 300, housePrice: 200, rent: 70, owner: null, houses: 0, img: '/img/dubai.png' },
             { type: 'chest', name: 'CHEST', color: '#a29bfe' },
-            { type: 'prop', group: 7, name: 'Sydney', color: '#55efc4', price: 320, housePrice: 200, rent: 80, owner: null, houses: 0 },
-            { type: 'prop', group: 8, name: 'L.A.', color: '#0984e3', price: 350, housePrice: 200, rent: 100, owner: null, houses: 0 },
+            { type: 'prop', group: 7, name: 'Sydney', color: '#55efc4', price: 320, housePrice: 200, rent: 80, owner: null, houses: 0, img: '/img/sydney.png' },
+            { type: 'prop', group: 8, name: 'L.A.', color: '#0984e3', price: 350, housePrice: 200, rent: 100, owner: null, houses: 0, img: '/img/la.png' },
             { type: 'chance', name: 'CHANCE', color: '#fab1a0' },
-            { type: 'prop', group: 8, name: 'N.Y.', color: '#0984e3', price: 400, housePrice: 200, rent: 120, owner: null, houses: 0 }
+            { type: 'prop', group: 8, name: 'N.Y.', color: '#0984e3', price: 400, housePrice: 200, rent: 120, owner: null, houses: 0, img: '/img/ny.png' }
         ];
 
         const CHANCE_CARDS = [
@@ -1330,190 +1407,13 @@
             { text: "Bạn được học bổng du học! Bay thẳng về ô GO và nhận 200đ.", type: "move", pos: 0 },
             { text: "Bị tình nghi buôn lậu! Đi thẳng vào nhà TÙ.", type: "jail" },
             { text: "Trúng vé số độc đắc! Nhận ngay 200đ.", type: "cash", val: 200 },
-            { text: "Đóng thuế thu nhập cá nhân. Mất 100đ.", type: "cash", val: -100 },
-            { text: " Bạn giúp đỡ người già qua đường, được thưởng 50đ.", type: "cash", val: 50 },
-            { text: "Bị mất ví! Trừ 50đ.", type: "cash", val: -50 },
-            { text: "Bạn được thừa kế tài sản! Nhận 150đ.", type: "cash", val: 150 },
-            { text: "Đi du lịch miễn phí đến ô Tokyo!", type: "move", pos: 11 },
-            { text: "Bị hỏng xe giữa đường! Sửa xe 50đ.", type: "cash", val: -50 },
-            { text: "Bạn tình cờ làm rơi tiền! Nhặt được 50đ.", type: "cash", val: 50 },
-            { text: "Bị phạt vì xả rác! Trừ 30đ.", type: "cash", val: -30 },
-            { text: "Bạn được mời tham dự tiệc sang trọng! Nhận 100đ.", type: "cash", val: 100 },
-            { text: "Bị mất điện thoại! Trừ 100đ.", type: "cash", val: -100 },
-            { text: "Bạn giúp đỡ cứu hỏa dập tắt đám cháy, được thưởng 80đ.", type: "cash", val: 80 },
-            { text: "Đi thẳng đến ô JAIL và bị giam giữ một lượt.", type: "jail" }
+            { text: "Đóng thuế thu nhập cá nhân. Mất 100đ.", type: "cash", val: -100 }
         ];
 
         const QUESTIONS = {
-            easy: [
-                { q: "I ___ from Vietnam.", a: ["am", "is", "are", "be"], c: 0 }, { q: "She usually ___ up at 6 AM.", a: ["wake", "woke", "wakes", "waking"], c: 2 }, { q: "They ___ learning English.", a: ["am", "is", "are", "do"], c: 2 }, { q: "My father ___ a doctor.", a: ["am", "is", "are", "be"], c: 1 }, { q: "Do you ___ a pen?", a: ["has", "having", "had", "have"], c: 3 }, { q: "Look! The cat ___ over the wall.", a: ["jump", "is jumping", "jumps", "jumped"], c: 1 }, { q: "I don't like ___ in the rain.", a: ["walk", "walks", "walking", "walked"], c: 2 }, { q: "___ he like playing football?", a: ["Do", "Does", "Is", "Are"], c: 1 }, { q: "There ___ an apple on the table.", a: ["is", "are", "am", "be"], c: 0 }, { q: "We ___ to the zoo yesterday.", a: ["go", "goes", "went", "going"], c: 2 },
-                { q: "It ___ raining now.", a: ["is", "are", "am", "be"], c: 0 }, { q: "He ___ a new car last week.", a: ["buy", "bought", "buys", "buying"], c: 1 }, { q: "___ you speak English?", a: ["Can", "Are", "Is", "Does"], c: 0 }, { q: "She is ___ than her sister.", a: ["tall", "taller", "tallest", "more tall"], c: 1 }, { q: "They have lived here ___ 2010.", a: ["for", "since", "in", "at"], c: 1 }, { q: "I ___ my keys. I can't find them.", a: ["lose", "lost", "have lost", "losing"], c: 2 }, { q: "Would you like ___ tea?", a: ["some", "any", "a", "an"], c: 0 }, { q: "He works ___ a bank.", a: ["in", "on", "at", "for"], c: 0 }, { q: "I am ___ TV right now.", a: ["watch", "watches", "watched", "watching"], c: 3 }, { q: "___ is your name?", a: ["Who", "What", "How", "Where"], c: 1 },
-                { q: "The sky is ___.", a: ["blue", "red", "green", "yellow"], c: 0 }, { q: "I need ___ help.", a: ["some", "any", "a", "an"], c: 0 }, { q: "She is a ___.", a: ["teach", "teaches", "teacher", "teaching"], c: 2 }, { q: "They ___ playing tennis.", a: ["am", "is", "are", "do"], c: 2 }, { q: "He ___ not like coffee.", a: ["do", "does", "is", "are"], c: 1 }, { q: "I have two ___.", a: ["brother", "brothers", "brother's", "brothers'"], c: 1 }, { q: "This is ___ book.", a: ["my", "mine", "I", "me"], c: 0 }, { q: "Where ___ you live?", a: ["do", "does", "are", "is"], c: 0 }, { q: "She went ___ the store.", a: ["to", "in", "on", "at"], c: 0 }, { q: "I am happy ___ see you.", a: ["to", "for", "with", "about"], c: 0 },
-                { q: "The dog is ___ the table.", a: ["under", "on", "in", "at"], c: 0 }, { q: "I have a ___ car.", a: ["new", "news", "newly", "newer"], c: 0 }, { q: "He is a good ___.", a: ["student", "students", "student's", "students'"], c: 0 }, { q: "They are my ___.", a: ["friend", "friends", "friend's", "friends'"], c: 1 }, { q: "I like to eat ___.", a: ["apple", "apples", "apple's", "apples'"], c: 1 }, { q: "She is very ___.", a: ["beautiful", "beauty", "beautifully", "beautify"], c: 0 }, { q: "He runs ___.", a: ["fast", "fasts", "fastly", "faster"], c: 0 }, { q: "They are playing ___.", a: ["game", "games", "game's", "games'"], c: 1 }, { q: "I am reading a ___.", a: ["book", "books", "book's", "books'"], c: 0 }, { q: "She is writing a ___.", a: ["letter", "letters", "letter's", "letters'"], c: 0 },
-                { q: "He is driving a ___.", a: ["car", "cars", "car's", "cars'"], c: 0 }, { q: "They are building a ___.", a: ["house", "houses", "house's", "houses'"], c: 0 }, { q: "I am listening to ___.", a: ["music", "musics", "musical", "musician"], c: 0 }, { q: "She is singing a ___.", a: ["song", "songs", "singer", "singing"], c: 0 }, { q: "He is drawing a ___.", a: ["picture", "pictures", "pictorial", "picturing"], c: 0 }, { q: "They are cooking ___.", a: ["food", "foods", "foodie", "feeding"], c: 0 }, { q: "I am drinking ___.", a: ["water", "waters", "watery", "watering"], c: 0 }, { q: "She is eating ___.", a: ["rice", "rices", "riced", "ricing"], c: 0 }, { q: "He is wearing a ___.", a: ["shirt", "shirts", "shirting", "shirted"], c: 0 }, { q: "They are buying ___.", a: ["clothes", "clothing", "clothe", "clothed"], c: 0 },
-                { q: "He ___ a student.", a: ["is", "am", "are", "be"], c: 0 },
-                { q: "I have ___ orange in my bag.", a: ["a", "an", "the", "any"], c: 1 },
-                { q: "They ___ football every Sunday.", a: ["play", "plays", "playing", "played"], c: 0 },
-                { q: "My sister ___ to school by bus.", a: ["go", "goes", "going", "gone"], c: 1 },
-                { q: "Where ___ you from?", a: ["is", "am", "are", "do"], c: 2 },
-                { q: "There are four ___ on the table.", a: ["box", "boxs", "boxes", "boxing"], c: 2 },
-                { q: "Listen! She ___ the piano.", a: ["play", "plays", "is playing", "played"], c: 2 },
-                { q: "I ___ like spicy food.", a: ["don't", "doesn't", "am not", "not"], c: 0 },
-                { q: "___ you have any brothers?", a: ["Do", "Does", "Is", "Are"], c: 0 },
-                { q: "She ___ a beautiful dress yesterday.", a: ["wear", "wears", "wore", "wearing"], c: 2 },
-                { q: "This is ___ apple.", a: ["a", "an", "the", "some"], c: 1 },
-                { q: "We ___ at the cinema last night.", a: ["was", "were", "are", "be"], c: 1 },
-                { q: "How ___ is this shirt?", a: ["many", "much", "old", "often"], c: 1 },
-                { q: "I usually get up ___ 7 o'clock.", a: ["in", "on", "at", "to"], c: 2 },
-                { q: "They are ___ to the radio.", a: ["listen", "listens", "listening", "listened"], c: 2 },
-                { q: "He ___ speak French very well.", a: ["can", "is", "does", "has"], c: 0 },
-                { q: "___ your mother a teacher?", a: ["Is", "Are", "Am", "Do"], c: 0 },
-                { q: "I don't have ___ money.", a: ["some", "any", "a", "an"], c: 1 },
-                { q: "My birthday is ___ June.", a: ["in", "on", "at", "for"], c: 0 },
-                { q: "These ___ my friends.", a: ["is", "am", "are", "be"], c: 2 },
-                { q: "Does he ___ in London?", a: ["live", "lives", "lived", "living"], c: 0 },
-                { q: "I am taller ___ my brother.", a: ["then", "than", "as", "more"], c: 1 },
-                { q: "Look at ___ birds in the sky.", a: ["this", "that", "these", "those"], c: 3 },
-                { q: "She ___ breakfast at 8 AM.", a: ["has", "have", "is having", "having"], c: 0 },
-                { q: "We ___ a movie now.", a: ["watch", "watches", "are watching", "watched"], c: 2 },
-                { q: "___ you like pizza?", a: ["Do", "Does", "Are", "Is"], c: 0 },
-                { q: "My cat is sleeping ___ the sofa.", a: ["in", "on", "at", "under"], c: 1 },
-                { q: "I ___ go to the park yesterday.", a: ["don't", "doesn't", "didn't", "wasn't"], c: 2 },
-                { q: "There ___ some milk in the fridge.", a: ["is", "are", "am", "be"], c: 0 },
-                { q: "Who ___ that man?", a: ["is", "am", "are", "be"], c: 0 },
-                { q: "I can't ___ my glasses.", a: ["find", "finds", "found", "finding"], c: 0 },
-                { q: "She ___ her homework every day.", a: ["do", "does", "did", "doing"], c: 1 },
-                { q: "The flowers ___ beautiful.", a: ["is", "am", "are", "be"], c: 2 },
-                { q: "___ many people are there?", a: ["How", "What", "Who", "Where"], c: 0 },
-                { q: "I want to buy ___ new shoes.", a: ["some", "any", "a", "an"], c: 0 },
-                { q: "He ___ a blue car.", a: ["has", "have", "is having", "having"], c: 0 },
-                { q: "They ___ at home now.", a: ["is", "am", "are", "be"], c: 2 },
-                { q: "Can you ___ me, please?", a: ["help", "helps", "helped", "helping"], c: 0 },
-                { q: "It is very ___ today.", a: ["hot", "hotly", "hotter", "hottest"], c: 0 },
-                { q: "She is ___ a book.", a: ["read", "reads", "reading", "readed"], c: 2 },
-                { q: "I like ___ to music.", a: ["listen", "listens", "listening", "listened"], c: 2 },
-                { q: "Where ___ you go last summer?", a: ["do", "does", "did", "are"], c: 2 },
-                { q: "He is my ___ brother.", a: ["older", "old", "oldest", "elder"], c: 0 },
-                { q: "We ___ hungry.", a: ["is", "am", "are", "be"], c: 2 },
-                { q: "___ you busy right now?", a: ["Is", "Are", "Am", "Do"], c: 1 },
-                { q: "I ___ play the guitar.", a: ["can", "am", "do", "is"], c: 0 },
-                { q: "The sun ___ in the East.", a: ["rise", "rises", "rising", "rose"], c: 1 },
-                { q: "She ___ speak English.", a: ["doesn't", "don't", "isn't", "not"], c: 0 },
-                { q: "This is ___ interesting story.", a: ["a", "an", "the", "any"], c: 1 },
-                { q: "What time ___ it?", a: ["is", "am", "are", "be"], c: 0 }
-            ],
-            medium: [
-                { q: "Many students find that playing games ___ vocabulary.", a: ["improve", "improves", "improving", "improved"], c: 1 }, { q: "If I ___ more time, I would learn code.", a: ["have", "had", "have had", "having"], c: 1 }, { q: "She hasn't finished her homework ___.", a: ["already", "just", "yet", "still"], c: 2 }, { q: "I look forward to ___ you soon.", a: ["see", "seeing", "saw", "be seen"], c: 1 }, { q: "He is the man ___ stole my car.", a: ["which", "who", "whom", "whose"], c: 1 }, { q: "By this time next year, I ___ my degree.", a: ["will finish", "will have finished", "finish", "finished"], c: 1 }, { q: "This is the most beautiful song I have ___ heard.", a: ["never", "ever", "just", "already"], c: 1 }, { q: "Despite ___ tired, he kept working.", a: ["be", "is", "being", "was"], c: 2 }, { q: "I suggest ___ a break.", a: ["take", "to take", "taking", "took"], c: 2 }, { q: "The building ___ in 1999.", a: ["was built", "built", "builds", "is built"], c: 0 },
-                { q: "If it rains tomorrow, we ___ at home.", a: ["stay", "will stay", "would stay", "stayed"], c: 1 }, { q: "He asked me what my name ___.", a: ["is", "was", "were", "are"], c: 1 }, { q: "I wish I ___ play the piano.", a: ["can", "could", "will", "would"], c: 1 }, { q: "The book ___ I bought yesterday is interesting.", a: ["who", "whom", "which", "whose"], c: 2 }, { q: "She told me she ___ already seen the movie.", a: ["has", "have", "had", "having"], c: 2 }, { q: "It's important that he ___ early.", a: ["arrive", "arrives", "arrived", "arriving"], c: 0 }, { q: "I am used to ___ up early.", a: ["wake", "woke", "waking", "waken"], c: 2 }, { q: "They made him ___ the room.", a: ["clean", "to clean", "cleaning", "cleaned"], c: 0 }, { q: "She ___ have forgotten our appointment.", a: ["must", "can", "should", "need"], c: 0 }, { q: "I'd rather you ___ not tell him.", a: ["do", "did", "does", "doing"], c: 1 },
-                { q: "He is interested ___ learning English.", a: ["in", "on", "at", "for"], c: 0 }, { q: "She is good ___ playing tennis.", a: ["at", "in", "on", "with"], c: 0 }, { q: "They are afraid ___ dogs.", a: ["of", "off", "from", "by"], c: 0 }, { q: "I am tired ___ working.", a: ["of", "with", "from", "by"], c: 0 }, { q: "He is fond ___ reading.", a: ["of", "with", "in", "on"], c: 0 }, { q: "She is keen ___ music.", a: ["on", "in", "with", "of"], c: 0 }, { q: "They are surprised ___ the news.", a: ["at", "by", "with", "about"], c: 0 }, { q: "I am worried ___ the exam.", a: ["about", "of", "with", "for"], c: 0 }, { q: "He is proud ___ his son.", a: ["of", "about", "with", "for"], c: 0 }, { q: "She is famous ___ her beauty.", a: ["for", "of", "with", "about"], c: 0 },
-                { q: "The car needs ___.", a: ["washing", "to wash", "wash", "washed"], c: 0 }, { q: "I remember ___ him before.", a: ["meeting", "to meet", "meet", "met"], c: 0 }, { q: "She forgot ___ the door.", a: ["to lock", "locking", "lock", "locked"], c: 0 }, { q: "He stopped ___ a cigarette.", a: ["to smoke", "smoking", "smoke", "smoked"], c: 0 }, { q: "They tried ___ the window.", a: ["to open", "opening", "open", "opened"], c: 0 }, { q: "I regret ___ you the truth.", a: ["telling", "to tell", "tell", "told"], c: 0 }, { q: "She avoided ___ his eyes.", a: ["meeting", "to meet", "meet", "met"], c: 0 }, { q: "He admitted ___ the mistake.", a: ["making", "to make", "make", "made"], c: 0 }, { q: "They denied ___ the money.", a: ["stealing", "to steal", "steal", "stole"], c: 0 }, { q: "I delayed ___ him the letter.", a: ["sending", "to send", "send", "sent"], c: 0 },
-                { q: "The weather is ___ today than yesterday.", a: ["better", "good", "best", "well"], c: 0 }, { q: "She is ___ intelligent than her sister.", a: ["more", "much", "most", "many"], c: 0 }, { q: "This is the ___ expensive car in the world.", a: ["most", "more", "much", "many"], c: 0 }, { q: "He is as ___ as a lion.", a: ["strong", "stronger", "strongest", "strongly"], c: 0 }, { q: "The ___ you study, the better you get.", a: ["more", "much", "most", "many"], c: 0 }, { q: "This is the ___ interesting book I have ever read.", a: ["most", "more", "much", "many"], c: 0 }, { q: "She runs ___ than him.", a: ["faster", "fast", "fastest", "fastly"], c: 0 }, { q: "He is the ___ student in the class.", a: ["tallest", "tall", "taller", "tally"], c: 0 }, { q: "This task is ___ difficult than the previous one.", a: ["more", "much", "most", "many"], c: 0 }, { q: "She is ___ beautiful girl I know.", a: ["the most", "more", "most", "much"], c: 0 },
-                { q: "I ___ English for five years.", a: ["study", "am studying", "have studied", "studied"], c: 2 },
-                { q: "He ___ his keys, so he can't get in.", a: ["lose", "lost", "has lost", "is losing"], c: 2 },
-                { q: "If it ___ sunny, we will go for a walk.", a: ["is", "was", "will be", "be"], c: 0 },
-                { q: "She is the woman ___ works in the office.", a: ["who", "which", "whom", "whose"], c: 0 },
-                { q: "You ___ smoke here; it's forbidden.", a: ["mustn't", "don't have to", "shouldn't", "can't"], c: 0 },
-                { q: "I enjoy ___ in my free time.", a: ["read", "to read", "reading", "reads"], c: 2 },
-                { q: "The movie was so ___ that I fell asleep.", a: ["bored", "boring", "bore", "bores"], c: 1 },
-                { q: "He ___ since 8 o'clock this morning.", a: ["works", "is working", "has been working", "worked"], c: 2 },
-                { q: "I'll call you as soon as I ___.", a: ["arrive", "will arrive", "arrived", "arriving"], c: 0 },
-                { q: "This room ___ every day.", a: ["cleans", "is cleaned", "cleaned", "is cleaning"], c: 1 },
-                { q: "If I ___ you, I would take that job.", a: ["am", "was", "were", "be"], c: 2 },
-                { q: "She ___ to Paris three times.", a: ["has been", "went", "has gone", "was"], c: 0 },
-                { q: "I don't know ___ to solve this problem.", a: ["what", "how", "which", "who"], c: 1 },
-                { q: "He succeeded ___ passing the exam.", a: ["in", "on", "at", "with"], c: 0 },
-                { q: "You ___ better see a doctor.", a: ["had", "would", "should", "ought"], c: 0 },
-                { q: "The man ___ car was stolen is very sad.", a: ["who", "whom", "whose", "which"], c: 2 },
-                { q: "I remember ___ this movie before.", a: ["see", "to see", "seeing", "saw"], c: 2 },
-                { q: "They ___ finish the report by Friday.", a: ["have to", "must to", "should to", "ought"], c: 0 },
-                { q: "The more I practice, ___ I play.", a: ["the better", "better", "the best", "best"], c: 0 },
-                { q: "I'm looking forward to ___ you.", a: ["meet", "meeting", "to meet", "met"], c: 1 },
-                { q: "She asked me ___ I liked coffee.", a: ["if", "that", "weather", "which"], c: 0 },
-                { q: "The dinner ___ by my mother now.", a: ["is cooked", "is being cooked", "cooks", "cooked"], c: 1 },
-                { q: "I wish I ___ a bigger house.", a: ["have", "had", "would have", "having"], c: 1 },
-                { q: "He apologized ___ being late.", a: ["for", "of", "at", "to"], c: 0 },
-                { q: "The task was ___ difficult for me to finish.", a: ["too", "enough", "very", "so"], c: 0 },
-                { q: "She is ___ intelligent than I thought.", a: ["less", "least", "little", "few"], c: 0 },
-                { q: "We ___ have a party next week.", a: ["going to", "are going to", "will to", "shall to"], c: 1 },
-                { q: "I ___ my homework when the phone rang.", a: ["do", "did", "was doing", "have done"], c: 2 },
-                { q: "They ___ each other for ten years.", a: ["know", "knew", "have known", "are knowing"], c: 2 },
-                { q: "You ___ bring an umbrella; it's not raining.", a: ["mustn't", "needn't", "shouldn't", "don't"], c: 1 },
-                { q: "The book ___ I am reading is great.", a: ["who", "whom", "which", "whose"], c: 2 },
-                { q: "She suggested ___ to the park.", a: ["go", "to go", "going", "goes"], c: 2 },
-                { q: "I am not used to ___ late.", a: ["work", "working", "to work", "worked"], c: 1 },
-                { q: "He's the student ___ got the highest score.", a: ["who", "which", "whom", "whose"], c: 0 },
-                { q: "If she ___ harder, she would pass.", a: ["study", "studied", "studies", "studying"], c: 1 },
-                { q: "I haven't seen him ___ last month.", a: ["for", "since", "during", "at"], c: 1 },
-                { q: "This is the ___ film I've ever seen.", a: ["worse", "worst", "bad", "badly"], c: 1 },
-                { q: "You should avoid ___ too much salt.", a: ["eat", "to eat", "eating", "eaten"], c: 2 },
-                { q: "The bridge ___ in 2005.", a: ["built", "was built", "is built", "builds"], c: 1 },
-                { q: "I am interested ___ ancient history.", a: ["in", "on", "at", "about"], c: 0 },
-                { q: "He's very good ___ telling stories.", a: ["at", "in", "on", "for"], c: 0 },
-                { q: "She made me ___ my room.", a: ["clean", "to clean", "cleaning", "cleaned"], c: 0 },
-                { q: "I'd rather ___ at home tonight.", a: ["stay", "to stay", "staying", "stayed"], c: 0 },
-                { q: "Neither he nor I ___ going to the party.", a: ["is", "am", "are", "be"], c: 1 },
-                { q: "The news ___ very exciting.", a: ["is", "are", "am", "be"], c: 0 },
-                { q: "I'll wait here until she ___.", a: ["come", "comes", "will come", "coming"], c: 1 },
-                { q: "She is ___ old to drive.", a: ["too", "enough", "very", "so"], c: 0 },
-                { q: "The students ___ by the teacher.", a: ["taught", "were taught", "are teaching", "teach"], c: 1 },
-                { q: "I've lost my phone. ___ you seen it?", a: ["Did", "Have", "Do", "Are"], c: 1 },
-                { q: "We should ___ the environment.", a: ["protect", "protecting", "to protect", "protected"], c: 0 }
-            ],
-            hard: [
-                { q: "Had the startup secured funding, they ___ the project.", a: ["would complete", "will have completed", "would have completed", "completed"], c: 2 }, { q: "Not only ___ late, but he also forgot his passport.", a: ["he was", "was he", "did he", "he did"], c: 1 }, { q: "Scarcely ___ the house when it started to rain.", a: ["I had left", "had I left", "I left", "did I leave"], c: 1 }, { q: "The CEO objected to ___ at the meeting.", a: ["his being criticized", "him be criticized", "he being criticized", "him criticizing"], c: 0 }, { q: "___ it not been for your help, I would have failed.", a: ["If", "Had", "Were", "Should"], c: 1 }, { q: "She was alleged ___ secrets to the rival company.", a: ["to leak", "leaking", "to have leaked", "having leaked"], c: 2 }, { q: "It's high time you ___ taking this seriously.", a: ["start", "started", "starting", "should start"], c: 1 }, { q: "He speaks English as though he ___ a native speaker.", a: ["is", "was", "were", "be"], c: 2 }, { q: "Only when you grow up ___ the truth.", a: ["you will understand", "will you understand", "you understand", "do you understand"], c: 1 }, { q: "___ that the CEO resigned, the stock price dropped.", a: ["Such was the scandal", "So scandal was", "Such a scandal it was", "So the scandal was"], c: 0 },
-                { q: "Little ___ about the surprises awaiting him.", a: ["did he know", "he knew", "knew he", "he did know"], c: 0 }, { q: "No sooner had I arrived ___ the phone rang.", a: ["when", "than", "then", "that"], c: 1 }, { q: "Under no circumstances ___ the door.", a: ["you should open", "should you open", "you open", "open you"], c: 1 }, { q: "Never before ___ such a beautiful sunset.", a: ["have I seen", "I have seen", "saw I", "I saw"], c: 0 }, { q: "Barely had the game started ___ it began to rain.", a: ["when", "than", "then", "that"], c: 0 }, { q: "Rarely ___ anyone disagree with her.", a: ["does", "do", "is", "are"], c: 0 }, { q: "Seldom ___ to the cinema nowadays.", a: ["we go", "go we", "do we go", "we do go"], c: 2 }, { q: "Only after the meeting ___ the truth.", a: ["I realized", "did I realize", "realized I", "I did realize"], c: 1 }, { q: "Not until she left ___ how much I loved her.", a: ["did I know", "I knew", "knew I", "I did know"], c: 0 }, { q: "In no way ___ responsible for this mess.", a: ["am I", "I am", "I be", "be I"], c: 0 },
-                { q: "He is considered ___ one of the best players.", a: ["to be", "being", "be", "is"], c: 0 }, { q: "She is thought ___ the country secretly.", a: ["to leave", "to have left", "leaving", "left"], c: 1 }, { q: "They are believed ___ in the mountains.", a: ["to hide", "to be hiding", "hiding", "hide"], c: 1 }, { q: "It is reported that the suspect ___ arrested.", a: ["has been", "have been", "was been", "is being"], c: 0 }, { q: "The project is expected ___ next month.", a: ["to finish", "to be finished", "finishing", "finished"], c: 1 }, { q: "He is rumored ___ a millionaire.", a: ["to become", "to have become", "becoming", "became"], c: 1 }, { q: "She is known ___ an expert in this field.", a: ["to be", "being", "be", "is"], c: 0 }, { q: "They are said ___ a lot of money.", a: ["to make", "to have made", "making", "made"], c: 1 }, { q: "It is alleged that he ___ the money.", a: ["stole", "steals", "stolen", "stealing"], c: 0 }, { q: "The building is supposed ___ haunted.", a: ["to be", "being", "be", "is"], c: 0 },
-                { q: "By the time we arrive, the film ___.", a: ["will start", "will have started", "starts", "started"], c: 1 }, { q: "I ___ English for 5 years by next month.", a: ["will study", "will have been studying", "study", "studied"], c: 1 }, { q: "He ___ the report by tomorrow morning.", a: ["will finish", "will have finished", "finishes", "finished"], c: 1 }, { q: "They ___ the house by the end of the year.", a: ["will build", "will have built", "build", "built"], c: 1 }, { q: "She ___ here for 10 years by 2025.", a: ["will live", "will have lived", "lives", "lived"], c: 1 }, { q: "I ___ all my money by the end of the trip.", a: ["will spend", "will have spent", "spend", "spent"], c: 1 }, { q: "We ___ the project by next week.", a: ["will complete", "will have completed", "complete", "completed"], c: 1 }, { q: "He ___ the book by the time you get back.", a: ["will read", "will have read", "reads", "read"], c: 1 }, { q: "They ___ the problem by tomorrow.", a: ["will solve", "will have solved", "solve", "solved"], c: 1 }, { q: "She ___ the letter by the end of the day.", a: ["will write", "will have written", "writes", "wrote"], c: 1 }, { q: "If you ___ me, I would have helped you.", a: ["asked", "had asked", "ask", "have asked"], c: 1 },
-                { q: "Scarcely ___ started when the lights went out.", a: ["the show had", "had the show", "the show", "did the show"], c: 1 },
-                { q: "I'd rather you ___ anyone about this.", a: ["don't tell", "didn't tell", "not tell", "not to tell"], c: 1 },
-                { q: "It's essential that he ___ there on time.", a: ["is", "be", "was", "were"], c: 1 },
-                { q: "Having ___ the work, he went home.", a: ["finish", "finishing", "finished", "to finish"], c: 2 },
-                { q: "Not until much later ___ the truth.", a: ["did I learn", "I learned", "learned I", "I did learn"], c: 0 },
-                { q: "She behaves as if she ___ the boss.", a: ["is", "was", "were", "be"], c: 2 },
-                { q: "Supposing you ___ the lottery, what would you do?", a: ["win", "won", "had won", "winning"], c: 1 },
-                { q: "But for his help, we ___ in time.", a: ["wouldn't finish", "hadn't finished", "wouldn't have finished", "didn't finish"], c: 2 },
-                { q: "He is believed ___ in the accident.", a: ["to be killed", "to have been killed", "killing", "to kill"], c: 1 },
-                { q: "No sooner ___ the room than the phone rang.", a: ["had I entered", "I had entered", "did I enter", "entered I"], c: 0 },
-                { q: "Under no circumstances ___ you touch that button.", a: ["should", "must", "can", "must you"], c: 3 },
-                { q: "I ___ rather you didn't smoke here.", a: ["would", "had", "should", "will"], c: 0 },
-                { q: "Were I ___ in your position, I'd resign.", a: ["be", "to be", "am", "being"], c: 1 },
-                { q: "The witness denied ___ the money.", a: ["to see", "seen", "having seen", "to have seen"], c: 2 },
-                { q: "It is high time we ___ something about pollution.", a: ["do", "did", "to do", "doing"], c: 1 },
-                { q: "Hardly ___ when the rain started.", a: ["we had arrived", "had we arrived", "did we arrive", "we arrived"], c: 1 },
-                { q: "Rarely ___ such a beautiful sunset.", a: ["one sees", "does one see", "sees one", "one does see"], c: 1 },
-                { q: "I regret ___ you that your application was rejected.", a: ["to inform", "informing", "inform", "informed"], c: 0 },
-                { q: "He's far ___ the best student in class.", a: ["and away", "by far", "so far", "far away"], c: 1 },
-                { q: "The car needs ___ before our trip.", a: ["to repair", "repairing", "repaired", "to be repairing"], c: 1 },
-                { q: "I'd rather ___ to the party yesterday.", a: ["go", "have gone", "had gone", "went"], c: 1 },
-                { q: "Should you ___ him, tell him I'm looking for him.", a: ["see", "saw", "will see", "seeing"], c: 0 },
-                { q: "Little ___ that he was being watched.", a: ["he knew", "did he know", "knew he", "he did know"], c: 1 },
-                { q: "I suggested that she ___ a lawyer.", a: ["see", "sees", "saw", "should to see"], c: 0 },
-                { q: "The more dangerous it is, ___ I like it.", a: ["the more", "the most", "more", "most"], c: 0 },
-                { q: "Only by ___ hard can you succeed.", a: ["work", "working", "to work", "worked"], c: 1 },
-                { q: "She is alleged ___ the document.", a: ["to steal", "to have stolen", "stealing", "stole"], c: 1 },
-                { q: "The project is on the point ___ finished.", a: ["of being", "to be", "at being", "to being"], c: 0 },
-                { q: "Try ___ he might, he couldn't open it.", a: ["as", "how", "what", "even"], c: 0 },
-                { q: "Had I known, I ___ differently.", a: ["would act", "would have acted", "acted", "will act"], c: 1 },
-                { q: "So ___ was the storm that trees were uprooted.", a: ["strong", "stronger", "strongly", "strength"], c: 0 },
-                { q: "It's about time you ___ a job.", a: ["find", "found", "to find", "finding"], c: 1 },
-                { q: "I would appreciate ___ from you soon.", a: ["hear", "to hear", "hearing", "heard"], c: 2 },
-                { q: "Never ___ such a boring speech.", a: ["I have heard", "have I heard", "did I hear", "I heard"], c: 1 },
-                { q: "He was seen ___ the building at midnight.", a: ["leave", "leaving", "left", "to be left"], c: 1 },
-                { q: "You are supposed ___ your homework by now.", a: ["to finish", "to have finished", "finishing", "finished"], c: 1 },
-                { q: "In no way ___ I mean to offend you.", a: ["do", "did", "am", "have"], c: 1 },
-                { q: "The furniture ___ yet.", a: ["hasn't delivered", "hasn't been delivered", "didn't deliver", "not delivered"], c: 1 },
-                { q: "I'd sooner you ___ me the truth.", a: ["tell", "told", "to tell", "telling"], c: 1 },
-                { q: "Providing ___ the weather is good, we'll go.", a: ["that", "which", "what", "if"], c: 0 },
-                { q: "Not only ___ but he's also kind.", a: ["is he rich", "he is rich", "does he rich", "rich he is"], c: 0 },
-                { q: "I'm not used to ___ treated like this.", a: ["be", "being", "been", "to be"], c: 1 },
-                { q: "He speaks as though he ___ an expert.", a: ["is", "was", "were", "be"], c: 2 },
-                { q: "The problem is worth ___.", a: ["discussing", "to discuss", "discuss", "discussed"], c: 0 },
-                { q: "Hardly had I sat down ___ the doorbell rang.", a: ["when", "than", "then", "that"], c: 0 },
-                { q: "On no account ___ you leave the room.", a: ["must", "must you", "you must", "should"], c: 1 },
-                { q: "I'm having my car ___ tomorrow.", a: ["repair", "repairing", "repaired", "to repair"], c: 2 },
-                { q: "By next month, I ___ for this company for 10 years.", a: ["will work", "will have been working", "work", "am working"], c: 1 },
-                { q: "He looks exhausted; he ___ all night.", a: ["must work", "must have been working", "should work", "can work"], c: 1 }
-            ]
+            easy: [{ q: "I ___ from Vietnam.", a: ["am", "is", "are", "be"], c: 0 }, { q: "Do you ___ a pen?", a: ["has", "having", "had", "have"], c: 3 }],
+            medium: [{ q: "If I ___ more time, I would learn code.", a: ["have", "had", "have had", "having"], c: 1 }, { q: "She hasn't finished her homework ___.", a: ["already", "just", "yet", "still"], c: 2 }],
+            hard: [{ q: "Had the startup secured funding, they ___ the project.", a: ["would complete", "will have completed", "would have completed", "completed"], c: 2 }]
         };
 
         let players = []; let curPlayerIdx = 0; let isRolling = false; let currentRotX = 0, currentRotY = 0;
@@ -1579,7 +1479,6 @@
         socket.on('player_bankrupt', (pId) => { BOARD_CONFIG.forEach(t => { if (t.owner === pId) { t.owner = null; t.houses = 0; } }); renderBoard(); });
 
         socket.on('game_over', (data) => {
-            playSound('ting'); setTimeout(() => playSound('ting'), 500);
             document.getElementById('victory-avatar').innerText = data.winnerAvatar; document.getElementById('victory-name').innerText = data.winnerName; document.getElementById('victory-score').innerText = data.score + " VNĐ";
             navTo('sc-victory'); BOARD_CONFIG.forEach(t => { if (t.type === 'prop') { t.owner = null; t.houses = 0; } });
         });
@@ -1595,9 +1494,9 @@
         function showNotify(msg) {
             const entry = document.createElement('div'); entry.style.padding = '12px 14px'; entry.style.borderRadius = '12px'; entry.style.fontSize = '0.85rem'; entry.style.lineHeight = '1.4'; entry.style.boxShadow = '0 2px 6px rgba(0,0,0,0.03)';
             let bC = 'var(--primary)', bgC = 'white';
-            if (msg.includes('✅') || msg.includes('nhận') || msg.includes('mua') || msg.includes('CƯỚP') || msg.includes('🎉') || msg.includes('nâng cấp')) { bC = 'var(--secondary)'; bgC = 'rgba(0,184,148,0.08)'; playSound('ting'); }
-            else if (msg.includes('❌') || msg.includes('thu') || msg.includes('Hết giờ') || msg.includes('trừ')) { bC = 'var(--accent)'; bgC = 'rgba(255,107,107,0.08)'; playSound('fail'); }
-            else if (msg.includes('🚨') || msg.includes('TÙ') || msg.includes('☠️') || msg.includes('🚓')) { bC = 'var(--accent)'; bgC = 'rgba(255,107,107,0.08)'; playSound('jail'); }
+            if (msg.includes('✅') || msg.includes('nhận') || msg.includes('mua') || msg.includes('CƯỚP') || msg.includes('🎉') || msg.includes('nâng cấp')) { bC = 'var(--secondary)'; bgC = 'rgba(0,184,148,0.08)'; }
+            else if (msg.includes('❌') || msg.includes('thu') || msg.includes('Hết giờ') || msg.includes('trừ')) { bC = 'var(--accent)'; bgC = 'rgba(255,107,107,0.08)'; }
+            else if (msg.includes('🚨') || msg.includes('TÙ') || msg.includes('☠️') || msg.includes('🚓')) { bC = 'var(--accent)'; bgC = 'rgba(255,107,107,0.08)'; }
             else if (msg.includes('🎲') || msg.includes('⏱️') || msg.includes('⚙️') || msg.includes('🏢') || msg.includes('💸') || msg.includes('🃏')) { bC = 'var(--accent-light)'; bgC = 'rgba(253, 203, 110, 0.1)'; }
             entry.style.borderLeft = `5px solid ${bC}`; entry.style.background = bgC; entry.innerHTML = msg;
             const n = document.getElementById('notification'); n.innerHTML = msg; n.style.display = 'block'; setTimeout(() => n.style.display = 'none', 3500);
@@ -1652,7 +1551,6 @@
             if (!isRolling && !players[curPlayerIdx].isBot && players[curPlayerIdx].id === mySocketId) {
                 clearInterval(autoRollTimer);
                 isRolling = true;
-                playSound('dice');
                 socket.emit('request_roll');
             }
         }
@@ -1660,7 +1558,6 @@
         socket.on('jail_escaped', (data) => {
             clearInterval(autoRollTimer);
             isRolling = true; const val = data.value; const cube = document.getElementById('dice-cube');
-            if (data.playerId !== mySocketId) playSound('dice');
 
             const rots = { 1: { x: 0, y: 0 }, 6: { x: 0, y: 180 }, 3: { x: 0, y: -90 }, 4: { x: 0, y: 90 }, 2: { x: -90, y: 0 }, 5: { x: 90, y: 0 } };
             const getA = (c, t, s) => c + (t - ((c % 360) + 360) % 360 + (t - ((c % 360) + 360) % 360 <= 0 ? 360 : 0)) + (s * 360);
@@ -1673,7 +1570,6 @@
                     showNotify(`🎉 <b>${p.username}</b> đổ được <b>6</b>! Đã phá khóa Tù thành công! Đổ xúc xắc lần nữa để đi tiếp.`);
                     isRolling = false;
                     updateTurnDisplay();
-                    if (p.isBot && isMyRoomHost) { setTimeout(() => socket.emit('request_roll', p.id), 1500); }
                 }
             }, 2000);
         });
@@ -1681,7 +1577,6 @@
         socket.on('dice_rolled', (data) => {
             clearInterval(autoRollTimer);
             isRolling = true; const val = data.value; const cube = document.getElementById('dice-cube');
-            if (data.playerId !== mySocketId) playSound('dice');
 
             const rots = { 1: { x: 0, y: 0 }, 6: { x: 0, y: 180 }, 3: { x: 0, y: -90 }, 4: { x: 0, y: 90 }, 2: { x: -90, y: 0 }, 5: { x: 90, y: 0 } };
             const getA = (c, t, s) => c + (t - ((c % 360) + 360) % 360 + (t - ((c % 360) + 360) % 360 <= 0 ? 360 : 0)) + (s * 360);
@@ -1701,12 +1596,43 @@
             }, 2000);
         });
 
+        function showCityBanner(tIdx, playerName) {
+            const tile = BOARD_CONFIG[tIdx];
+            if (!tile || tile.type !== 'prop') return;
+
+            const showcase = document.getElementById('city-showcase');
+            document.getElementById('showcase-p').innerText = `${playerName} đang ở`;
+            document.getElementById('showcase-c').innerText = tile.name;
+
+            if (tile.img) {
+                showcase.style.backgroundImage = `url('${tile.img}')`;
+            } else {
+                showcase.style.backgroundImage = `none`;
+                showcase.style.backgroundColor = 'var(--dark)';
+            }
+
+            showcase.style.display = 'flex';
+            setTimeout(() => { showcase.style.display = 'none'; }, 4000);
+        }
+
         function movePlayerVisual(steps, p) {
             const token = document.getElementById(`token-${p.id}`); if (!token) return;
             let cur = parseInt(token.parentElement.id.replace('holder-', '')); let stepC = 0;
             const moveInt = setInterval(() => {
                 cur = (cur + 1) % 32; stepC++; document.getElementById(`holder-${cur}`).appendChild(token);
-                if (stepC >= steps) { clearInterval(moveInt); if (p.id === mySocketId) { socket.emit('movement_complete', { pos: cur }); setTimeout(() => handleTile(cur, p), 500); } else if (p.isBot && isMyRoomHost) { socket.emit('movement_complete', { pos: cur, targetId: p.id }); setTimeout(() => handleBotTile(cur, p), 500); } }
+
+                if (stepC >= steps) {
+                    clearInterval(moveInt);
+                    showCityBanner(cur, p.username);
+
+                    if (p.id === mySocketId) {
+                        socket.emit('movement_complete', { pos: cur });
+                        setTimeout(() => handleTile(cur, p), 500);
+                    } else if (p.isBot && isMyRoomHost) {
+                        socket.emit('movement_complete', { pos: cur, targetId: p.id });
+                        setTimeout(() => handleBotTile(cur, p), 500);
+                    }
+                }
             }, 150);
         }
 
@@ -1756,7 +1682,7 @@
                     btn.style.display = 'block'; btn.innerText = "⏸️ BẤM DỪNG!"; btn.disabled = false; btn.style.background = 'linear-gradient(135deg, var(--accent), #e15f41)';
                     modal.style.display = 'flex'; currentStealTimeValue = 0;
                     currentStealTimer = setInterval(() => {
-                        currentStealTimeValue += 0.05; if (Math.floor(currentStealTimeValue * 100) % 50 === 0) playSound('tick');
+                        currentStealTimeValue += 0.05;
                         if (currentStealTimeValue <= 2.0) { display.innerText = currentStealTimeValue.toFixed(2); } else { display.innerText = "??.??"; display.style.color = '#636e72'; }
                     }, 50);
                 }
@@ -1806,10 +1732,25 @@
                     const activePlayer = players[curPlayerIdx]; if (!activePlayer) return socket.emit('next_turn');
                     if (activePlayer.id === mySocketId) {
                         const tIdx = originalPlayerTileIndex; const tile = BOARD_CONFIG[tIdx];
-                        if (tile && tile.type === 'prop' && tile.owner && tile.owner !== mySocketId) { payRent(tIdx); } else { socket.emit('next_turn'); }
+                        if (tile && tile.type === 'prop' && tile.owner && tile.owner !== mySocketId) {
+                            payRent(tIdx);
+                        } else if (tile && tile.type === 'prop' && tile.owner === mySocketId && tile.houses < 4) {
+                            let m = getDifficultyMulti();
+                            if (activePlayer.score >= (tile.housePrice * m)) { showBuyModal(tIdx, 'build'); } else { socket.emit('next_turn'); }
+                        } else {
+                            socket.emit('next_turn');
+                        }
                     } else if (activePlayer.isBot && isMyRoomHost) {
                         const pBot = activePlayer; const tIdx = originalPlayerTileIndex; const tile = BOARD_CONFIG[tIdx];
-                        if (tile && tile.type === 'prop' && tile.owner && tile.owner !== pBot.id) { botPayRent(tIdx, pBot); } else { socket.emit('next_turn', pBot.id); }
+                        if (tile && tile.type === 'prop' && tile.owner && tile.owner !== pBot.id) {
+                            botPayRent(tIdx, pBot);
+                        } else if (tile && tile.type === 'prop' && tile.owner === pBot.id && tile.houses < 4) {
+                            let m = getDifficultyMulti();
+                            if (pBot.score >= (tile.housePrice * m)) {
+                                socket.emit('property_action', { targetId: pBot.id, action: 'build', tileIndex: tIdx, cost: tile.housePrice * m, playerName: pBot.username, tileName: tile.name });
+                                setTimeout(() => socket.emit('next_turn', pBot.id), 1000);
+                            } else { socket.emit('next_turn', pBot.id); }
+                        } else { socket.emit('next_turn', pBot.id); }
                     }
                 } catch (err) { socket.emit('next_turn'); }
             }, 2500);
@@ -1896,6 +1837,20 @@
 
         function answerQuestion(isCor, pts, tIdx, qData) { document.getElementById('modal-q').style.display = 'none'; socket.emit('answered_result', { correct: isCor, points: isCor ? pts : 0, isBonus: false, tileIndex: tIdx, questionData: qData }); }
 
+        // BẮT SỰ KIỆN SYNC BÀN CỜ ĐỂ LƯU VÀO CLIENT
+        socket.on('sync_board', (data) => {
+            if (data && data.tileIndex !== undefined) {
+                const t = BOARD_CONFIG[data.tileIndex];
+                if (data.action === 'buy') {
+                    t.owner = data.playerId;
+                    t.houses = 0;
+                } else if (data.action === 'build') {
+                    t.houses++;
+                }
+            }
+            updateBoardVisuals();
+        });
+
         socket.on('process_property_action', (data) => {
             let m = getDifficultyMulti();
             const tIdx = data.tileIndex; const tile = BOARD_CONFIG[tIdx]; const p = players.find(pl => pl.id === data.playerId);
@@ -1921,11 +1876,19 @@
             document.getElementById('mb-title').innerText = act === 'buy' ? "🏛️ MUA ĐỊA DANH" : "🏠 NÂNG CẤP NHÀ";
             document.getElementById('mb-text').innerHTML = act === 'buy' ? `Mua <b style="color:var(--primary)">${tile.name}</b>?<br>Giá: ${tile.price * m}đ` : `Nâng cấp nhà <b style="color:var(--primary)">${tile.name}</b>?<br>Giá: ${tile.housePrice * m}đ`;
             const btnYes = document.getElementById('btn-buy-yes'); btnYes.innerText = act === 'buy' ? `MUA (${tile.price * m}đ)` : `NÂNG CẤP (${tile.housePrice * m}đ)`;
-            btnYes.onclick = () => { socket.emit('property_action', { action: act, tileIndex: tIdx, cost: act === 'buy' ? tile.price * m : tile.housePrice * m, playerName: me.username, tileName: tile.name }); modal.style.display = 'none'; socket.emit('next_turn'); };
+
+            // Gửi action và cập nhật UI luôn qua sync_board
+            btnYes.onclick = () => {
+                socket.emit('property_action', { action: act, tileIndex: tIdx, cost: act === 'buy' ? tile.price * m : tile.housePrice * m, playerName: me.username, tileName: tile.name });
+                modal.style.display = 'none';
+                // Không next_turn ngay, để server xử lý và gọi qua
+                setTimeout(() => socket.emit('next_turn'), 500);
+            };
             document.getElementById('btn-buy-no').onclick = () => { modal.style.display = 'none'; socket.emit('next_turn'); };
             modal.style.display = 'flex';
         }
 
+        // TẠO BÀN CỜ LÓT NỀN VÀ UPDATE GIAO DIỆN
         function renderBoard() {
             let m = getDifficultyMulti();
             const board = document.getElementById('board'); const hub = document.querySelector('.center-hub'); board.innerHTML = ''; if (hub) board.appendChild(hub);
@@ -1933,43 +1896,76 @@
                 let r, c; if (i <= 8) { r = 1; c = i + 1; } else if (i <= 16) { r = i - 7; c = 9; } else if (i <= 24) { r = 9; c = 25 - i; } else { r = 33 - i; c = 1; }
                 const d = document.createElement('div'); d.className = `tile ${t.type === 'corner' || t.type === 'go_jail' ? 'corner' : ''}`; d.style.gridRow = r; d.style.gridColumn = c; d.id = `tile-${i}`;
                 if (t.type === 'prop') {
-                    let displayPrice = t.owner ? `<span style="color: #e74c3c; font-weight: 800;">Thuế: $${calcRent(i)}</span>` : `$${t.price * m}`;
-                    d.innerHTML = `<div class="bar" style="background:transparent; border-top: 6px solid ${t.color}"></div><div class="tile-name">${t.name}<br><span style="font-size:0.5rem; font-weight:normal;" id="price-tag-${i}">${displayPrice}</span></div>`;
+                    let displayPrice = `$${t.price * m}`;
+
+                    let bgLayer = '';
+                    let overlay = '';
+                    if (t.img) {
+                        bgLayer = `<div class="tile-bg-layer" style="background-image: url('${t.img}');"></div>`;
+                        overlay = `<div class="tile-bg-overlay"></div>`;
+                    }
+
+                    d.innerHTML = `
+                        ${bgLayer}
+                        ${overlay}
+                        <div class="bar" style="background:transparent; border-top: 6px solid ${t.color}; z-index: 3;"></div>
+                        <div class="tile-name">${t.name}<br><span id="price-tag-${i}" style="font-weight:normal;">${displayPrice}</span></div>`;
                 } else {
-                    d.innerHTML = `<span style="color:${t.color}; font-weight:900;">${t.name}</span>`;
+                    d.innerHTML = `<span style="color:${t.color}; font-weight:900; z-index:2;">${t.name}</span>`;
                 }
                 const h = document.createElement('div'); h.className = 'token-holder'; h.id = `holder-${i}`; d.appendChild(h); board.appendChild(d);
             });
             players.forEach(p => {
                 if (!p.bankrupt) {
-                    const t = document.createElement('div'); t.className = 'token'; t.style.border = `3px solid ${p.color}`; t.innerText = p.avatar; t.id = `token-${p.id}`; document.getElementById(`holder-${p.pos}`).appendChild(t);
+                    const t = document.createElement('div'); t.className = 'token'; t.style.borderColor = p.color; t.innerText = p.avatar; t.id = `token-${p.id}`; document.getElementById(`holder-${p.pos}`).appendChild(t);
                 }
             });
             updateBoardVisuals();
         }
 
+        // HÀM HIỂN THỊ CHỦ ĐẤT + SỐ NHÀ + XÓA TÊN
         function updateBoardVisuals() {
             BOARD_CONFIG.forEach((t, i) => {
                 const el = document.getElementById(`tile-${i}`);
                 if (t.type === 'prop' && t.owner) {
                     const o = players.find(p => p.id === t.owner); if (!o) return;
+
+                    // Thêm class .owned để đổi CSS (ẩn tên, xóa mờ ảnh)
+                    el.classList.add('owned');
+
+                    // Thêm Avatar góc trái trên
                     let badge = el.querySelector('.owner-badge');
                     if (!badge) { badge = document.createElement('div'); badge.className = 'owner-badge'; el.appendChild(badge); }
                     badge.style.border = `2px solid ${o.color}`; badge.innerHTML = o.avatar;
 
-                    let priceTag = document.getElementById(`price-tag-${i}`);
-                    if (priceTag) priceTag.innerHTML = `<span style="color: #e74c3c; font-weight: 800;">Thuế: $${calcRent(i)}</span>`;
+                    // Thêm Tiền Thuế góc trái dưới
+                    let rentBadge = el.querySelector('.rent-badge');
+                    if (!rentBadge) { rentBadge = document.createElement('div'); rentBadge.className = 'rent-badge'; el.appendChild(rentBadge); }
+                    rentBadge.innerHTML = `-$${calcRent(i)}`;
 
+                    // Đổi màu viền của cả cái ô đất
+                    el.style.borderColor = o.color;
+                    el.style.borderWidth = '2px';
+
+                    // Thẻ x2 nếu có trọn bộ
                     const groupProps = BOARD_CONFIG.filter(prop => prop.group === t.group);
                     const ownsAll = groupProps.every(prop => prop.owner === t.owner);
                     let mTag = el.querySelector('.monopoly-tag');
                     if (ownsAll) { if (!mTag) { el.innerHTML += `<div class="monopoly-tag">x2</div>`; } } else if (mTag) mTag.remove();
 
-                    let hD = el.querySelector('.house-container'); if (!hD) { hD = document.createElement('div'); hD.className = 'house-container'; el.appendChild(hD); } hD.innerHTML = '🏠'.repeat(t.houses);
+                    // Thêm biểu tượng nhà góc phải dưới
+                    let hD = el.querySelector('.house-container'); if (!hD) { hD = document.createElement('div'); hD.className = 'house-container'; el.appendChild(hD); }
+                    hD.innerHTML = '🏠'.repeat(t.houses);
                 } else if (t.type === 'prop' && !t.owner) {
+                    // Xóa class .owned để đưa về trạng thái nguyên bản
+                    el.classList.remove('owned');
+
                     let badge = el.querySelector('.owner-badge'); if (badge) badge.remove();
+                    let rentBadge = el.querySelector('.rent-badge'); if (rentBadge) rentBadge.remove();
                     let hD = el.querySelector('.house-container'); if (hD) hD.remove();
                     let mTag = el.querySelector('.monopoly-tag'); if (mTag) mTag.remove();
+                    el.style.borderColor = 'rgba(255,255,255,0.1)';
+                    el.style.borderWidth = '1px';
                 }
             });
         }
@@ -1981,7 +1977,6 @@
                     ds.innerHTML += `<div style="padding:15px; border-radius:14px; background:rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.05); border-left:6px solid #95A5A6; margin-bottom:12px; filter: grayscale(1);"><div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-weight:700; color:#95A5A6; font-size:1.1rem; text-decoration: line-through;">${p.avatar} ${p.username}</span><span style="font-weight:900; font-size: 1rem; color: #e74c3c;">PHÁ SẢN</span></div></div>`;
                 } else {
                     const jailTag = p.jail ? `<span style="color:var(--accent); font-size:0.7rem; font-weight:900; background:rgba(255,107,107,0.2); padding:4px 8px; border-radius:6px; margin-left:8px;">🚨 TÙ</span>` : '';
-                    // ĐÃ SỬA: Xóa bỏ chuỗi (🔥)
                     ds.innerHTML += `<div style="padding:15px; border-radius:14px; background:${idx === curPlayerIdx ? 'white' : 'rgba(255,255,255,0.5)'}; border: 1px solid rgba(0,0,0,0.05); border-left:6px solid ${p.color}; margin-bottom:12px; box-shadow: ${idx === curPlayerIdx ? '0 4px 15px rgba(0,0,0,0.05)' : 'none'}; transition: var(--transition);"><div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-weight:700; color:${p.color}; font-size:1.1rem;">${p.avatar} ${p.username} ${jailTag}</span><span style="font-weight:900; font-size: 1.2rem; color: var(--dark);">${p.score} <span style="font-size:0.8rem; color:#b2bec3;">VNĐ</span></span></div></div>`;
                 }
             });

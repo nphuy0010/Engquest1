@@ -30,11 +30,10 @@ function getAvailableAvatar(roomPlayers) {
     return available.length > 0 ? available[Math.floor(Math.random() * available.length)] : '👽';
 }
 
-// 🎯 ĐÃ SỬA: Cập nhật mức tiền khởi đầu mới
 function getStartingMoney(difficulty) {
-    if (difficulty === 'medium') return 3000;
-    if (difficulty === 'hard') return 5000;
-    return 2000; // easy
+    if (difficulty === 'medium') return 2000;
+    if (difficulty === 'hard') return 3000;
+    return 1500; // easy
 }
 
 function checkBankrupt(roomId, p) {
@@ -177,6 +176,14 @@ io.on('connection', (socket) => {
         }
     });
 
+    socket.on('answering_event', (targetId) => {
+        const roomId = socketToRoom[socket.id];
+        if (roomId && rooms[roomId]) {
+            const room = rooms[roomId]; const p = getActor(room, socket.id, targetId);
+            if (p) io.to(roomId).emit('player_is_answering', p.id);
+        }
+    });
+
     socket.on('share_question', (data) => {
         const roomId = socketToRoom[socket.id];
         if (roomId) socket.to(roomId).emit('show_shared_question', data);
@@ -298,7 +305,6 @@ io.on('connection', (socket) => {
             if (p) {
                 p.score -= parseInt(data.cost);
                 io.to(roomId).emit('sync_players', room.players);
-                io.to(roomId).emit('sync_board', { action: data.action, tileIndex: data.tileIndex, playerId: p.id, playerName: p.username });
                 io.to(roomId).emit('log_msg', `🏢 <b>${p.avatar} ${p.username}</b> vừa ${data.action === 'buy' ? 'mua' : 'nâng cấp'} <b>${data.tileName}</b> với giá <b>${data.cost}đ</b>!`);
                 checkBankrupt(roomId, p);
             }
@@ -357,4 +363,4 @@ io.on('connection', (socket) => {
     });
 });
 
-const PORT = process.env.PORT || 3000; server.listen(PORT, () => console.log(`🚀 Server EngQuest Online đang chạy tại cổng ${PORT}`));
+const PORT = process.env.PORT || 3000; server.listen(PORT, () => console.log(`🚀 Server EngQuest Flat Board đang chạy tại cổng ${PORT}`));
