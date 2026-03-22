@@ -101,31 +101,38 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('request_roll', (targetId) => {
-        const roomId = socketToRoom[socket.id]; if (roomId && rooms[roomId]) {
-            const room = rooms[roomId]; const actor = getActor(room, socket.id, targetId);
-            if (actor && room.players[room.currentTurnIdx]?.id === actor.id) {
-                let v1 = Math.floor(Math.random() * 6) + 1; let v2 = Math.floor(Math.random() * 6) + 1; let total = v1 + v2;
-                if (actor.jail) {
-                    if (v1 === v2 || Math.random() < 0.3) {
-                        actor.jail = false; io.to(roomId).emit('sync_players', room.players);
-                        io.to(roomId).emit('jail_escaped', { v1, v2, total, playerId: actor.id });
-                    } else {
-                        io.to(roomId).emit('dice_rolled', { v1, v2, total, playerId: actor.id, remainInJail: true });
-                    }
-                } else {
-                    io.to(roomId).emit('dice_rolled', { v1, v2, total, playerId: actor.id });
-                }
+    socket.on('end_game', () => {
+        const roomId = socketToRoom[socket.id];
+        if (roomId && rooms[roomId] && rooms[roomId].host === socket.id) {
+            const room = rooms[roomId]; room.isPlaying = false;
+            const alivePlayers = room.players.filter(p => !p.bankrupt);
+            if (alivePlayers.length > 0) {
+                alivePlayers.sort((a, b) => b.score - a.score); const winner = alivePlayers[0];
+                io.to(roomId).emit('game_over', { winnerName: winner.username, winnerAvatar: winner.avatar, score: winner.score });
+            } else {
+                io.to(roomId).emit('game_over', { winnerName: "Không ai", winnerAvatar: "💀", score: 0 });
             }
         }
     });
 
-    socket.on('movement_complete', (data) => {
+    socket.on('request_roll', (targetId) => {
         const roomId = socketToRoom[socket.id]; if (roomId && rooms[roomId]) {
-            const room = rooms[roomId]; const p = getActor(room, socket.id, data.targetId); const finalPos = data.pos;
-            if (p) {
-                if (p.pos > finalPos && finalPos < 12) { p.score += 2000; io.to(roomId).emit('log_msg', `✅ <b>${p.avatar} ${p.username}</b> qua cờ GO (+2000đ)`); }
-                p.pos = finalPos; io.to(roomId).emit('sync_players', room.players);
+            const room = rooms[roomId]; const actor = getActor(room, socket.id, targetId);
+            if (actor && room.players[room.currentTurnIdx]?.id === actor.id) {
+                // 🚀 ĐÃ ĐỒNG BỘ: Sinh 1 giá trị từ 1 đến 6
+                let val;
+                if (actor.jail) {
+                    if (Math.random() < 0.5) { val = 6; } else { val = Math.floor(Math.random() * 5) + 1; }
+                    if (val === 6) {
+                        actor.jail = false; io.to(roomId).emit('sync_players', room.players);
+                        io.to(roomId).emit('jail_escaped', { value: val, playerId: actor.id });
+                    } else {
+                        io.to(roomId).emit('dice_rolled', { value: val, playerId: actor.id, remainInJail: true });
+                    }
+                } else {
+                    val = Math.floor(Math.random() * 6) + 1;
+                    io.to(roomId).emit('dice_rolled', { value: val, playerId: actor.id });
+                }
             }
         }
     });
@@ -147,6 +154,24 @@ io.on('connection', (socket) => {
                 if (data.pos === 0) { p.score += 2000; io.to(roomId).emit('log_msg', `🎉 <b>${p.avatar} ${p.username}</b> được thưởng 2000đ khi bay về GO!`); }
                 io.to(roomId).emit('sync_players', rooms[roomId].players);
             }
+        }
+    });
+
+    socket.on('movement_complete', (data) => {
+        const roomId = socketToRoom[socket.id]; if (roomId && rooms[roomId]) {
+            const room = rooms[roomId]; const p = getActor(room, socket.id, data.targetId); const finalPos = data.pos;
+            if (p) {
+                if (p.pos > finalPos && finalPos < 12) { p.score += 2000; io.to(roomId).emit('log_msg', `✅ <b>${p.avatar} ${p.username}</b> qua cờ GO (+2000đ)`); }
+                p.pos = finalPos; io.to(roomId).emit('sync_players', room.players);
+            }
+        }
+    });
+
+    socket.on('answering_event', (targetId) => {
+        const roomId = socketToRoom[socket.id];
+        if (roomId && rooms[roomId]) {
+            const room = rooms[roomId]; const p = getActor(room, socket.id, targetId);
+            if (p) io.to(roomId).emit('player_is_answering', p.id);
         }
     });
 
@@ -284,12 +309,12 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         const roomId = socketToRoom[socket.id];
         if (roomId && rooms[roomId]) {
-            let room = rooms[roomId];
+            let room = rooms[roomId]; const droppedName = room.players.find(p => p.id === socket.id)?.username || "Ai đó";
             room.players = room.players.filter(p => p.id !== socket.id);
             if (room.players.filter(p => !p.isBot).length === 0) delete rooms[roomId];
             else {
                 if (room.host === socket.id) { room.host = room.players.filter(p => !p.isBot)[0].id; room.players.find(p => p.id === room.host).isReady = true; }
-                if (room.isPlaying) { if (room.currentTurnIdx >= room.players.length) room.currentTurnIdx = 0; io.to(roomId).emit('player_dropped', { players: room.players, turn: room.currentTurnIdx }); }
+                if (room.isPlaying) { if (room.currentTurnIdx >= room.players.length) room.currentTurnIdx = 0; io.to(roomId).emit('player_dropped', { players: room.players, turn: room.currentTurnIdx }); io.to(roomId).emit('log_msg', `🔴 <b>${droppedName}</b> mất kết nối!`); }
                 else io.to(roomId).emit('update_lobby', room);
             }
         }
