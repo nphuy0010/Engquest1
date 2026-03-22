@@ -1241,7 +1241,7 @@
             </div>
 
             <div style="display: flex; gap: 12px; margin-bottom: 15px;">
-                <button class="btn btn-primary" onclick="reqCreateRoom()" style="flex: 1;">➕ TẠO PH Phòng</button>
+                <button class="btn btn-primary" onclick="reqCreateRoom()" style="flex: 1;">➕ TẠO PHÒNG</button>
                 <button class="btn btn-info" onclick="reqPlayBot()" style="flex: 1;">🤖 CHƠI VỚI MÁY</button>
             </div>
 
@@ -1359,11 +1359,6 @@
                                 <div class="face f6">6</div>
                             </div>
                         </div>
-
-                        <button class="btn btn-warning" id="btn-force-skip"
-                            onclick="if(isMyRoomHost) socket.emit('force_next_turn');"
-                            style="width: auto; margin-top: 5px; font-size: 0.8rem; padding: 8px 15px; display: none;">⚙️
-                            BỎ QUA LƯỢT</button>
                     </div>
                 </div>
             </div>
@@ -1685,8 +1680,6 @@
         function updateTurnDisplay() {
             if (players.length > 0) {
                 const p = players[curPlayerIdx];
-                const btnSkip = document.getElementById('btn-force-skip');
-                if (isMyRoomHost && p.id !== mySocketId && !p.isBot) btnSkip.style.display = 'block'; else btnSkip.style.display = 'none';
 
                 clearInterval(autoRollTimer);
                 const displayDiv = document.getElementById('current-action-display');

@@ -28,7 +28,6 @@ function getAvailableAvatar(roomPlayers) {
     return available.length > 0 ? available[Math.floor(Math.random() * available.length)] : '👽';
 }
 
-// 🚀 ĐÃ CHỈNH SỬA: Hạ tiền khởi đầu về 1500, 2000, 3000
 function getStartingMoney(difficulty) {
     if (difficulty === 'medium') return 2000;
     if (difficulty === 'hard') return 3000;
@@ -151,7 +150,6 @@ io.on('connection', (socket) => {
             const p = getActor(rooms[roomId], socket.id, data.targetId);
             if (p) {
                 p.pos = data.pos;
-                // 🚀 ĐÃ CHỈNH SỬA: Giảm thưởng qua GO còn 200đ
                 if (data.pos === 0) { p.score += 200; io.to(roomId).emit('log_msg', `🎉 <b>${p.avatar} ${p.username}</b> được thưởng 200đ khi bay về GO!`); }
                 io.to(roomId).emit('sync_players', rooms[roomId].players);
             }
@@ -162,7 +160,6 @@ io.on('connection', (socket) => {
         const roomId = socketToRoom[socket.id]; if (roomId && rooms[roomId]) {
             const room = rooms[roomId]; const p = getActor(room, socket.id, data.targetId); const finalPos = data.pos;
             if (p) {
-                // 🚀 ĐÃ CHỈNH SỬA: Giảm thưởng qua GO còn 200đ
                 if (p.pos > finalPos && finalPos < 12) { p.score += 200; io.to(roomId).emit('log_msg', `✅ <b>${p.avatar} ${p.username}</b> qua cờ GO (+200đ)`); }
                 p.pos = finalPos; io.to(roomId).emit('sync_players', room.players);
             }
@@ -297,14 +294,6 @@ io.on('connection', (socket) => {
                 do { room.currentTurnIdx = (room.currentTurnIdx + 1) % room.players.length; } while (room.players[room.currentTurnIdx].bankrupt);
                 io.to(roomId).emit('turn_changed', room.currentTurnIdx);
             }
-        }
-    });
-
-    socket.on('force_next_turn', () => {
-        const roomId = socketToRoom[socket.id];
-        if (roomId && rooms[roomId] && rooms[roomId].host === socket.id) {
-            const room = rooms[roomId]; do { room.currentTurnIdx = (room.currentTurnIdx + 1) % room.players.length; } while (room.players[room.currentTurnIdx].bankrupt);
-            io.to(roomId).emit('turn_changed', room.currentTurnIdx); io.to(roomId).emit('log_msg', `⚙️ Chủ phòng đã sử dụng quyền Ép chuyển lượt!`);
         }
     });
 
